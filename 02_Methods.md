@@ -17,6 +17,7 @@ See OneNote FS19C lab notebook entries xxx
 * Completed on: 1/7/2021
 * Platform: Ceres, slurm
 * fastqc.batch slurm script:
+
   ```
   #!/bin/bash
 #SBATCH --job-name=fastqc                              # name of the job submitted
@@ -33,6 +34,7 @@ fastqc -t 16 *.fastq.gz  
 mv *fastqc* ./fastqc/
 #End of file
   ```
+
 * Files generated:
   * *fastqc.zip
   * *fastqc.html
@@ -43,6 +45,7 @@ mv *fastqc* ./fastqc/
 * Completed on: 1/7/2021
 * Platform: Ceres, conda environment
 * Commands:
+
   ```
   salloc
   module load miniconda
@@ -51,6 +54,7 @@ mv *fastqc* ./fastqc/
   multiqc *.fastqc.zip
   conda deactivate
   ```
+
 * Why are the plots flat plot (not interactive)?
   * From: https://multiqc.info/docs/
   "Flat plots
