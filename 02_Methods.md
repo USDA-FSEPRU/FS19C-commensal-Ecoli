@@ -33,8 +33,9 @@ module load fastqc
 fastqc -t 16 *.fastq.gz  
 mv *fastqc* ./fastqc/
 #End of file
-  ```
-
+```  
+```
+``` 
 * Files generated:
   * *fastqc.zip
   * *fastqc.html
