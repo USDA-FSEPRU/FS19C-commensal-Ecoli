@@ -3,36 +3,73 @@
 
 ## Raw data location
 
-### Illumina Reads
-Q drive
+### Illumina NovaSeq Reads
+Q:/_TempTransfer/DBayles/mou
+* 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
+  * Samples 1-96 from Sept. 15, 2020
+* 1_33298_01_1-A01-1-428RN3A_HVHJT_1839.tar
+  * Re-sequenced samples 95 and 96 from Dec. 16, 2020 because there were no sequences in the first NovaSeq run
+
+(Ceres) /project/fsepru/kmou/FS19C/lane1/
+* *.fastq.gz sequence data for samples 1-96
+* badsequencedata/
+  * 1-B08-20-427FEC_S27_L001_R*_001.fastq.gz
+  * 1-H12-96-441FEC_S103_L001_R*_001.fastq.gz
+* fastqc/
+* linked/
+  * *_covstats.txt
+  * *.fasta
+  * *.names
+  * *_pol.fasta
+  * *.slurm
+  * stderr.*
+  * stdout.*
+* renamefiles.batch
+
+
 
 ### QC reports
+#### FastQC
+* *fastqc.zip
+* *fastqc.html
 
 #### MultiQC
-* Completed on Jan. 7, 2020
-* Platform: Ceres, conda environment
-```
-salloc
-module load miniconda
-source activate fastanienv
-conda install -c bioconda multiqc
-multiqc *.fastqc.zip
-```
-* File generated:  multiqc_report.html
+* FS19all_multiqc_report.html
+* FS19all_multiqc_data/
+* FS19_1-94_multiqc_report.html
+* FS19_1-94_multiqc_data/
 
-* Why are the plots flat plot?
-From: https://multiqc.info/docs/
-"Flat plots
-Reports with large numbers of samples may contain flat plots. These are rendered when the MultiQC report is generated using MatPlotLib and are non-interactive (flat) images within the report. The reason for generating these is that large sample numbers can make MultiQC reports very data-intensive and unresponsive (crashing people's browsers in extreme cases). Plotting data in flat images is scalable to any number of samples, however.
-Flat plots in MultiQC have been designed to look as similar to their interactive versions as possible. They are also copied to multiqc_data/multiqc_plots"
 
 
 ## Genome Assembly
-Ceres
-
+(Ceres)
+/project/fsepru/kmou/FS19C/polished_genomes_100X
+* *_pol.fasta
+* fs19cfastanioutput.out
+* referencegenomes/
+  * Ecoli_HS.fasta  
+  * Ecoli_K-12_MG1655.fasta  
+  * Ecoli_NADC6564.fasta  
+  * Ecoli_Nissle1917.fasta  
+  * Ecoli_O157H7_EDL933.fasta
+* querylist.txt
+* referencelist.txt
 
 ## Genome Annotation
 
 
 
-## Final Files of Importance
+## Final Files of Importance in Files
+* FS19C_metadata.xlsx
+* 1-H12-96-441FEC_S2_L002_R2_001_fastqc.html
+* 1-H12-96-441FEC_S2_L002_R1_001_fastqc.html
+* 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
+* 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
+* FS19_1-94_multiqc_report.html
+* FS19all_multiqc_report.html
+* FS19CfastANIoutput.xlsx
+* FS19C Samples 1-96 Final Data.xlsx
+* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
+* Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
+* Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
+* FS19_outline_09.23.19.docx
