@@ -241,6 +241,21 @@ ls -dv "$PWD"/* > quertylist.txt
 ```
 ls -dv "$PWD"/* > referencelist.txt
 ```
+Reference genomes include:
+* E. coli MG1655 aka https://www.ncbi.nlm.nih.gov/nuccore/NC_000913.3
+  * Saved as Ecoli_K-12_MG1655.fasta
+* E. coli HS aka https://www.ncbi.nlm.nih.gov/nuccore/NC_009800.1
+  * Saved as Ecoli_HS.fasta
+* E. coli Nissle 1917 aka https://www.ncbi.nlm.nih.gov/nuccore/CP007799.1
+  * Saved as Ecoli_Nissle1917.fasta
+* E. coli O157:H7 str. NADC 6564 aka https://www.ncbi.nlm.nih.gov/nuccore/CP017251
+  * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/#CR28
+  * Saved as Ecoli_NADC6564.fasta
+* E. coli O157:H7 EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
+  * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
+  * Saved as Ecoli_O157H7_EDL933.fasta
+
+
 
 5. Moved querylist.txt and referencelist.txt to same directory and ran fastani:
 ```
@@ -280,6 +295,20 @@ conda install -c bioconda mash
 ```
 mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
 ```
+Reference genomes include:
+* E. coli MG1655 aka https://www.ncbi.nlm.nih.gov/nuccore/NC_000913.3
+  * Saved as Ecoli_K-12_MG1655.fasta
+* E. coli HS aka https://www.ncbi.nlm.nih.gov/nuccore/NC_009800.1
+  * Saved as Ecoli_HS.fasta
+* E. coli Nissle 1917 aka https://www.ncbi.nlm.nih.gov/nuccore/CP007799.1
+  * Saved as Ecoli_Nissle1917.fasta
+* E. coli O157:H7 str. NADC 6564 aka https://www.ncbi.nlm.nih.gov/nuccore/CP017251
+  * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/#CR28
+  * Saved as Ecoli_NADC6564.fasta
+* E. coli O157:H7 EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
+  * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
+  * Saved as Ecoli_O157H7_EDL933.fasta
+
 Output generated: .msh
 
 3. Run distance estimates comparing sketch genomes with itself. This runs really fast (less than a second)
@@ -287,8 +316,10 @@ Output generated: .msh
 mash dist -p 1 .msh .msh > distances.tab
 ```
 
-4. Make distance matrix from distances.tab
-
 * Files generated:
   * distances.tab
   * FS19Cmashdistances.xlsx
+
+
+#### MDS
+1. Make distance matrix from distances.tab and fs19cfastanioutput2.out
