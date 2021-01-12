@@ -8,7 +8,7 @@ Q:/_TempTransfer/DBayles/mou
 * 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
   * Samples 1-96 from Sept. 15, 2020
 * 1_33298_01_1-A01-1-428RN3A_HVHJT_1839.tar
-  * Re-sequenced samples 95 and 96 from Dec. 16, 2020 because there were no sequences in the first NovaSeq run
+  * Re-sequenced samples 95 and 96 from 16Dec2020 because there were no sequences in the first NovaSeq run
 
 (Ceres) /project/fsepru/kmou/FS19C/lane1/
 * *.fastq.gz sequence data for samples 1-96
@@ -67,7 +67,8 @@ Q:/_TempTransfer/DBayles/mou
 * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
 * FS19_1-94_multiqc_report.html
 * FS19all_multiqc_report.html
-* FS19CfastANIoutput.xlsx
+* FS19CfastANIoutput2.xlsx
+* FS19Cmashdistances.xlsx
 * FS19C Samples 1-96 Final Data.xlsx
 * KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
