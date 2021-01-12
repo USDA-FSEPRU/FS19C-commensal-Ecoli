@@ -279,7 +279,7 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
-* Began on: 11Jan2021
+* Completed on: 11Jan2021
 * Platform: Ceres, conda
 * Commands ran:
 1. Load environment and install mash
