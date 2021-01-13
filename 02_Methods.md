@@ -323,3 +323,9 @@ mash dist -p 1 .msh .msh > distances.tab
 
 #### MDS
 1. Make distance matrix from distances.tab and fs19cfastanioutput2.out
+
+
+
+## WGS submission to SRA
+* Must complete Biosample entry before you can complete and Bioproject entry
+* [SRA Quick Start Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submit/) and a more detailed [SRA Submission Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submitbio/)
