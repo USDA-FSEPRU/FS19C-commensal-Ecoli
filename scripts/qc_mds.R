@@ -46,6 +46,7 @@ plot_fast_mds <-
 
 plot_fast_mds
 
+ggsave("FS19C_fastaniMDS.tiff", plot=plot_fast_mds, width = 9, height = 8, dpi = 500, units =c("in"))
 
 
 ### Mash ###
@@ -77,7 +78,7 @@ plot_mash_mds <-
 
 plot_mash_mds
 
-
+ggsave("FS19C_mashMDS.tiff", plot=plot_mash_mds, width = 9, height = 8, dpi = 500, units =c("in"))
 
 #Jules sample code
 ani_tab <- read_tsv('./Files/ANIm_percentage_identity.tab') %>%
