@@ -316,6 +316,8 @@ Output generated: .msh
 mash dist -p 1 .msh .msh > distances.tab
 ```
 
+4. distances.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
+
 * Files generated:
   * distances.tab
   * FS19Cmashdistances.xlsx
