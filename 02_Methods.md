@@ -323,88 +323,217 @@ mash dist -p 1 .msh .msh > distances.tab
   * FS19Cmashdistances.xlsx
 
 
-#### MDS
+#### Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
+* Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
+* Completed on: 15Jan2021
+* Platform: R
+* Commands ran:
 1. See scripts/qc_mds.R for details
 ```
-  #####################################################################################################
-  #FS19C QC - MDS of fastANI and Mash output
-  #Kathy Mou
+#####################################################################################################
+#FS19C QC - MDS of fastANI and Mash output
+#Kathy Mou
 
-  #Purpose: Convert ANI pairwise genome-genome similarity calculations from Mash and fastANI to a distance matrix and visualize via MDS.
+  #Purpose: Convert ANI pairwise genome-genome similarity calculations of fastANI and mash output to a distance matrix and visualize distance matrices with MDS and heatmaps.
 
   #Load library packages
-  library(ggplot2)
-  library(tidyverse)
-  library(ggrepel) #for geom_text_repel
+library(ggplot2)
+library(tidyverse)
+library(ggrepel) #for geom_text_repel()
+library(pheatmap)
+library(gtools) #for mixedorder() to sort reference_id numerically, which has mixed numeric and characters
 
   sessionInfo()
-  #R version 4.0.2 (2020-06-22)
+#R version 4.0.2 (2020-06-22)
 
   #####################################################################################################
 
-  #In mash and fastani files, removed extra path names (/home/..., _pol.fasta and .fasta) from elements in reference_id and query_id in excel before importing distances.tab to R so that distance calculation would work
-  #Otherwise, it produces errors saying duplicate 'row.names' are not allowed, non-unique values when setting 'row.names'
+  #In mash and fastani files, I removed extra path names (/home/..., _pol.fasta and .fasta) from elements in reference_id and query_id
+#in excel before importing distances.tab to R so that distance calculation would work
+#Otherwise, it produces errors saying duplicate 'row.names' are not allowed, non-unique values when setting 'row.names'
+#fastANI gives you ANI similarity in percentage, mash already did the distance calculation for you (hence the small decimal numbers)
+#so you don't need to do distance calculation (1-ANI).
+#You will need to convert fastANI ANI percentage values to decimal and then subtract that from 1 to get distance calculation.
+#I did a little experiment to see if reordering reference_id of mash file (distance.tab) with mixedorder() would change MDS and
+#heatmap structure compared to if I didn't reorder reference_id. In conclusion, no difference, so don't need to reorder reference_id
 
+  ################################### FastANI ##################################################################
+######## Import fastani file, remove orthologous_matches, total_seq_fragments columns ########
+fast_tab <- read_tsv('./Files/fs19cfastanioutput2.out.tab', col_names = c("reference_id", "query_id", "ani", "orthologous_matches", "total_seq_fragments")) %>%
+select(-orthologous_matches) %>%
+select(-total_seq_fragments) %>%
+mutate(ani_dist= 1-(ani/100)) %>% #add new ani_dist column to calculate distance
+select(-ani)
 
-  ### FastANI ###
-  #Import fastani file, remove orthologous_matches, total_seq_fragments columns
-  fast_tab <- read_tsv('./Files/fs19cfastanioutput2.out.tab', col_names = c("reference_id", "query_id", "ani_dist", "orthologous_matches", "total_seq_fragments")) %>%
-    select(-orthologous_matches) %>%
-    select(-total_seq_fragments)
+  ######## Make distance matrix ########
+fast_dist <- fast_tab %>%
+pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
+column_to_rownames(var='query_id')
 
-  #Calculate distance
-  fast_dist <- fast_tab %>%
-    pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
-    column_to_rownames(var='query_id') %>%
-    as.dist() #distance matrix computation that computes distances between rows of a data matrix
+  ######## Heatmap of fastani distance matrix as another way of looking at clustering ########
+#Adapted code from: https://www.datanovia.com/en/blog/clustering-using-correlation-as-distance-measures-in-r/
+fast_heatmap <- pheatmap(fast_dist, scale = "row", main = "fastANI distance matrix heatmap")
+fast_heatmap
+ggsave("FS19C_fastani_heatmap.tiff", plot=fast_heatmap, width = 13, height = 14, dpi = 500, units =c("in"))
 
-  #Generate MDS
-  fast_mds <- cmdscale(fast_dist) %>% as.data.frame() %>%
-    rownames_to_column(var='reference_id')
-  #cmdscale = classic MDS of a data matrix
+  ######## Pairwise correlation between samples ########
+#by columns
+cols.cor <- cor(fast_dist, use = "pairwise.complete.obs", method='pearson')
+#by rows
+rows.cor <- cor(t(fast_dist), use = 'pairwise.complete.obs', method='pearson')
 
-  #Plot MDS
-  plot_fast_mds <-
-    fast_mds %>% ggplot(aes(x=V1, y=V2)) +
-    geom_point()+
-    geom_text_repel(aes(label=reference_id), max.overlaps = 50) +
-    labs(x='MDS1', y='MDS2') +
-    ggtitle("fastANI MDS")
+  ######## Plot heatmap of pairwise correlations ########
+fast_corr_heatmap <- pheatmap(fast_dist, scale = 'row',
+                            clustering_distance_cols = as.dist(1 - cols.cor),
+                            clustering_distance_rows = as.dist(1 - rows.cor),
+                            main = "fastANI pairwise correlation heatmap")
+fast_corr_heatmap
+ggsave("FS19C_fastani_correlation_heatmap.tiff", plot=fast_corr_heatmap, width = 11, height = 14, dpi = 500, units =c("in"))
 
-  plot_fast_mds
+  ######## Calculate distance for MDS ########
+fast_dist2 <- as.dist(fast_dist) #distance matrix computation that computes distances between rows of a data matrix
+head(fast_dist2)
 
+  ######## Generate MDS ########
+fast_mds <- cmdscale(fast_dist2) %>% as.data.frame() %>%
+rownames_to_column(var='reference_id')
+#cmdscale = classic MDS of a data matrix
 
+  ######## Plot MDS ########
+plot_fast_mds <-
+fast_mds %>% ggplot(aes(x=V1, y=V2)) +
+geom_point()+
+geom_text_repel(aes(label=reference_id), max.overlaps = 50) +
+labs(x='MDS1', y='MDS2') +
+ggtitle("fastANI MDS")
+plot_fast_mds
+ggsave("FS19C_fastaniMDS.tiff", plot=plot_fast_mds, width = 9, height = 8, dpi = 500, units =c("in"))
 
-  ### Mash ###
-  #Import mash file, add ani_dist column, remove ANI / pvalue / matching_hashes columns
-  mash_tab <- read_tsv('./Files/distances.tab', col_names = c("reference_id", "query_id", "ANI", "pvalue", "matching_hashes")) %>%
-    mutate(ani_dist=1-ANI) %>%
-    select(-ANI) %>%
-    select(-pvalue) %>%
-    select(-matching_hashes)
+  ############################################ Mash #########################################################
+######## Import mash file, add ani_dist column, remove pvalue, matching_hashes columns ########
+mash_tab <- read_tsv('./Files/distances.tab', col_names = c("reference_id", "query_id", "ani_dist", "pvalue", "matching_hashes")) %>%
+select(-pvalue) %>%
+select(-matching_hashes)
+mash_tab2 <- mash_tab[mixedorder(as.character(mash_tab$reference_id)),] #I reordered reference_id to make samples list in numerical order versus
+#ordering like 1, 10-19, 2, 20-29, etc.
+#I hoped this could fix FS19C_mash_correlation_heatmap.tiff so that it could list samples on the right of heatmap in the same order as
+#FS19C_fastani_correlation_heatmap.tiff. Did not work :(
 
-  #Calculate distance
-  mash_dist <- mash_tab %>%
-    pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
-    column_to_rownames(var='query_id') %>%
-    as.dist() #distance matrix computation that computes distances between rows of a data matrix
+  ######## Make distance matrix ########
+#mash_dist with mash_tab
+mash_dist <- mash_tab %>%
+arrange(reference_id) %>%
+pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
+column_to_rownames(var='query_id')
 
-  #Generate MDS
-  mash_mds <- cmdscale(mash_dist) %>% as.data.frame() %>%
-    rownames_to_column(var='reference_id')
-  #cmdscale = classic MDS of a data matrix
+  #mash_dist2 with mash_tab2
+mash_dist2 <- mash_tab2 %>%
+arrange(reference_id) %>%
+pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
+column_to_rownames(var='query_id')
 
-  #Plot MDS
-  plot_mash_mds <-
-    mash_mds %>% ggplot(aes(x=V1, y=V2)) +
-    geom_point()+
-    geom_text_repel(aes(label=reference_id), max.overlaps = 50) +
-    labs(x='MDS1', y='MDS2') +
-    ggtitle("Mash MDS")
+  ######## Heatmap of mash distance matrix as another way of looking at clustering ########
+#using mash_dist
+mash_heatmap <- pheatmap(mash_dist, scale = "row", main = "mash distance matrix heatmap")
+mash_heatmap
+ggsave("FS19C_mash_heatmap.tiff", plot=mash_heatmap, width = 13, height = 14, dpi = 500, units =c("in"))
 
-  plot_mash_mds
+  #using mash_dist2
+mash_heatmap2 <- pheatmap(mash_dist2, scale = "row", main = "mash distance matrix heatmap")
+mash_heatmap2 #looks the same as mash_heatmap
+
+  ######## Pairwise correlation between samples (columns) ########
+#using mash_dist
+cols.cor.mash <- cor(mash_dist, use = "pairwise.complete.obs", method='pearson')
+#pairwise correlation between samples (rows)
+rows.cor.mash <- cor(t(mash_dist), use = 'pairwise.complete.obs', method='pearson')
+
+  #using mash_dist2
+cols.cor.mash2 <- cor(mash_dist2, use = "pairwise.complete.obs", method='pearson')
+#pairwise correlation between samples (rows)
+rows.cor.mash2 <- cor(t(mash_dist2), use = 'pairwise.complete.obs', method='pearson')
+
+  ######## Plot heatmap of pairwise correlations ########
+#using mash_dist
+mash_corr_heatmap <- pheatmap(mash_dist, scale = 'row',
+                            clustering_distance_cols = as.dist(1 - cols.cor.mash),
+                            clustering_distance_rows = as.dist(1 - rows.cor.mash),
+                            main = "mash pairwise correlation heatmap")
+mash_corr_heatmap
+ggsave("FS19C_mash_correlation_heatmap.tiff", plot=mash_corr_heatmap, width = 11, height = 14, dpi = 500, units =c("in"))
+
+  #using mash_dist2
+mash_corr_heatmap2 <- pheatmap(mash_dist2, scale = 'row',
+                            clustering_distance_cols = as.dist(1 - cols.cor.mash2),
+                            clustering_distance_rows = as.dist(1 - rows.cor.mash2),
+                            main = "mash pairwise correlation heatmap2")
+mash_corr_heatmap2 #looks the same as mash_corr_heatmap
+
+  ######## Calculate distance for MDS ########
+#using mash_dist
+mash_distA <- as.dist(mash_dist) #distance matrix computation that computes distances between rows of a data matrix
+head(mash_distA)
+
+  #using mash_dist2
+mash_distB <- as.dist(mash_dist2) #distance matrix computation that computes distances between rows of a data matrix
+head(mash_distB)
+
+  ######## Generate MDS ########
+#using mash_distA
+mash_mdsA <- cmdscale(mash_distA) %>% as.data.frame() %>%
+rownames_to_column(var='reference_id')
+#cmdscale = classic MDS of a data matrix
+
+  #using mash_distB
+mash_mdsB <- cmdscale(mash_distB) %>% as.data.frame() %>%
+rownames_to_column(var='reference_id')
+
+  ######## Plot MDS ########
+#using mash_mdsA
+plot_mash_mdsA <-
+mash_mdsA %>% ggplot(aes(x=V1, y=V2)) +
+geom_point()+
+geom_text_repel(aes(label=reference_id), max.overlaps = 50) +
+labs(x='MDS1', y='MDS2') +
+ggtitle("Mash MDS")
+plot_mash_mdsA
+ggsave("FS19C_mashMDS.tiff", plot=plot_mash_mdsA, width = 9, height = 8, dpi = 500, units =c("in"))
+
+  #using mash_mdsB
+plot_mash_mdsB <-
+mash_mdsB %>% ggplot(aes(x=V1, y=V2)) +
+geom_point()+
+geom_text_repel(aes(label=reference_id), max.overlaps = 50) +
+labs(x='MDS1', y='MDS2') +
+ggtitle("Mash MDS")
+plot_mash_mdsB #exact same plot as plot_mash_mdsA
+ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 500, units =c("in")) #this is a different mashMDS after I used mixedorder on reference_id
 ```
 
+2. Analyzed fastANI and mash MDS plots. The plots look very different and clustering was variable between the two. Will need to ask Jules what counts as outliers in each plot, and does it matter which MDS plot I choose for determining what counts as outliers before doing pangenome analysis as long as I make note of what I chose?
+
+3. Before asking Jules, I googled how to determine outliers in MDS plot and came across this paper: https://doi.org/10.1093/bioinformatics/btz964. They use heatmaps of distance matrices to type bacteria, so I decided to try generating a heatmap to see how it compares between fastANI and mash.
+
+4. Followed this site for generating heatmap from distance matrix and correlation: https://www.datanovia.com/en/blog/clustering-using-correlation-as-distance-measures-in-r/
+* This paper does something similar that ran mash and tested linear correlation with pearson's correlation coefficient test. Purpose was to look at whole genome similarity to identify bacterial meningitis causing species: https://doi.org/10.1186/s12879-018-3324-1
+
+5. Added heatmap and Pearson's correlation coefficient scripts to scripts/qc_mds.R.
+
+6. I compared FS19C_fastani_heatmap.tiff and FS19C_mash_heatmap.tiff and they're very similar (order of samples listed on bottom and side of heatmap aren't in exact order, but they're in the same color blocks). The scale of key is different because I notice that the ANI values used in mash are 1.0 and below while for fastani it's 100 and below (difference by a factor of 100).
+
+7. When I compared FS19C_fastani_correlation_heatmap.tiff with FS19C_mash_correlation_heatmap.tiff, the figures were quite different.
+
+8. I had short video meeting with Jules on 15Jan2021 from 1-1:30pm to go over my MDS plots.
+  1. I made two main errors:
+    1. Doing distance calculation on mash file when I didn't need to (it already did the calculation for me, it outputs the distances, I just need to make and run distance matrix).
+    2. For fastANI file, the values are reported as similarity values in percent (ANI % 1-100). I needed to convert the percent to a proportion, then do 1-X from that decimal to get distance matrix. Then run distance calculation. I originally made a similarity matrix.
+  2. Other things to note:
+    1. Jules said that changing order of sample names in reference_id shouldn't change ordination. After correcting my errors (see below), I ran mash_tab with and without change to reference_id order and I got the same figures either way. So, I don't need to worry about order of samples listed in distance matrix.
+    2. How to determine outliers in MDS? Put another organism (like Salmonella) in the mix that you know is an absolute outlier and re-run ordination to see where the true outliers lie.
+
+9. I ran qc_mds.R script with the corrections and saw that there weren't any obvious outliers, like what Jules had hinted when he ran the code on his end.
+
+10. Next step: run prokka. I can use UnitProt pangenome E. coli to run annotation. I asked if I chould do this or run a single reference genome for annotation and Jules said I should try the pangenome method first. Will need to find the E. coli pangenome annotation (protein).
 
 
 ## WGS submission to SRA

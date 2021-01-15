@@ -65,12 +65,15 @@ Q:/_TempTransfer/DBayles/mou
 * 1-H12-96-441FEC_S2_L002_R1_001_fastqc.html
 * 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
 * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
+* distances.tab
 * FS19_1-94_multiqc_report.html
+* FS19_outline_09.23.19.docx
 * FS19all_multiqc_report.html
+* FS19C Samples 1-96 Final Data.xlsx
+* FS19C_metadata.xlsx
+* fs19cfastanioutput2.out.tab
 * FS19CfastANIoutput2.xlsx
 * FS19Cmashdistances.xlsx
-* FS19C Samples 1-96 Final Data.xlsx
-* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
+* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
-* FS19_outline_09.23.19.docx
