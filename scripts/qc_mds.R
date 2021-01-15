@@ -8,9 +8,9 @@
 library(ggplot2)
 library(tidyverse)
 library(ggrepel) #for geom_text_repel()
-install.packages("pheatmap")
+# install.packages("pheatmap")
 library(pheatmap)
-install.packages("gtools")
+# install.packages("gtools")
 library(gtools) #for mixedorder() to sort reference_id numerically, which has mixed numeric and characters
 
 sessionInfo()
@@ -25,9 +25,10 @@ sessionInfo()
 
 ### FastANI ###
 #Import fastani file, remove orthologous_matches, total_seq_fragments columns
-fast_tab <- read_tsv('./Files/fs19cfastanioutput2.out.tab', col_names = c("reference_id", "query_id", "ani_dist", "orthologous_matches", "total_seq_fragments")) %>%
+fast_tab <- read_tsv('./Files/fs19cfastanioutput2.out.tab', col_names = c("reference_id", "query_id", "ani", "orthologous_matches", "total_seq_fragments")) %>%
   select(-orthologous_matches) %>% 
-  select(-total_seq_fragments)
+  select(-total_seq_fragments) %>% 
+  mutate(ani_dist= 1-(ani/100))
 
 #Make distance matrix
 fast_dist <- fast_tab %>%
