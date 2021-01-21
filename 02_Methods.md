@@ -13,7 +13,7 @@ See OneNote FS19C lab notebook entries xxx
 
 ## Conda environments
 ### fastanienv
-* FastANI, multiqc
+* FastANI, multiqc, prokka
 
 ### mashenv
 * Mash
@@ -535,6 +535,37 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 
 10. Next step: run prokka. I can use UnitProt pangenome E. coli to run annotation. I asked if I chould do this or run a single reference genome for annotation and Jules said I should try the pangenome method first. Will need to find the E. coli pangenome annotation (protein).
 
+#### Genome annotation
+* Summary: Identify annotation reference from UniProt (E. coli pangenome) and use prokka to annotate all 95 samples.
+* Began on: 20Jan2021
+* Platform:
+1. Find E. coli pangenome (pan proteome) on UniProt:
+  * [Escherichia coli (strain K12) (Strain: K12 / MG1655 / ATCC 47076)](https://www.uniprot.org/proteomes/UP000000625)
+  * [Escherichia coli O157:H7 (Strain: O157:H7 / Sakai / RIMD 0509952 / EHEC)](https://www.uniprot.org/proteomes/UP000000558)
+2. Read Prokka paper
+  * DOI: 10.1093/bioinformatics/btu153
+3. Find prokka github page: https://github.com/tseemann/prokka
+4. install prokka in fastanienv conda environment on Ceres in FS19C/polished_genomes_100X
+```
+salloc
+module load miniconda
+source activate fastanienv
+conda install -c conda-forge -c bioconda -c defaults prokka
+prokka #this test didn't work...
+```
+* How else to install and run prokka on conda??
+* See https://github.com/tseemann/prokka/issues/448
+* Try this: https://github.com/tseemann/prokka/issues/508
+```
+conda create -n prokka_env -c conda-forge -c bioconda prokka
+$ conda activate prokka_env
+```
+
+5. potential for loop to entry
+```
+for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” –outdir “$tag”_prokka –force –addgenes “$file”; done.
+```
+* taken from https://doi.org/10.3389/fvets.2020.582297
 
 ## WGS submission to SRA
 * Must complete Biosample entry before you can complete and Bioproject entry
