@@ -18,6 +18,8 @@ See OneNote FS19C lab notebook entries xxx
 ### mashenv
 * Mash
 
+### prokka_env
+* prokka
 
 ## Sequence Analysis
 ### Sequence assembly
@@ -538,6 +540,7 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 #### Genome annotation
 * Summary: Identify annotation reference from UniProt (E. coli pangenome) and use prokka to annotate all 95 samples.
 * Began on: 20Jan2021
+* Completed on:
 * Platform:
 1. Find E. coli pangenome (pan proteome) on UniProt:
   * [Escherichia coli (strain K12) (Strain: K12 / MG1655 / ATCC 47076)](https://www.uniprot.org/proteomes/UP000000625)
@@ -556,16 +559,30 @@ prokka #this test didn't work...
 * How else to install and run prokka on conda??
 * See https://github.com/tseemann/prokka/issues/448
 * Try this: https://github.com/tseemann/prokka/issues/508
+5. (21Jan2021) Tried the following commands on Ceres to remove prokka_env, make new prokka_env with different way of installing prokka. It works!
 ```
+conda env remove --name prokka_env #remove prokka_env and try it again with the next command
 conda create -n prokka_env -c conda-forge -c bioconda prokka
-$ conda activate prokka_env
+source activate prokka_env
+prokka
+prokka --version 1.14.6
+prokka --listdb
+#Looking for databases in: /home/kathy.mou/.conda/envs/prokka_env/db
+#Kingdoms: Archaea Bacteria Mitochondria Viruses
+#Genera: Enterococcus Escherichia Staphylococcus
+#HMMs: HAMAP
+#CMs: Archaea Bacteria Viruses
 ```
-
-5. potential for loop to entry
+6. Made a new directory polishedgenomesprokka/, copied fasta files from polished_genomes_100X to this directory, renamed .fasta to .fna
 ```
-for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” –outdir “$tag”_prokka –force –addgenes “$file”; done.
+rename .fasta .fna *.fasta
 ```
-* taken from https://doi.org/10.3389/fvets.2020.582297
+7. Download [E. coli strain K12 proteome (fasta)](https://www.uniprot.org/proteomes/UP000000625)... taking a long time to download. Try this annotation first.
+8. Need to ask Jules what kind of fasta file do I need to use for annotation first. The fasta file I have doesn't have the ~~~ symbols that prokka says is needed for annotation tag formats: https://github.com/tseemann/prokka/blob/master/README.md#fasta-database-format
+9. For loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
+```
+for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” --proteins xx –outdir “$tag”_prokka –force –addgenes “$file”; done.
+```
 
 ## WGS submission to SRA
 * Must complete Biosample entry before you can complete and Bioproject entry
