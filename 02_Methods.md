@@ -559,7 +559,7 @@ prokka #this test didn't work...
 * How else to install and run prokka on conda??
 * See https://github.com/tseemann/prokka/issues/448
 * Try this: https://github.com/tseemann/prokka/issues/508
-5. (21Jan2021) Tried the following commands on Ceres to remove prokka_env, make new prokka_env with different way of installing prokka. It works!
+5. (21Jan2021) Tried the following commands based on [this issues page](https://github.com/tseemann/prokka/issues/508) on Ceres to remove prokka_env, make new prokka_env with different way of installing prokka. It works!
 ```
 conda env remove --name prokka_env #remove prokka_env and try it again with the next command
 conda create -n prokka_env -c conda-forge -c bioconda prokka
@@ -577,12 +577,26 @@ prokka --listdb
 ```
 rename .fasta .fna *.fasta
 ```
-7. Download [E. coli strain K12 proteome (fasta)](https://www.uniprot.org/proteomes/UP000000625)... taking a long time to download. Try this annotation first.
+7. Download [E. coli strain K12 proteome (fasta)](https://www.uniprot.org/proteomes/UP000000625) - Try this annotation first.
 8. Need to ask Jules what kind of fasta file do I need to use for annotation first. The fasta file I have doesn't have the ~~~ symbols that prokka says is needed for annotation tag formats: https://github.com/tseemann/prokka/blob/master/README.md#fasta-database-format
-9. For loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
+9. (22Jan2021) At lab meeting, Jules recommended not spending too much time finding the "perfect" annotation (custom or publicly-available ones) because there will always be something missing. Instead, find annotations that have the genes you want. So I looked up what genes the project plan had mentioned (see 01_Background) and came up with this list:
+  * EA utilization, eut operon for utilization ethanolamine as a nitrogen source (see project plan)
+  * genes involved in utilizing the following carbon/sugar substrates: glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuornate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine N-acetylneuraminate, sialic acid and D-gluconate.
+	* bacteriocins
+  * Look up papers from project plan, record in 01_Background, read and find exact gene or operon names
+| Gene/Operon name | Description | Comments |
+| --- | --- | --- |
+| eut (17 genes including eutR transcriptional regulator) | ethanolamine utilization as nitrogen source | eut operon : https://academic.oup.com/jb/article-abstract/147/1/83/751773?redirectedFrom=fulltext, https://jb.asm.org/content/195/21/4947.long |
+| xxx | xxx |
+| test | dfdf |
+
+
+
+13. For loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
 ```
 for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” --proteins xx –outdir “$tag”_prokka –force –addgenes “$file”; done.
 ```
+
 
 ## WGS submission to SRA
 * Must complete Biosample entry before you can complete and Bioproject entry
