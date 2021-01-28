@@ -556,9 +556,9 @@ source activate fastanienv
 conda install -c conda-forge -c bioconda -c defaults prokka
 prokka #this test didn't work...
 ```
-* How else to install and run prokka on conda??
-* See https://github.com/tseemann/prokka/issues/448
-* Try this: https://github.com/tseemann/prokka/issues/508
+  * How else to install and run prokka on conda??
+  * See https://github.com/tseemann/prokka/issues/448
+  * Try this: https://github.com/tseemann/prokka/issues/508
 5. (21Jan2021) Tried the following commands based on [this issues page](https://github.com/tseemann/prokka/issues/508) on Ceres to remove prokka_env, make new prokka_env with different way of installing prokka. It works!
 ```
 conda env remove --name prokka_env #remove prokka_env and try it again with the next command
@@ -581,16 +581,51 @@ rename .fasta .fna *.fasta
 8. Need to ask Jules what kind of fasta file do I need to use for annotation first. The fasta file I have doesn't have the ~~~ symbols that prokka says is needed for annotation tag formats: https://github.com/tseemann/prokka/blob/master/README.md#fasta-database-format
 9. (22Jan2021) At lab meeting, Jules recommended not spending too much time finding the "perfect" annotation (custom or publicly-available ones) because there will always be something missing. Instead, find annotations that have the genes you want. So I looked up what genes the project plan had mentioned (see 01_Background) and came up with this list:
   * EA utilization, eut operon for utilization ethanolamine as a nitrogen source (see project plan)
-  * genes involved in utilizing the following carbon/sugar substrates: glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuornate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine N-acetylneuraminate, sialic acid and D-gluconate.
+  * genes involved in utilizing the following carbon/sugar substrates: glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate.
 	* bacteriocins
   * Look up papers from project plan, record in 01_Background, read and find exact gene or operon names
 | Gene/Operon name | Description | Comments |
 | --- | --- | --- |
 | eut (17 genes including eutR transcriptional regulator) | ethanolamine utilization as nitrogen source | eut operon : https://academic.oup.com/jb/article-abstract/147/1/83/751773?redirectedFrom=fulltext, https://jb.asm.org/content/195/21/4947.long |
-| xxx | xxx |
-| test | dfdf |
+| araBAD | arabinose | 10.1128/IAI.01386-07 |
+| fucAO<sup>1</sup>, fucK<sup>2</sup> | fucose | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| galK | galactose | 10.1128/IAI.01386-07 |
+| gntK (idnK)| gluconate | 10.1128/IAI.01386-07 |
+| uxaC | hexuronate<sup>1</sup>, glucuronate<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| uxaB | galacturonate | 10.1128/IAI.01386-07 |
+| manA | mannose | 10.1128/IAI.01386-07 |
+| nagE | NAG (N-acetylglucosamine) | 10.1128/IAI.01386-07 |
+| manXYZ | glucosamine | 10.1128/IAI.01386-07 |
+| **agaWEFA<sup>1</sup>**, nanAT<sup>2</sup> | N-acetylgalactosamine and galactosamine<sup>1</sup>, **N-acetylgalactosamine<sup>2</sup>** | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| nanAT | **NANA (N-acetyl-neuraminic acid)<sup>1</sup>**, N-acetylgalactosamine<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| rbsK | ribose | 10.1128/IAI.01386-07 |
+| lacZ | lactose | https://doi.org/10.1371/journal.pone.0053957 |
+| sacH | sucrose | https://doi.org/10.1371/journal.pone.0053957 |
 
 
+10. (27Jan2021)  Look through UniProt for metabolic pathway genomes
+  * Complete list: ethanolamine, glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate
+  * List of substrate-related genes not in [Escherichia coli K12 substr. MG1655 EMBL file](https://www.ebi.ac.uk/ena/browser/view/U00096): missing N-acetylgalactosamine
+      * File: U00096.3.txt
+  * List of substrate-related genes not in [Escherichia coli O157:H7 str. Sakai EMBL file](https://www.ebi.ac.uk/ena/browser/view/BA000007): it has genes related to all substrates (not sure if the complete metabolic pathways are present for each substrate, but there are proteins associated with all these substrates)
+      * File: BA000007.3.txt
+11. Looked through each EMBL file and print out all proteins associated with each of the substrates:
+  * Escherichia coli O157:H7 str. Sakai
+    ```
+    grep -f carbohydratelist.txt BA000007.3.txt > completecarblistO157H7.txt
+    ```
+  * Escherichia_coli_str_K12_MG1655
+    ```
+    grep -f carbohydratelist.txt U00096.3.txt > completecarblistK12.txt
+    ```
+12. Compared the two files and printed out genes unique to each strains
+  ```
+  comm -1 -3 completecarblistO157H7.txt completecarblistK12.txt > genesnotpresentinO157H7.txt #not present in O157H7
+  comm -1 -3 completecarblistK12.txt completecarblistO157H7.txt > genesnotpresentinK12.txt
+  ```
+13. So, at least one of the strains' proteomes have genes associated with each of the metabolites listed in OSQR plan. I will also go through review papers referenced in OSQR plan to see what other genes to include.
+ * Maltby et al.: EMBL files missing glucuronate, galacuronate; however, based on a paper referenced by Maltby et al., glucoronate, galacuronate, and hexuronate are one sugar
+ *    
 
 13. For loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
 ```
