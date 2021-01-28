@@ -8,10 +8,8 @@
 * Commands:
 
 #To do
-## Try Mash
-How to run on conda: https://anaconda.org/bioconda/mash
-Directions: http://mash.readthedocs.org
+* Run prokka
+* roary
 
 # Journal Target
-
 * [Journal submission guidelines](link)

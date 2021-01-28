@@ -75,6 +75,24 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   * 189. [Sugar metabolism, an additional virulence factor in enterobacteria.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7129668/)
     * description of paper  
 
+| Gene/Operon name | Description | Comments |
+| -- | -- | -- |
+| eut (17 genes including eutR transcriptional regulator) | ethanolamine utilization as nitrogen source | eut operon : https://academic.oup.com/jb/article-abstract/147/1/83/751773?redirectedFrom=fulltext, https://jb.asm.org/content/195/21/4947.long |
+| araBAD | arabinose | 10.1128/IAI.01386-07 |
+| fucAO<sup>1</sup>, fucK<sup>2</sup> | fucose | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| galK | galactose | 10.1128/IAI.01386-07 |
+| uxaB | galacturonate | 10.1128/IAI.01386-07 |
+| gntK (idnK)| gluconate | 10.1128/IAI.01386-07 |
+| manXYZ | glucosamine | 10.1128/IAI.01386-07 |
+| uxaC | hexuronate<sup>1</sup>, glucuronate<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| lacZ | lactose | https://doi.org/10.1371/journal.pone.0053957 |
+| manA | mannose | 10.1128/IAI.01386-07 |
+| **agaWEFA<sup>1</sup>**, nanAT<sup>2</sup> | N-acetylgalactosamine and galactosamine<sup>1</sup>, **N-acetylgalactosamine<sup>2</sup>** | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| nagE | NAG (N-acetylglucosamine) | 10.1128/IAI.01386-07 |
+| nanAT | **NANA (N-acetyl-neuraminic acid)<sup>1</sup>**, N-acetylgalactosamine<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| rbsK | ribose | 10.1128/IAI.01386-07 |
+| sacH | sucrose | https://doi.org/10.1371/journal.pone.0053957 |
+
 ## Relevant email and other communication
 
 ```

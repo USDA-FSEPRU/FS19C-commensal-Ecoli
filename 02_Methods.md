@@ -17,6 +17,7 @@ See OneNote FS19C lab notebook entries xxx
 
 ### mashenv
 * Mash
+  * Directions: http://mash.readthedocs.org
 
 ### prokka_env
 * prokka
@@ -27,7 +28,7 @@ See OneNote FS19C lab notebook entries xxx
 * Completed on:
 * Platform:
 * Commands:
-1. Make text file replace.batch
+1. Make text file replace.sh
 ```
 #usr/bin/bash
 while read line
@@ -36,12 +37,12 @@ cat SRAassemblyPipeline.SLURM_TEMPLATE | sed "s/REPLACE/$line/g" > "$line".slurm
 done < samples.txt
 ```
 
-2. Run replace.batch
+2. Run replace.sh
 ```
-sh replace.batch
+sh replace.sh
 ```
 
-3. Rename *.fastq.gz files to fit the '*_1.fastq.gz' or '*_2.fastq.gz' format using the following bash script to create a directory "linked", take the fastq.gz files in current directory, shorten the names from something like 1-H12-96-441FEC_S103_L001_R2_001.fastq.gz to 1-H12-96-441FEC_2.fastq.gz, and copy over the short-named fastq.gz files to "linked" directory while also linking the short-named fastq.gz files to the original long-named fastq.gz files.
+3. Rename *.fastq.gz files to fit the '*_1.fastq.gz' or '*_2.fastq.gz' format using the following bash script to create a directory "linked", take the fastq.gz files in current directory, shorten the names from something like 1-H12-96-441FEC_S103_L001_R2_001.fastq.gz to 1-H12-96-441FEC_2.fastq.gz, and copy over the short-named fastq.gz files to "linked" directory while also linking the short-named fastq.gz files to the original long-named fastq.gz files. Saved as bash script "renamefiles.sh" and ran on ceres.
 ```
 mkdir linked
 for myfile in ./*.fastq.gz; do
@@ -52,7 +53,7 @@ done
 ```
 
 
-4. Run the follow slurm script  
+4. Run the follow slurm script (SRAassemblyPipeline.FS19C.SLURM_TEMPLATE)
 ```
 #!/bin/bash
 #SBATCH --job-name=REPLACE                              # name of the job submitted
@@ -148,7 +149,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
 * Completed on: 7Jan2021
 * Platform: Ceres, slurm
-* fastqc.batch slurm script:
+* fastqc.batch slurm script (aka fastqc.slurm):
 
   ```
   #!/bin/bash
@@ -584,23 +585,7 @@ rename .fasta .fna *.fasta
   * genes involved in utilizing the following carbon/sugar substrates: glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate.
 	* bacteriocins
   * Look up papers from project plan, record in 01_Background, read and find exact gene or operon names
-| Gene/Operon name | Description | Comments |
-| --- | --- | --- |
-| eut (17 genes including eutR transcriptional regulator) | ethanolamine utilization as nitrogen source | eut operon : https://academic.oup.com/jb/article-abstract/147/1/83/751773?redirectedFrom=fulltext, https://jb.asm.org/content/195/21/4947.long |
-| araBAD | arabinose | 10.1128/IAI.01386-07 |
-| fucAO<sup>1</sup>, fucK<sup>2</sup> | fucose | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
-| galK | galactose | 10.1128/IAI.01386-07 |
-| gntK (idnK)| gluconate | 10.1128/IAI.01386-07 |
-| uxaC | hexuronate<sup>1</sup>, glucuronate<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
-| uxaB | galacturonate | 10.1128/IAI.01386-07 |
-| manA | mannose | 10.1128/IAI.01386-07 |
-| nagE | NAG (N-acetylglucosamine) | 10.1128/IAI.01386-07 |
-| manXYZ | glucosamine | 10.1128/IAI.01386-07 |
-| **agaWEFA<sup>1</sup>**, nanAT<sup>2</sup> | N-acetylgalactosamine and galactosamine<sup>1</sup>, **N-acetylgalactosamine<sup>2</sup>** | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
-| nanAT | **NANA (N-acetyl-neuraminic acid)<sup>1</sup>**, N-acetylgalactosamine<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
-| rbsK | ribose | 10.1128/IAI.01386-07 |
-| lacZ | lactose | https://doi.org/10.1371/journal.pone.0053957 |
-| sacH | sucrose | https://doi.org/10.1371/journal.pone.0053957 |
+
 
 
 10. (27Jan2021)  Look through UniProt for metabolic pathway genomes
@@ -626,11 +611,34 @@ rename .fasta .fna *.fasta
 13. So, at least one of the strains' proteomes have genes associated with each of the metabolites listed in OSQR plan. I will also go through review papers referenced in OSQR plan to see what other genes to include.
  * Maltby et al.: EMBL files missing glucuronate, galacuronate; however, based on a paper referenced by Maltby et al., glucoronate, galacuronate, and hexuronate are one sugar
  *    
+14. (28Jan2021) Decide to run prokka on Ceres using the for loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
+```
+for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” –outdir “$tag”_prokka –force –addgenes “$file”; done
+```
+Get error message:
+```
+[09:45:50] This is prokka 1.14.6
+[09:45:50] Written by Torsten Seemann <torsten.seemann@gmail.com>
+[09:45:50] Homepage is https://github.com/tseemann/prokka
+[09:45:50] Local time is Thu Jan 28 09:45:50 2021
+[09:45:50] You are kathy.mou
+[09:45:50] Operating system is linux
+[09:45:50] You have BioPerl 1.007002
+[09:45:50] System has 72 cores.
+[09:45:50] Will use maximum of 8 cores.
+[09:45:50] Annotating as >>> Bacteria <<<
+[09:45:50] '–prefix' is not a readable non-empty FASTA file
+```
+15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit and prokka ran past the part I got stuck on in the last step. However, it didn't like how long the length of contig IDs in my fasta are, so it suggested renaming contigs or try --centre X --compliant to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
+```
+[10:20:41] Contig ID must <= 37 chars long: NODE_1_length_378381_cov_16.779345_pilon_pilon_pilon
+[10:20:41] Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.
+```
+Added --centre X --compliant to previous command
+```
+for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
+```
 
-13. For loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
-```
-for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” --proteins xx –outdir “$tag”_prokka –force –addgenes “$file”; done.
-```
 
 
 ## WGS submission to SRA
