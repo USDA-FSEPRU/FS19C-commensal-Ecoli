@@ -584,10 +584,7 @@ rename .fasta .fna *.fasta
   * EA utilization, eut operon for utilization ethanolamine as a nitrogen source (see project plan)
   * genes involved in utilizing the following carbon/sugar substrates: glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate.
 	* bacteriocins
-  * Look up papers from project plan, record in 01_Background, read and find exact gene or operon names
-
-
-
+  * Look up papers from project plan, record in 01_Background.md, read and find exact gene or operon names
 10. (27Jan2021)  Look through UniProt for metabolic pathway genomes
   * Complete list: ethanolamine, glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate
   * List of substrate-related genes not in [Escherichia coli K12 substr. MG1655 EMBL file](https://www.ebi.ac.uk/ena/browser/view/U00096): missing N-acetylgalactosamine
@@ -613,6 +610,9 @@ rename .fasta .fna *.fasta
  *    
 14. (28Jan2021) Decide to run prokka on Ceres using the for loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
 ```
+salloc
+module load miniconda
+source activate prokka_env
 for file in *.fna; do tag=$file%.fna; prokka –prefix “$tag” –locustag “$tag” –genus Escherichia –strain “$tag” –outdir “$tag”_prokka –force –addgenes “$file”; done
 ```
 Get error message:
@@ -629,16 +629,18 @@ Get error message:
 [09:45:50] Annotating as >>> Bacteria <<<
 [09:45:50] '–prefix' is not a readable non-empty FASTA file
 ```
-15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit and prokka ran past the part I got stuck on in the last step. However, it didn't like how long the length of contig IDs in my fasta are, so it suggested renaming contigs or try --centre X --compliant to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
+15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit, and prokka ran past the part I got stuck on in the last step. However, it didn't like how long the length of contig IDs in my fasta are, so it suggested renaming contigs or try --centre X --compliant to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
 ```
 [10:20:41] Contig ID must <= 37 chars long: NODE_1_length_378381_cov_16.779345_pilon_pilon_pilon
 [10:20:41] Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.
 ```
-Added --centre X --compliant to previous command
+Added --centre X --compliant command line options
 ```
 for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
 ```
+It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
+16. (29Jan2021) Read Roary paper and look up how to run roary
 
 
 ## WGS submission to SRA
