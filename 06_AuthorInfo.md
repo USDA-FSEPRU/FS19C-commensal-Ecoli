@@ -1,7 +1,7 @@
 # Author Information
 
 ## Author Order
-Mou, KT<sup>1,2</sup>, Trachsel, J<sup>2</sup>, Sharma, V<sup>2</sup>, Kudva, I<sup>2</sup>, Alt, D<sup>2</sup>, Loving, CL<sup>2</sup>
+Mou KT<sup>1,2</sup>, Trachsel J<sup>2</sup>, Sharma VK<sup>2</sup>, Kudva IT<sup>2</sup>, Alt D<sup>2</sup>, Loving CL<sup>2</sup>
 
 ## Author Affiliations, addresses
 * <sup>1</sup>Oak Ridge Institute for Science and Education, P.O. Box 117, Oak Ridge, TN, 37831, USA
@@ -18,8 +18,8 @@ Mou, KT<sup>1,2</sup>, Trachsel, J<sup>2</sup>, Sharma, V<sup>2</sup>, Kudva, I<
 | -- | -- |
 | Mou, KT | Data Curation, Formal Analysis, Investigation, Software, Validation, Visualization |
 | Trachsel, J | Data Curation, Software, Resources |
-| Sharma, V | Conceptualization, Funding Acquisition |
-| Kudva, I | Conceptualization, Funding Acquisition |
+| Sharma, VK | Conceptualization, Funding Acquisition |
+| Kudva, IT | Conceptualization, Funding Acquisition |
 | Alt, D | Resources |
 | Loving, CL | Conceptualization, Funding Acquisition, Investigation, Supervision |
 
