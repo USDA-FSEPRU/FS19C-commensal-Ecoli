@@ -214,7 +214,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
  * 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
  * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
 
-## FastANI
+## QC with FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
 * Completed on: 29Dec2020
@@ -659,7 +659,7 @@ I added --centre X --compliant command line options
 ```
 for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
 ```
-It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
+16. It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
 #### Files generated (for each isolate):
 * *_pol.fasta%.fasta_prokka/
@@ -677,15 +677,51 @@ It is working! Started around 10:30AM, finished at 11pm. All samples have a new 
   * *_pol.fasta%.fasta.txt
 
 ## Pangenome analysis
-* Summary: ran Roary on FS19C gff data by running in ... to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
+* Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
 * Platform: Ceres
 
-1. Notes from Roary publication
+1. Notes from Roary publication (including supplemental info)
   * pass in the flag '-e' to get multi-fasta file to use with RAxML or FastTree to generate phylogenetic tree based on SNPs in core genes. The file you want for those applications is called *core_gene_alignment.aln*. This flag also generates *pan_genome_reference.fa* file
-  *
+  * Access this tutorial for step-by-step: https://github.com/microgenomics/tutorials/blob/master/pangenome.md
 
+2. Roary is on Ceres. I will copy all gff from each folder and make a new folder of only gff files. Then I can roary with them with some kind of loop on slurm.
+```
+find . -name *.gff -exec cp '{}' "./prokka_gff/" ";"
+```
+Adapted from this [forum](https://unix.stackexchange.com/questions/67503/move-all-files-with-a-certain-extension-from-multiple-subdirectories-into-one-di).
+
+3. Ran md5sum checksum to compare isolate 96's gff file from prokka_gff/ with 96's gff file from 96-441FEC_pol.fasta%.fasta_prokka/
+```
+md5sum 96-441FEC_pol.fasta%.fasta.gff ../prokka_gff/96-441FEC_pol.fasta%.fasta.gff > cksum96.txt
+md5sum -c cksum96.txt
+# 96-441FEC_pol.fasta%.fasta.gff: OK
+# ../prokka_gff/96-441FEC_pol.fasta%.fasta.gff: OK
+```
+
+4. The find command worked, so I will generate slurm script (roary.slurm) to run roary.
+```
+#!/bin/bash
+#SBATCH --job-name=roary                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 12:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+module load roary
+roary -f ./roary_output -e -n -v *.gff
+#End of file
+```
+
+5. Submitted job on SLURM
+```
+sbatch roary.slurm
+Submitted batch job 5495686
+```
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

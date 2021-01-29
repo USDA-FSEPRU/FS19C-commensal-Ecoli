@@ -110,7 +110,9 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   * Github: https://github.com/tseemann/prokka
   * Prokka for loop DOI: https://doi.org/10.3389/fvets.2020.582297
 6. Roary DOI: 10.1093/bioinformatics/btv421
-  * Github:
+  * Github: https://github.com/sanger-pathogens/Roary
+  * Roary site: http://sanger-pathogens.github.io/Roary/
+  * Great step-by-step tutorial: https://github.com/microgenomics/tutorials/blob/master/pangenome.md
 
 
 ## Relevant email and other communication
