@@ -107,7 +107,7 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 4. FastANI DOI: 10.1038/s41467-018-07641-9
   * Github: https://github.com/ParBLiSS/FastANI
 5. Prokka DOI: 10.1093/bioinformatics/btu153
-  * * Github: https://github.com/tseemann/prokka
+  * Github: https://github.com/tseemann/prokka
   * Prokka for loop DOI: https://doi.org/10.3389/fvets.2020.582297
 6. Roary DOI: 10.1093/bioinformatics/btv421
   * Github:

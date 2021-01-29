@@ -140,10 +140,10 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 #rm REPLACE.SLURM
 ```
 
-##### Files generated
+##### Files generated:
+*
 
-## QC
-### FastQC
+## QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
 * Completed on: 7Jan2021
 * Platform: Ceres, slurm
@@ -170,7 +170,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
   * *fastqc.zip
   * *fastqc.html
 
-### MultiQC
+## QC with MultiQC
 * Tutorial: https://www.youtube.com/watch?v=qPbIlO_KWN0
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94 (forgot to do this prior to sequence assembly). I did not include samples 95 and 96 in the multiqc run as I realized these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (but I would only consider  samples 1-94 from that first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
 * Completed on: 7Jan2021
@@ -214,7 +214,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
  * 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
  * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
 
-### FastANI
+## FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
 * Completed on: 29Dec2020
@@ -279,7 +279,7 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
   * fs19cfastanioutput.out
   * fs19cfastanioutput2.out
 
-### Mash
+## QC with Mash
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
@@ -326,7 +326,7 @@ mash dist -p 1 .msh .msh > distances.tab
   * distances.tab
   * FS19Cmashdistances.xlsx
 
-### Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
+## QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
 * Completed on: 15Jan2021
 * Platform: R Studio
@@ -544,12 +544,13 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 * FS19C_mashMDS.tiff
 * qc_mds.R
 
-### Genome annotation with prokka
+## Genome annotation with prokka
 * Summary: Identify annotation reference from UniProt (E. coli pangenome) and use prokka to annotate all 95 samples.
 * Prokka publication: DOI: 10.1093/bioinformatics/btu153
 * Began on: 20Jan2021
 * Completed on:
 * Platform: Ceres, prokka_env conda environment
+
 1. Find E. coli pangenome (pan proteome) on UniProt:
   * [Escherichia coli (strain K12) (Strain: K12 / MG1655 / ATCC 47076)](https://www.uniprot.org/proteomes/UP000000625)
   * [Escherichia coli O157:H7 (Strain: O157:H7 / Sakai / RIMD 0509952 / EHEC)](https://www.uniprot.org/proteomes/UP000000558)
@@ -649,12 +650,12 @@ Get error message:
 [09:45:50] '–prefix' is not a readable non-empty FASTA file
 ```
 
-15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit, and prokka ran past the part I got stuck on in the last step. However, it didn't like how long the length of contig IDs in my fasta are, so it suggested renaming contigs or try --centre X --compliant to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
+15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit, and prokka ran past the part I got stuck on. However, it didn't like the length of contig IDs in my fasta files, so it suggested renaming contigs or try '--centre X --compliant' to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
 ```
 [10:20:41] Contig ID must <= 37 chars long: NODE_1_length_378381_cov_16.779345_pilon_pilon_pilon
 [10:20:41] Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.
 ```
-Added --centre X --compliant command line options
+I added --centre X --compliant command line options
 ```
 for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
 ```
@@ -675,7 +676,7 @@ It is working! Started around 10:30AM, finished at 11pm. All samples have a new 
   * *_pol.fasta%.fasta.tsv
   * *_pol.fasta%.fasta.txt
 
-### Pangenome analysis
+## Pangenome analysis
 * Summary: ran Roary on FS19C gff data by running in ... to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
@@ -687,5 +688,5 @@ It is working! Started around 10:30AM, finished at 11pm. All samples have a new 
 
 
 ## WGS submission to SRA
-* Must complete Biosample entry before you can complete and Bioproject entry
+* Must complete Biosample entry (which will generate biosample entry in tandem)
 * [SRA Quick Start Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submit/) and a more detailed [SRA Submission Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submitbio/)
