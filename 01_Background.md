@@ -93,6 +93,26 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 | rbsK | ribose | 10.1128/IAI.01386-07 |
 | sacH | sucrose | https://doi.org/10.1371/journal.pone.0053957 |
 
+
+## Method papers and relevant sites
+1. fastQC
+  * Github: 10.1093/bioinformatics/btw354
+  * https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+2. MultiQC DOI: 10.1093/bioinformatics/btw354
+  * Github: https://github.com/ewels/MultiQC
+  * https://multiqc.info/docs/
+3. Mash DOI: 10.1186/s13059-016-0997-x
+  * Github: https://github.com/marbl/Mash
+  * http://mash.readthedocs.org
+4. FastANI DOI: 10.1038/s41467-018-07641-9
+  * Github: https://github.com/ParBLiSS/FastANI
+5. Prokka DOI: 10.1093/bioinformatics/btu153
+  * * Github: https://github.com/tseemann/prokka
+  * Prokka for loop DOI: https://doi.org/10.3389/fvets.2020.582297
+6. Roary DOI: 10.1093/bioinformatics/btv421
+  * Github:
+
+
 ## Relevant email and other communication
 
 ```

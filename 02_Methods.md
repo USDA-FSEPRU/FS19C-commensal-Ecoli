@@ -10,7 +10,6 @@ See OneNote FS19C lab notebook entries xxx
 * KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * FS19C_metadata.xlsx
 
-
 ## Conda environments
 ### fastanienv
 * FastANI, multiqc, prokka
@@ -22,12 +21,11 @@ See OneNote FS19C lab notebook entries xxx
 ### prokka_env
 * prokka
 
-## Sequence Analysis
-### Sequence assembly
-* Summary:
+## Sequence assembly
+* Summary: QC and assemble sequences using BBMap and spades
 * Completed on:
-* Platform:
-* Commands:
+* Platform: Ceres
+
 1. Make text file replace.sh
 ```
 #usr/bin/bash
@@ -51,7 +49,6 @@ for myfile in ./*.fastq.gz; do
         ln -sr $myfile linked/$target
 done
 ```
-
 
 4. Run the follow slurm script (SRAassemblyPipeline.FS19C.SLURM_TEMPLATE)
 ```
@@ -143,9 +140,10 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 #rm REPLACE.SLURM
 ```
 
+##### Files generated
 
-### QC
-#### FastQC
+## QC
+### FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
 * Completed on: 7Jan2021
 * Platform: Ceres, slurm
@@ -168,17 +166,17 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
   #End of file
   ```
 
-* Files generated:
+##### Files generated:
   * *fastqc.zip
   * *fastqc.html
 
-#### MultiQC
+### MultiQC
 * Tutorial: https://www.youtube.com/watch?v=qPbIlO_KWN0
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94 (forgot to do this prior to sequence assembly). I did not include samples 95 and 96 in the multiqc run as I realized these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (but I would only consider  samples 1-94 from that first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
 * Completed on: 7Jan2021
-* Platform: Ceres, conda environment
-* Commands:
+* Platform: Ceres, fastanienv conda environment
 
+1. Command ran:
   ```
   salloc
   module load miniconda
@@ -188,20 +186,25 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
   conda deactivate
   ```
 
-1. Why are the plots flat plot (not interactive)?
+2. Why are the plots flat plot (not interactive)?
   * From: https://multiqc.info/docs/
   "Flat plots
   Reports with large numbers of samples may contain flat plots. These are rendered when the MultiQC report is generated using MatPlotLib and are non-interactive (flat) images within the report. The reason for generating these is that large sample numbers can make MultiQC reports very data-intensive and unresponsive (crashing people's browsers in extreme cases). Plotting data in flat images is scalable to any number of samples, however.
   Flat plots in MultiQC have been designed to look as similar to their interactive versions as possible. They are also copied to multiqc_data/multiqc_plots"
-2. I noticed the FS19all_multiqc_report.html report showed samples 95 and 96 having huge number of reads, per sequence GC content had several large peaks, and samples 95 and 96 making up the majority of the overrepresented sequences.
-3. To try to eliminate the discrepancies due to samples 95 and 96 (these two samples had so many reads as a result of re-sequencing them) and are therefore skewing the report stats, I moved samples 95 and 96 fastqc.zip to Fastqc_Sample95_96 directory, and ran multiqc to generate FS19_1-94_multiqc_report.html and FS19_1-94_data directory.
-4. multiqc report of samples 1-94 look a lot better with the sequence count ranges being a lot closer among all samples, sequence quality histograms all in green, per sequence quality scores in green, less than 1% of reads making up overrepresented sequences, and a single peak for per sequence GC content
-5. I also looked at the fastqc reports for samples 95 and 96 individually.
+
+3. I noticed the FS19all_multiqc_report.html report showed samples 95 and 96 having huge number of reads, per sequence GC content had several large peaks, and samples 95 and 96 making up the majority of the overrepresented sequences.
+
+4. To try to eliminate the discrepancies due to samples 95 and 96 (these two samples had so many reads as a result of re-sequencing them) and are therefore skewing the report stats, I moved samples 95 and 96 fastqc.zip to Fastqc_Sample95_96 directory, and ran multiqc to generate FS19_1-94_multiqc_report.html and FS19_1-94_data directory.
+
+5. multiqc report of samples 1-94 look a lot better with the sequence count ranges being a lot closer among all samples, sequence quality histograms all in green, per sequence quality scores in green, less than 1% of reads making up overrepresented sequences, and a single peak for per sequence GC content
+
+6. I also looked at the fastqc reports for samples 95 and 96 individually.
   * **95** (both reads): quality scores are green through entire position, some sequence duplication levels starting at 9, peak at >10 and ends at >500; per base sequence content is iffy from positions 1-9
   * **96** (both reads): quality scores are green through entire position, some sequence duplication levels starting at 9, peak at >10 and ends at >500; per base sequence content is iffy from positions 1-9
-6. Note: Jules says if you're able to get assemblies to work, you can be sure that the sequences' qualities are good
 
-* Files generated:
+7. Note: Jules says if you're able to get assemblies to work, you can be sure that the sequences' qualities are good
+
+##### Files generated:
  * FS19all_multiqc_report.html
  * FS19all_multiqc_data directory
  * FS19_1-94_multiqc_report.html
@@ -211,12 +214,12 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
  * 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
  * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
 
-#### FastANI
+### FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
 * Completed on: 29Dec2020
-* Platform: Ceres, conda
-* Commands ran:
+* Platform: Ceres, fastanienv conda environment
+
 1. Preparing conda environment on Ceres
 ```
 salloc
@@ -258,8 +261,6 @@ Reference genomes include:
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
   * Saved as Ecoli_O157H7_EDL933.fasta
 
-
-
 5. Moved querylist.txt and referencelist.txt to same directory and ran fastani:
 ```
 fastANI --ql querylist.txt --rl referencelist.txt -o fs19cfastanioutput.out
@@ -272,19 +273,19 @@ fastANI --ql querylist.txt --rl referencelist.txt -o fs19cfastanioutput.out
 fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 ```
 
-* Files generated:
+##### Files generated:
   * FS19CfastANIoutput.xlsx
   * FS19CfastANIoutput2.xlsx
   * fs19cfastanioutput.out
   * fs19cfastanioutput2.out
 
-#### Mash
+### Mash
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
 * Completed on: 11Jan2021
-* Platform: Ceres, conda
-* Commands ran:
+* Platform: Ceres, mashenv conda environment
+
 1. Load environment and install mash
 ```
 salloc
@@ -321,16 +322,15 @@ mash dist -p 1 .msh .msh > distances.tab
 
 4. distances.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
 
-* Files generated:
+##### Files generated:
   * distances.tab
   * FS19Cmashdistances.xlsx
 
-
-#### Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
+### Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
 * Completed on: 15Jan2021
-* Platform: R
-* Commands ran:
+* Platform: R Studio
+
 1. See scripts/qc_mds.R for details
 ```
 #####################################################################################################
@@ -538,17 +538,27 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 
 10. Next step: run prokka. I can use UnitProt pangenome E. coli to run annotation. I asked if I chould do this or run a single reference genome for annotation and Jules said I should try the pangenome method first. Will need to find the E. coli pangenome annotation (protein).
 
-#### Genome annotation
+##### Files generated:
+* fastANImashMDSheatmaps.pptx
+* FS19C_fastaniMDS.tiff
+* FS19C_mashMDS.tiff
+* qc_mds.R
+
+### Genome annotation with prokka
 * Summary: Identify annotation reference from UniProt (E. coli pangenome) and use prokka to annotate all 95 samples.
+* Prokka publication: DOI: 10.1093/bioinformatics/btu153
 * Began on: 20Jan2021
 * Completed on:
-* Platform:
+* Platform: Ceres, prokka_env conda environment
 1. Find E. coli pangenome (pan proteome) on UniProt:
   * [Escherichia coli (strain K12) (Strain: K12 / MG1655 / ATCC 47076)](https://www.uniprot.org/proteomes/UP000000625)
   * [Escherichia coli O157:H7 (Strain: O157:H7 / Sakai / RIMD 0509952 / EHEC)](https://www.uniprot.org/proteomes/UP000000558)
+
 2. Read Prokka paper
   * DOI: 10.1093/bioinformatics/btu153
+
 3. Find prokka github page: https://github.com/tseemann/prokka
+
 4. install prokka in fastanienv conda environment on Ceres in FS19C/polished_genomes_100X
 ```
 salloc
@@ -560,6 +570,7 @@ prokka #this test didn't work...
   * How else to install and run prokka on conda??
   * See https://github.com/tseemann/prokka/issues/448
   * Try this: https://github.com/tseemann/prokka/issues/508
+
 5. (21Jan2021) Tried the following commands based on [this issues page](https://github.com/tseemann/prokka/issues/508) on Ceres to remove prokka_env, make new prokka_env with different way of installing prokka. It works!
 ```
 conda env remove --name prokka_env #remove prokka_env and try it again with the next command
@@ -574,23 +585,29 @@ prokka --listdb
 #HMMs: HAMAP
 #CMs: Archaea Bacteria Viruses
 ```
+
 6. Made a new directory polishedgenomesprokka/, copied fasta files from polished_genomes_100X to this directory, renamed .fasta to .fna
 ```
 rename .fasta .fna *.fasta
 ```
+
 7. Download [E. coli strain K12 proteome (fasta)](https://www.uniprot.org/proteomes/UP000000625) - Try this annotation first.
+
 8. Need to ask Jules what kind of fasta file do I need to use for annotation first. The fasta file I have doesn't have the ~~~ symbols that prokka says is needed for annotation tag formats: https://github.com/tseemann/prokka/blob/master/README.md#fasta-database-format
+
 9. (22Jan2021) At lab meeting, Jules recommended not spending too much time finding the "perfect" annotation (custom or publicly-available ones) because there will always be something missing. Instead, find annotations that have the genes you want. So I looked up what genes the project plan had mentioned (see 01_Background) and came up with this list:
   * EA utilization, eut operon for utilization ethanolamine as a nitrogen source (see project plan)
   * genes involved in utilizing the following carbon/sugar substrates: glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate.
 	* bacteriocins
   * Look up papers from project plan, record in 01_Background.md, read and find exact gene or operon names
+
 10. (27Jan2021)  Look through UniProt for metabolic pathway genomes
   * Complete list: ethanolamine, glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuronate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine, N-acetylneuraminate, sialic acid and D-gluconate
   * List of substrate-related genes not in [Escherichia coli K12 substr. MG1655 EMBL file](https://www.ebi.ac.uk/ena/browser/view/U00096): missing N-acetylgalactosamine
       * File: U00096.3.txt
   * List of substrate-related genes not in [Escherichia coli O157:H7 str. Sakai EMBL file](https://www.ebi.ac.uk/ena/browser/view/BA000007): it has genes related to all substrates (not sure if the complete metabolic pathways are present for each substrate, but there are proteins associated with all these substrates)
       * File: BA000007.3.txt
+
 11. Looked through each EMBL file and print out all proteins associated with each of the substrates:
   * Escherichia coli O157:H7 str. Sakai
     ```
@@ -600,14 +617,16 @@ rename .fasta .fna *.fasta
     ```
     grep -f carbohydratelist.txt U00096.3.txt > completecarblistK12.txt
     ```
+
 12. Compared the two files and printed out genes unique to each strains
   ```
   comm -1 -3 completecarblistO157H7.txt completecarblistK12.txt > genesnotpresentinO157H7.txt #not present in O157H7
   comm -1 -3 completecarblistK12.txt completecarblistO157H7.txt > genesnotpresentinK12.txt
   ```
+
 13. So, at least one of the strains' proteomes have genes associated with each of the metabolites listed in OSQR plan. I will also go through review papers referenced in OSQR plan to see what other genes to include.
  * Maltby et al.: EMBL files missing glucuronate, galacuronate; however, based on a paper referenced by Maltby et al., glucoronate, galacuronate, and hexuronate are one sugar
- *    
+
 14. (28Jan2021) Decide to run prokka on Ceres using the for loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
 ```
 salloc
@@ -629,6 +648,7 @@ Get error message:
 [09:45:50] Annotating as >>> Bacteria <<<
 [09:45:50] '–prefix' is not a readable non-empty FASTA file
 ```
+
 15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit, and prokka ran past the part I got stuck on in the last step. However, it didn't like how long the length of contig IDs in my fasta are, so it suggested renaming contigs or try --centre X --compliant to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
 ```
 [10:20:41] Contig ID must <= 37 chars long: NODE_1_length_378381_cov_16.779345_pilon_pilon_pilon
@@ -640,7 +660,30 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 ```
 It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
-16. (29Jan2021) Read Roary paper and look up how to run roary
+#### Files generated (for each isolate):
+* *_pol.fasta%.fasta_prokka/
+  * *_pol.fasta%.fasta.err
+  * *_pol.fasta%.fasta.faa
+  * *_pol.fasta%.fasta.ffn
+  * *_pol.fasta%.fasta.fna
+  * *_pol.fasta%.fasta.fsa
+  * *_pol.fasta%.fasta.gbk
+  * *_pol.fasta%.fasta.gff
+  * *_pol.fasta%.fasta.log
+  * *_pol.fasta%.fasta.sqn
+  * *_pol.fasta%.fasta.tbl
+  * *_pol.fasta%.fasta.tsv
+  * *_pol.fasta%.fasta.txt
+
+### Pangenome analysis
+* Summary: ran Roary on FS19C gff data by running in ... to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
+* Roary publication DOI: 10.1093/bioinformatics/btv421
+* Began on: 29Jan2021
+* Platform: Ceres
+
+1. Notes from Roary publication
+  * pass in the flag '-e' to get multi-fasta file to use with RAxML or FastTree to generate phylogenetic tree based on SNPs in core genes. The file you want for those applications is called *core_gene_alignment.aln*. This flag also generates *pan_genome_reference.fa* file
+  *
 
 
 ## WGS submission to SRA
