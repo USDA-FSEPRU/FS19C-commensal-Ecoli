@@ -250,29 +250,29 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 **4Dec2020**
 1. Previous jobs ran successfully. Submitted the following jobs to slurm:
 * 71-427FED.slurm: Submitted batch job 5307961
-• 72-428FEC.slurm: Submitted batch job 5307963
-• 73-428FED.slurm: Submitted batch job 5307964
-• 74-429FEC.slurm: Submitted batch job 5307965
-• 75-429FED.slurm: Submitted batch job 5307966
-• 76-430FEC.slurm: Submitted batch job 5307978
-• 77-430FED.slurm: Submitted batch job 5307979
-• 78-431FEC.slurm: Submitted batch job 5307980
-• 79-431FED.slurm: Submitted batch job 5307981
-• 80-432FEC.slurm: Submitted batch job 5307982
-• 81-432FED.slurm: Submitted batch job 5307984
-• 82-433FEC.slurm: Submitted batch job 5308053
-• 83-433FED.slurm: Submitted batch job 5308054
-• 84-434FEC.slurm: Submitted batch job 5308056
-• 85-434FED.slurm: Submitted batch job 5308057
-• 86-435FEC.slurm: Submitted batch job 5308058
-• 87-435FED.slurm: Submitted batch job 5308059
-• 88-436FEC.slurm: Submitted batch job 5308060
-• 89-436FED.slurm: Submitted batch job 5308061
-• 90-437FED.slurm: Submitted batch job 5308062
-• 91-438FEC.slurm: Submitted batch job 5308063
-• 92-438FED.slurm: Submitted batch job 5308064
-• 93-439FEC.slurm: Submitted batch job 5308065
-• 95-440FED.slurm: Submitted batch job 5308067
+* 72-428FEC.slurm: Submitted batch job 5307963
+* 73-428FED.slurm: Submitted batch job 5307964
+* 74-429FEC.slurm: Submitted batch job 5307965
+* 75-429FED.slurm: Submitted batch job 5307966
+* 76-430FEC.slurm: Submitted batch job 5307978
+* 77-430FED.slurm: Submitted batch job 5307979
+* 78-431FEC.slurm: Submitted batch job 5307980
+* 79-431FED.slurm: Submitted batch job 5307981
+* 80-432FEC.slurm: Submitted batch job 5307982
+* 81-432FED.slurm: Submitted batch job 5307984
+* 82-433FEC.slurm: Submitted batch job 5308053
+* 83-433FED.slurm: Submitted batch job 5308054
+* 84-434FEC.slurm: Submitted batch job 5308056
+* 85-434FED.slurm: Submitted batch job 5308057
+* 86-435FEC.slurm: Submitted batch job 5308058
+* 87-435FED.slurm: Submitted batch job 5308059
+* 88-436FEC.slurm: Submitted batch job 5308060
+* 89-436FED.slurm: Submitted batch job 5308061
+* 90-437FED.slurm: Submitted batch job 5308062
+* 91-438FEC.slurm: Submitted batch job 5308063
+* 92-438FED.slurm: Submitted batch job 5308064
+* 93-439FEC.slurm: Submitted batch job 5308065
+* 95-440FED.slurm: Submitted batch job 5308067
 
 2. 95 did not assemble as expected because Mike Baker said for samples 95 and 96, they could not get any sequences.
 
@@ -337,10 +337,16 @@ mv 96-441FEC_2.fastq.gz 96-441FEC_2_old.fastq.gz
 ls -v *pol.fasta > polishedfasta.txt
 ```
 
-##### Files generated:
+##### Files/directories generated (for each isolate if indicated with a '*')
 * polishedfasta.txt
 * *_1.fastq.gz
 * *_2.fastq.gz
+* *_pol.fasta
+* *.slurm
+* *.names
+* *_covstats.txt
+* *.fasta
+* *_spades_out/
 
 ## QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
@@ -366,7 +372,7 @@ ls -v *pol.fasta > polishedfasta.txt
   #End of file
   ```
 
-##### Files generated:
+##### Files generated (for each isolate):
   * *fastqc.zip
   * *fastqc.html
 
@@ -738,7 +744,9 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 
 9. I ran qc_mds.R script with the corrections and saw that there weren't any obvious outliers, like what Jules had hinted when he ran the code on his end.
 
-10. Next step: run prokka. I can use UnitProt pangenome E. coli to run annotation. I asked if I chould do this or run a single reference genome for annotation and Jules said I should try the pangenome method first. Will need to find the E. coli pangenome annotation (protein).
+10. (22Jan2021) At microbe meeting, Crystal pointed out that it's good we're seeing some differences of the commensal isolates (like isolates collected from EDL933 group cluster separately from EDL933 isolate) from the STEC isolates in this plot. Regardless of whether we do find any differences in metabolic genes or not, there are other differences we can explore too.
+
+11. Next step: run prokka. I can use UnitProt pangenome E. coli to run annotation. I asked if I chould do this or run a single reference genome for annotation and Jules said I should try the pangenome method first. Will need to find the E. coli pangenome annotation (protein).
 
 ##### Files generated:
 * fastANImashMDSheatmaps.pptx
@@ -861,6 +869,7 @@ I added --centre X --compliant command line options
 ```
 for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
 ```
+
 16. It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
 #### Files generated (for each isolate):
@@ -882,6 +891,7 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 * Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
+* Completed on: 1Feb2021
 * Platform: Ceres
 
 1. Notes from Roary publication (including supplemental info)
@@ -925,7 +935,7 @@ sbatch roary.slurm
 Submitted batch job 5495686
 ```
 
-6. (1Feb2021) Job didn't finish because my job reached the time limit of the partition: short partition for 48 hours. Job got cancelled. I will need to re-run roary using a partition with longer simulation time (medium, 7 days). I will move the 1st roary run's output to a folder "uncompletedroary29Jan2021". I also emailed Jules to ask about how to know how much of each resource from Ceres to use for a job.
+6. (1Feb2021) Job didn't finish because my job reached the time limit of the partition: short partition for 48 hours. Job got cancelled. I will need to re-run roary using a partition with longer simulation time (medium, 7 days). I emailed Jules to ask about how to know how much of each resource from Ceres to use for a job.
 
 7. Jules asked what command I used with roary, so I sent him my slurm script. After looking through, he says my initial resource request should be more than enough. The problem is I'm not telling roary to use more than one cpu/core/thread. Check out roary documentation to see how to tell roary to use more than one processor/thread. I looked up and found an option to include:
 ```
@@ -957,11 +967,30 @@ Submitted batch job 5507099
 
 10. Job ran from 10:24am to 1:10pm and completed! Copied `roary_output` directory to local desktop
 ```
-scp -r ceres:~/project/fsepru/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/roary_output ./
+scp -r ceres:~/fsepru_kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/roary_output ./
 ```
 
-
-
+#### Files generated:
+* accessory.header.embl			
+* core_alignment_header.embl
+* accessory.tab				
+* core_gene_alignment.aln
+* accessory_binary_genes.fa		
+* gene_presence_absence.Rtab
+* accessory_binary_genes.fa.newick
+* gene_presence_absence.csv
+* accessory_graph.dot			
+* number_of_conserved_genes.Rtab
+* blast_identity_frequency.Rtab		
+* number_of_genes_in_pan_genome.Rtab
+* clustered_proteins			
+* number_of_new_genes.Rtab
+* core_accessory.header.embl		
+* number_of_unique_genes.Rtab
+* core_accessory.tab			
+* pan_genome_reference.fa
+* core_accessory_graph.dot		
+* summary_statistics.txt
 
 
 
