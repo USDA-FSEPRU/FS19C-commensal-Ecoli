@@ -7,7 +7,7 @@ Written summary of sequence analyses methods performed on FS19C samples 1-96 in 
 * **14May2020** DNA extraction of isolates #25-48 using DNeasy Blood and Tissue Kit
 * **21May2020** DNA extraction of isolates #49-72 using DNeasy Blood and Tissue Kit
 * **28May2020** DNA extraction of isolates #73-96 using DNeasy Blood and Tissue Kit
-* List of samples that need to re-extract DNA: 28May2020, 29May2020, 3June2020, 11June2020
+* Lists of samples had additional DNA re-extractions found on entries: 28May2020, 29May2020, 3June2020, 11June2020
 * **11June2020** Submission of FS19C 96-well plate of E. coli isolates 1-96 DNA to David Alt for NovaSeq sequencing.
 
 ### Additional files of importance
