@@ -23,7 +23,8 @@ See OneNote FS19C lab notebook entries xxx
 
 ## Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
-* Completed on:
+* Began on: 16Sept2020
+* Completed on: 18Dec2020
 * Platform: Ceres
 
 1. Make text file replace.sh
@@ -145,6 +146,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 
 ## QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
+* Began on: 6Jan2021
 * Completed on: 7Jan2021
 * Platform: Ceres, slurm
 * fastqc.batch slurm script (aka fastqc.slurm):
@@ -173,7 +175,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 ## QC with MultiQC
 * Tutorial: https://www.youtube.com/watch?v=qPbIlO_KWN0
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94 (forgot to do this prior to sequence assembly). I did not include samples 95 and 96 in the multiqc run as I realized these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (but I would only consider  samples 1-94 from that first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
-* Completed on: 7Jan2021
+* Began and Completed on: 7Jan2021
 * Platform: Ceres, fastanienv conda environment
 
 1. Command ran:
@@ -217,7 +219,8 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 ## QC with FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
-* Completed on: 29Dec2020
+* Began on: 28Dec2020
+* Completed on: 11Jan2021
 * Platform: Ceres, fastanienv conda environment
 
 1. Preparing conda environment on Ceres
@@ -283,7 +286,7 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
-* Completed on: 11Jan2021
+* Began and Completed on: 11Jan2021
 * Platform: Ceres, mashenv conda environment
 
 1. Load environment and install mash
@@ -328,6 +331,7 @@ mash dist -p 1 .msh .msh > distances.tab
 
 ## QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
+* Began on: 14Jan2021
 * Completed on: 15Jan2021
 * Platform: R Studio
 
@@ -548,7 +552,7 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 * Summary: Identify annotation reference from UniProt (E. coli pangenome) and use prokka to annotate all 95 samples.
 * Prokka publication: DOI: 10.1093/bioinformatics/btu153
 * Began on: 20Jan2021
-* Completed on:
+* Completed on: 28Jan2021
 * Platform: Ceres, prokka_env conda environment
 
 1. Find E. coli pangenome (pan proteome) on UniProt:
@@ -721,6 +725,36 @@ roary -f ./roary_output -e -n -v *.gff
 ```
 sbatch roary.slurm
 Submitted batch job 5495686
+```
+
+6. (1Feb2021) Job didn't finish because my job reached the time limit of the partition: short partition for 48 hours. Job got cancelled. I will need to re-run roary using a partition with longer simulation time (medium, 7 days). I will move the 1st roary run's output to a folder "uncompletedroary29Jan2021". I also emailed Jules to ask about how to know how much of each resource from Ceres to use for a job.
+
+7. Jules asked what command I used with roary, so I sent him my slurm script. After looking through, he says my initial resource request should be more than enough. The problem is I'm not telling roary to use more than one cpu/core/thread. Check out roary documentation to see how to tell roary to use more than one processor/thread. I looked up and found an option to include:
+```
+roary -f ./roary_output -e -n -v -p 16 *.gff
+```
+
+8. Modified roary.slurm script to the following:
+```
+#!/bin/bash
+#SBATCH --job-name=roary                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                   # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                     # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+module load roary
+roary -f ./roary_output -e -n -v -p 16 *.gff
+#End of file
+```
+
+9. Submitted job on SLURM
+```
+sbatch roary.slurm
+Submitted batch job 5507099
 ```
 
 ## WGS submission to SRA
