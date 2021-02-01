@@ -96,6 +96,7 @@
 * Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
 * KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
+* FS19C 96 S-S+ E. coli gDNA gels.pdf
 
 ## Files I need to add in Files directory
 * querylist.txt (genome assembly)

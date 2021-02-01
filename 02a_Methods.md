@@ -134,7 +134,7 @@ Basically PATH is a bash variable of colon delimited paths, so you need to add t
 
 8. Need to parse through Jules' script
 
-## 15Sept2020 - 2020: Practice bbmap scripts on 4 FS19C E. coli isolates to determine whether to run with 100X or 250X coverage assemblies
+## 15Sept2020 - 30Oct2020: Practice bbmap scripts on 4 FS19C E. coli isolates to determine whether to run with 100X or 250X coverage assemblies
 
 **15Sept2020**
 1. Got email from Darrell that NovaSeq data is available. I am downloading to local computer.
@@ -1144,26 +1144,26 @@ An important thing to look at from the “Evaluation” section is the file outp
 36. Copy/move slurm template files and `SampleID_temp.fq.gz` to `FS19C_4Samples250X` directory or `FS19C_4Samples100X` directory
 
 37. Edit slurm template files:
-  * Comment out 1st `reformat.sh` command
-	* `reformat.sh`:
-	 * 100X: sbt=600000000
-	 * 250X: sbt 600000000*250=1500000000
-	* `spades.py`:
-	 * 100X: `-o SampleID_6Mb_100X_spades_out`
-	 * 250X: `-o SampleID_6Mb_250X_spades_out`
-	* `bbmap.sh`:
-	 * 100X: `ref=SampleID_6Mb_100X_spades_out/scaffolds.fasta, covstats=SampleID_6Mb_100X_covstats.txt`
-	 * 250X: `ref=SampleID_6Mb_250X_spades_out/scaffolds.fasta, covstats=SampleID_6Mb_250X_covstats.txt`
+* Comment out 1st `reformat.sh` command
+* `reformat.sh`:
+  * 100X: sbt=600000000
+	* 250X: sbt 600000000*250=1500000000
+* `spades.py`:
+  * 100X: `-o SampleID_6Mb_100X_spades_out`
+  * 250X: `-o SampleID_6Mb_250X_spades_out`
+* `bbmap.sh`:
+  * 100X: `ref=SampleID_6Mb_100X_spades_out/scaffolds.fasta, covstats=SampleID_6Mb_100X_covstats.txt`
+  * 250X: `ref=SampleID_6Mb_250X_spades_out/scaffolds.fasta, covstats=SampleID_6Mb_250X_covstats.txt`
 
 38. Completed slurm template file editing for 100X, 250X of the following, with notes:
-	* 1-428
-	* 20-427FEC
-	 * 100X (I used the repaired `temp.fq.gz` file, not the original)
-	 * 250X
+* 1-428
+* 20-427FEC
+  * 100X (I used the repaired `temp.fq.gz` file, not the original)
+  * 250X
 	  * Try `repair.sh` with rest of script
 		* `repair.sh in=20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair`
-	* 94-439FED
-  * 96-441FEC
+* 94-439FED
+* 96-441FEC
 
 **27Oct2020** Run jobs on slurm
 1. 1-428RN3A 100X
@@ -1182,7 +1182,8 @@ Submitted batch job 5203622
 ```
 Submitted batch job 5203618
 ```
-  * Got the same warnings as before even with new repair.sh
+
+4. Got the same warnings as before even with new `repair.sh`
 ```
     	=== Error correction and assembling warnings:
 			 * 0:00:33.273   159M / 11G   WARN    General                 (pair_info_count.cpp       : 341)   Unable to estimate insert size for paired library #0
@@ -1194,7 +1195,8 @@ Submitted batch job 5203618
 ```
 Submitted batch job 5203623
 ```
-  * Got the same warnings as before even with new `repair.sh`
+
+5. Got the same warnings as before even with new `repair.sh`
 ```
 		=== Error correction and assembling warnings:
 		 * 0:00:32.863   162M / 11G   WARN    General                 (pair_info_count.cpp       : 341)   Unable to estimate insert size for paired library #0
@@ -1202,29 +1204,318 @@ Submitted batch job 5203623
 		 * 0:00:32.865   162M / 11G   WARN    General                 (repeat_resolving.cpp      :  63)   Insert size was not estimated for any of the paired libraries, repeat resolution module will not run.
 ```
 
-5. 94-439FED 100X
-		a. 100X
-			i. Submitted batch job 5203619
-			ii. Looked at stderr, assembly was successful
-		b. 250X
-			i. Submitted batch job 5203626
-			ii. Looked at stderr, assembly was successful
-	4. 96-441FEC
-		a. 100X
-			i. Submitted batch job 5203621
-			ii. Looked at stderr, assembly unsuccessful
-		b. 250X
-			i. Submitted batch job 5203628
-			ii. Looked at stderr, assembly unsuccessful
-2. Run stats.sh for samples 1 and 94
-	1. Make copy of slurm files, rename as SampleID.6Mb.stats.slurm, comment all scripts, add stats.sh in=scaffolds.fasta, run on slurm
-		a. 1-428RN3A
-			i. 100X
-				1) Submitted batch job 5204491
-			ii. 250X
-				1) Submitted batch job 5204494
-		b. 94-439FED
-			i. 100X
-				1) Submitted batch job 5204492
-			ii. 250X
-				1) Submitted batch job 5204493
+6. 94-439FED 100X
+  * Submitted batch job 5203619
+  * Looked at stderr, assembly was successful
+
+7. 94-439FED 250X
+  * Submitted batch job 5203626
+  * Looked at stderr, assembly was successful
+
+8. 96-441FEC 100X
+  * Submitted batch job 5203621
+  * Looked at stderr, assembly unsuccessful
+
+9. 96-441FEC 250X
+  * Submitted batch job 5203628
+  * Looked at stderr, assembly unsuccessful
+
+10. Run `stats.sh` for samples 1 and 94. Make copy of slurm files, rename as `SampleID.6Mb.stats.slurm`, comment all scripts, add `stats.sh in=scaffolds.fasta`, run on slurm
+
+11. 1-428RN3A 100X: Submitted batch job 5204491
+
+12. 1-428RN3A 250X: Submitted batch job 5204494
+
+13. 94-439FED 100X: Submitted batch job 5204492
+
+14. 94-439FED 250X: Submitted batch job 5204493
+
+**28Oct2020**
+1. Re-run 250X!! Set the sbt to wrong value (I had set it at 150000000000 when it should be 1500000000). Add `stats.sh` with input from spades_output folder
+2. Run jobs on slurm
+  * 1-428RN3A 250X: Submitted batch job 5213903
+  * 20-427FEC 250X: Submitted batch job 5215138
+  * 94-439FED 250X: Submitted batch job 5213905
+  * 96-441FEC 250X: Submitted batch job 5213906
+3. Compare stats.sh of 1-428RN3A 100X and 250X
+  * 100X
+```
+		A       C       G       T       N       IUPAC   Other   GC      GC_stdev
+		0.2468  0.2558  0.2504  0.2469  0.0001  0.0000  0.0000  0.5062  0.0809
+
+		Main genome scaffold total:             275
+		Main genome contig total:               279
+		Main genome scaffold sequence total:    5.104 MB
+		Main genome contig sequence total:      5.103 MB        0.008% gap
+		Main genome scaffold N/L50:             10/133.539 KB
+		Main genome contig N/L50:               11/133.539 KB
+		Main genome scaffold N/L90:             39/24.344 KB
+		Main genome contig N/L90:               41/23.661 KB
+		Max scaffold length:                    624.593 KB
+		Max contig length:                      624.593 KB
+		Number of scaffolds > 50 KB:            26
+		% main genome in scaffolds > 50 KB:     80.67%
+
+		Minimum         Number          Number          Total           Total           Scaffold
+		Scaffold        of              of              Scaffold        Contig          Contig
+		Length          Scaffolds       Contigs         Length          Length          Coverage
+		--------        --------------  --------------  --------------  --------------  --------
+		    All                    275             279       5,103,702       5,103,302    99.99%
+		    100                    275             279       5,103,702       5,103,302    99.99%
+		    250                    217             221       5,092,354       5,091,954    99.99%
+		    500                    167             171       5,075,206       5,074,806    99.99%
+		   1 KB                    126             130       5,047,527       5,047,127    99.99%
+		 2.5 KB                     81              85       4,972,451       4,972,051    99.99%
+		   5 KB                     67              71       4,922,488       4,922,088    99.99%
+		  10 KB                     56              60       4,845,791       4,845,391    99.99%
+		  25 KB                     38              42       4,578,560       4,578,160    99.99%
+		  50 KB                     26              27       4,117,150       4,117,050   100.00%
+		 100 KB                     16              17       3,320,408       3,320,308   100.00%
+		 250 KB                      4               5       1,646,796       1,646,696    99.99%
+		 500 KB                      1               1         624,593         624,593   100.00%
+```
+
+  * 250X
+```
+		A       C       G       T       N       IUPAC   Other   GC      GC_stdev
+		0.2472  0.2543  0.2520  0.2465  0.0001  0.0000  0.0000  0.5063  0.0811
+
+		Main genome scaffold total:             267
+		Main genome contig total:               271
+		Main genome scaffold sequence total:    5.102 MB
+		Main genome contig sequence total:      5.102 MB        0.006% gap
+		Main genome scaffold N/L50:             9/144.648 KB
+		Main genome contig N/L50:               10/144.648 KB
+		Main genome scaffold N/L90:             37/24.344 KB
+		Main genome contig N/L90:               39/24.315 KB
+		Max scaffold length:                    624.593 KB
+		Max contig length:                      624.593 KB
+		Number of scaffolds > 50 KB:            26
+		% main genome in scaffolds > 50 KB:     82.63%
+
+		Minimum         Number          Number          Total           Total           Scaffold
+		Scaffold        of              of              Scaffold        Contig          Contig
+		Length          Scaffolds       Contigs         Length          Length          Coverage
+		--------        --------------  --------------  --------------  --------------  --------
+		    All                    267             271       5,101,927       5,101,617    99.99%
+		    100                    267             271       5,101,927       5,101,617    99.99%
+		    250                    215             219       5,091,839       5,091,529    99.99%
+		    500                    164             168       5,074,020       5,073,710    99.99%
+		   1 KB                    123             127       5,046,376       5,046,066    99.99%
+		 2.5 KB                     80              84       4,974,532       4,974,222    99.99%
+		   5 KB                     65              69       4,921,799       4,921,489    99.99%
+		  10 KB                     53              57       4,838,375       4,838,065    99.99%
+		  25 KB                     36              40       4,587,442       4,587,132    99.99%
+		  50 KB                     26              28       4,215,872       4,215,762   100.00%
+		 100 KB                     16              17       3,425,646       3,425,546   100.00%
+		 250 KB                      5               6       1,902,738       1,902,638    99.99%
+		 500 KB                      1               1         624,593         624,593   100.00%
+```
+
+4. Conclusion: more # contigs and scaffolds for 100X, smaller contig and scaffold length by 2000bp for 100X, higher N50 scaffold and N50 contig value (133KB at 100X, 144KB at 250X)
+
+5. Compare 94-439FED 100X to 250X
+  * 100X
+```
+		A       C       G       T       N       IUPAC   Other   GC      GC_stdev
+		0.2467  0.2536  0.2534  0.2464  0.0001  0.0000  0.0000  0.5069  0.0688
+
+		Main genome scaffold total:             326
+		Main genome contig total:               334
+		Main genome scaffold sequence total:    5.571 MB
+		Main genome contig sequence total:      5.570 MB        0.014% gap
+		Main genome scaffold N/L50:             16/93.761 KB
+		Main genome contig N/L50:               16/93.761 KB
+		Main genome scaffold N/L90:             62/16.697 KB
+		Main genome contig N/L90:               64/13.684 KB
+		Max scaffold length:                    378.381 KB
+		Max contig length:                      378.381 KB
+		Number of scaffolds > 50 KB:            34
+		% main genome in scaffolds > 50 KB:     74.03%
+
+		Minimum         Number          Number          Total           Total           Scaffold
+		Scaffold        of              of              Scaffold        Contig          Contig
+		Length          Scaffolds       Contigs         Length          Length          Coverage
+		--------        --------------  --------------  --------------  --------------  --------
+		    All                    326             334       5,571,139       5,570,339    99.99%
+		    100                    326             334       5,571,139       5,570,339    99.99%
+		    250                    300             308       5,566,038       5,565,238    99.99%
+		    500                    260             268       5,550,988       5,550,188    99.99%
+		   1 KB                    189             197       5,501,396       5,500,596    99.99%
+		 2.5 KB                    117             125       5,377,588       5,376,788    99.99%
+		   5 KB                     92              96       5,283,973       5,283,573    99.99%
+		  10 KB                     73              77       5,151,706       5,151,306    99.99%
+		  25 KB                     52              53       4,807,292       4,807,192   100.00%
+		  50 KB                     34              35       4,124,425       4,124,325   100.00%
+		 100 KB                     14              15       2,616,146       2,616,046   100.00%
+		 250 KB                      1               1         378,381         378,381   100.00%
+```
+
+  * 250X
+```
+		A       C       G       T       N       IUPAC   Other   GC      GC_stdev
+		0.2466  0.2542  0.2527  0.2465  0.0001  0.0000  0.0000  0.5069  0.0708
+
+		Main genome scaffold total:             335
+		Main genome contig total:               343
+		Main genome scaffold sequence total:    5.573 MB
+		Main genome contig sequence total:      5.573 MB        0.014% gap
+		Main genome scaffold N/L50:             16/93.761 KB
+		Main genome contig N/L50:               16/93.761 KB
+		Main genome scaffold N/L90:             63/13.887 KB
+		Main genome contig N/L90:               65/12.226 KB
+		Max scaffold length:                    378.381 KB
+		Max contig length:                      378.381 KB
+		Number of scaffolds > 50 KB:            34
+		% main genome in scaffolds > 50 KB:     74.21%
+
+		Minimum         Number          Number          Total           Total           Scaffold
+		Scaffold        of              of              Scaffold        Contig          Contig
+		Length          Scaffolds       Contigs         Length          Length          Coverage
+		--------        --------------  --------------  --------------  --------------  --------
+		    All                    335             343       5,573,384       5,572,584    99.99%
+		    100                    335             343       5,573,384       5,572,584    99.99%
+		    250                    304             312       5,567,328       5,566,528    99.99%
+		    500                    265             273       5,552,569       5,551,769    99.99%
+		   1 KB                    189             197       5,498,877       5,498,077    99.99%
+		 2.5 KB                    118             126       5,376,710       5,375,910    99.99%
+		   5 KB                     95              99       5,291,456       5,291,056    99.99%
+		  10 KB                     72              76       5,128,699       5,128,299    99.99%
+		  25 KB                     51              52       4,790,007       4,789,907   100.00%
+		  50 KB                     34              35       4,135,964       4,135,864   100.00%
+		 100 KB                     14              15       2,627,630       2,627,530   100.00%
+		 250 KB                      1               1         378,381         378,381   100.00%
+```
+
+6. Conclusion: less # contigs and scaffolds for 100X, smaller contig and scaffold length by 2000bp for 100X, exact same N50 contig and scaffold value for 100X and 250X (93.761KB); higher N90 scaffold and N90 contig value for 100X
+
+7. Look at covstats.txt for 1-428RN3A, 94-439FED 100X and 250X
+
+8. Examined and highlighted in red any of the contigs with lower than 90% coverage. Is that a good cutoff? How to remove those contigs?
+
+9. Compared 100X and 250X. Go over the main genome scaffold N/L50, main genome contig N/L50, Main genome scaffold N/L90, main genome contig N/L90, Number of contigs (all), number of scaffolds (all), Total scaffold length (all), Total contig length (all)
+
+10. Make notes on what to discuss with Jules
+  * Your decision tree
+	* Sample 20 didn't work when I tried repair.sh
+	* For the Rscript line, what did he mean by " length weighted average coverage of the longest 10 contigs". Is that the N90 statistic?
+	* Would like to try these extra scripts too.
+
+11. Was reviewing 20-427FEC slurm scripts and wondered if I ran the repaired version of the fq.gz file through the rest of the pipeline. I don't think I did, so I re-ran the following (Submitted batch job 5228580, 5228583):
+
+```
+#convert to interleaved
+reformat.sh in1=20-427FEC_1.fastq.gz in2=20-427FEC_2.fastq.gz out=2nd20-427FEC.fq.gz
+ln -s 2nd20-427FEC.fq.gz 20-427FEC_temp.fq.gz
+
+#diagnose interleaving
+#bbsplitpairs.sh in=old_20-427FEC.fq.gz out=fixedint.20-427FEC.fq.gz outs=intsingletons.20-427FEC.fq.gz minlen=70 fint
+repair.sh in=2nd20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=repair_singletons.20-427FEC.fq.gz repair
+
+#Trim adapters.  Optionally, reads with Ns can be discarded by adding "maxns=0" and reads with really low average quality can be discarded with "maq=8".
+bbduk.sh in=20-427FEC_temp.fq.gz out=20-427FEC_trimmed.fq.gz ktrim=r k=23 mink=11 hdist=1 tbo tpe minlen=70 ref=/home/kathy.mou/software/bbmap/resources/adapters.fa ftm=5 ordered interleaved=t
+rm 20-427FEC_temp.fq.gz; ln -s 20-427FEC_trimmed.fq.gz 20-427FEC_temp.fq.gz
+
+#Remove synthetic artifacts and spike-ins by kmer-matching.
+bbduk.sh in=20-427FEC_temp.fq.gz out=20-427FEC_filtered.fq.gz k=31 ref=/home/kathy.mou/software/bbmap/resources/sequencing_artifacts.fa.gz,/home/kathy.mou/software/bbmap/resources/phix174_ill.ref.fa.gz ordered cardinality interleaved=t
+rm 20-427FEC_temp.fq.gz; ln -s 20-427FEC_filtered.fq.gz 20-427FEC_temp.fq.gz
+
+#subsample to approx 100x
+reformat.sh in=20-427FEC_temp.fq.gz sbt=600000000 out=20-427FEC_subsamp.fq.gz interleaved=t
+rm 20-427FEC_temp.fq.gz; ln -s 20-427FEC_subsamp.fq.gz 20-427FEC_temp.fq.gz
+
+#Error-correct phase 1
+bbmerge.sh in=20-427FEC_temp.fq.gz out=20-427FEC_ecco.fq.gz ecco mix vstrict ordered interleaved=t
+rm 20-427FEC_temp.fq.gz; ln -s 20-427FEC_ecco.fq.gz 20-427FEC_temp.fq.gz
+
+#Error-correct phase 2
+clumpify.sh in=20-427FEC_temp.fq.gz out=20-427FEC_eccc.fq.gz ecc passes=4 reorder interleaved=t
+rm 20-427FEC_temp.fq.gz; ln -s 20-427FEC_eccc.fq.gz 20-427FEC_temp.fq.gz
+
+#Error-correct phase 3
+#Low-depth reads can be discarded here with the "tossjunk", "tossdepth", or "tossuncorrectable" flags.
+#For very large datasets, "prefilter=1" or "prefilter=2" can be added to conserve memory.
+tadpole.sh in=20-427FEC_temp.fq.gz out=20-427FEC_ecct.fq.gz ecc k=62 ordered tossjunk=t interleaved=t
+rm 20-427FEC_temp.fq.gz; ln -s 20-427FEC_ecct.fq.gz 20-427FEC_temp.fq.gz
+
+#Assemble with Spades
+spades.py --12 20-427FEC_ecct.fq.gz -o 20-427FEC_6Mb_100X_spades_out --only-assembler -t 16 -m 32 -k 25,55,95,125
+
+# --- Evaluation ---
+
+#Calculate the coverage distribution, and capture reads that did not make it into the assembly
+bbmap.sh in=20-427FEC_subsamp.fq.gz ref=20-427FEC_6Mb_100X_spades_out/scaffolds.fasta nodisk covstats=20-427FEC_6Mb_100X_covstats.txt maxindel=200 minid=90 qtrim=10 untrim ambig=all interleaved=t
+
+#calculate stats
+stats.sh in=20-427FEC_6Mb_100X_spades_out/scaffolds.fasta
+```
+
+12. I got the same error messages.
+
+**29Oct2020** Met with Jules
+1. Repair.sh didn't work for 20-427FEC at 100X and 250X coverage… what to try next? Got same warning messages
+```
+bbsplitpairs.sh in=20-427FEC.fq.gz out=fixed.20-427FEC.fq.gz outs=singletons.20-427FEC.fq.gz minlen=70 fint
+##bbsplitpairs.sh didn't produce any output
+#100X:
+repair.sh in=old_20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair
+#250X:
+repair.sh in=20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair
+```
+
+2. Jules said looking at stderr file, it looked fine. Not sure what happened. Will need to do some digging. I said I can run the assemblies of the other 90-some samples and if a bunch of them start looking like this sample 20, then we can look further at what's going on. If not, I could ask Crystal if we could just toss out this sample.
+
+3. Decision tree to pick 100X, extra scripts
+* I showed Jules the N50 contigs & scaffold, total scaffold/contigs length, # contigs (scaffold is when spades puts together the reads that might match but not sure how many gaps are in between).
+* Jules pointed out that I should look at the minimum scaffold length column. He sets it at 500bp. Use that as determination. 100X and 250X with 500bp cutoff looked pretty similar, so I'll still go with 100X. Jules says that's plenty of coverage.
+* When I showed him the covstats excel file, I showed the "covered %" column. He says to also look at "avg_fold" column. Anything less than the 1/3 of the weighted average of the 10 longest contigs should be removed from assemblies. He has a script that can do those calculations and remove those contigs.
+* He dropped two script files in my fsepru/kmou directory called "good_contig_names.R" and "adapt_polish.sh".
+
+4. We went over my SLURM template script. Talked about the extra scripts.
+* Uncomment Rscript ~/scripts/good_contig_names.R, change "scripts" to "software", move the two scripts that Jules gave you to the software directory
+* filterbyname.sh = remove or keep list of contigs, remove all garbage assemblies
+* adapt_polish runs on pilon: Makes copy of reference, will keep track of changes pilon made, "source" command makes functions available (ou can put that in software folder), change "templates" to "software"		
+* SampleID.fasta (reference file) and SampleID_subsamp.fq.gz (interleaved reads), run for 4 iterations
+* Once it sweeps back and forth and no changes are detected between the two versions, it'll quit. Output is sampleID_pol.fasta
+
+5. Run the rest of those scripts on slurm template for the two samples that worked to see how they look. Then work on shortening fq.gz file names.
+```
+Rscript ~/software/good_contig_names.R 1-428RN3A_6Mb_100X_covstats.txt
+#rm 1-428RN3A_6Mb_100X_covstats.txt
+
+filterbyname.sh names=1-428RN3A_6Mb_100X.names in=1-428RN3A_6Mb_100X_spades_out/scaffolds.fasta out=1-428RN3A.fasta include=t
+#rm 1-428RN3A_6Mb_100X.names
+
+# if this all finishes correctly then remove all the intermediates #
+#rm -r 1-428RN3A_spades_out/
+#rm 1-428RN3A_eccc.fq.gz 1-428RN3A_ecco.fq.gz 1-428RN3A_filtered.fq.gz 1-428RN3A_trimmed.fq.gz 1-428RN3A_1.fastq.gz 1-428RN3A_2.fastq.gz 1-428RN3A.fq.gz 1-428RN3A_ecct.fq.gz 1-428RN3A_temp.fq.gz
+
+# run polishing script #
+
+source ~/software/adapt_polish.sh
+
+adapt_polish 1-428RN3A.fasta 1-428RN3A_subsamp.fq.gz 4
+
+#rm 1-428RN3A.SLURM
+```
+
+6. Ran 1-428RN3A 100X: Submitted batch job 5231280 and it ran successfully
+
+7. Ran 94-439FED 100X: Submitted batch job 5231290 and it ran successfully
+
+8. (This step is for the 95 other FS19C fasta files for actual downstream analysis) Tried to use rename function to rename all *fastq.gz files to remove extra characters but rename doesn't work the way I want (doesn't use regex)
+```
+rename "s/^1-A\d*-//g" *.fastq.gz
+rename 's/1-A\d*_/ /g' *.fastq.gz
+rename 's/1-A\d*_//g' *.fastq.gz
+rename 's/1-A\d*_//' *.fastq.gz
+rename 's/1-A\d*_/ /' *.fastq.gz
+```
+
+**30Oct2020**
+1. Emailed Jules about the rename function and he sent me to a website: https://tldp.org/LDP/abs/html/string-manipulation.html
+2. I needed to learn the basics of bash shell and scripting so I went to this site (very easy to understand): https://linuxconfig.org/bash-scripting-tutorial-for-beginners
+3. Stopped at positional parameters section
+Bash string manipulation cheat sheet: https://gist.github.com/magnetikonline/90d6fe30fc247ef110a1
+
+## Final decision: Run assemblies at 100X coverage, skip isolate #20 

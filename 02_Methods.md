@@ -1,14 +1,22 @@
 # Methods
-
-Written summary of methods performed in this repo. Includes lab notes of how methods performed
+Written summary of sequence analyses methods performed on FS19C samples 1-96 in this repo. Includes lab notes of how methods performed
 
 ## Sample Collection
-See OneNote FS19C lab notebook entries xxx
+### OneNote FS19C lab notebook entries on E. coli isolates 1-96 from 24Apr2020 to 11June2020: streaking plates, DNA extraction, re-extraction of DNA, DNA cleanup, nanodrop, Qubit, gel
+* **20May2020** DNA extraction of isolates #1-24 using DNeasy Blood and Tissue Kit
+* **14May2020** DNA extraction of isolates #25-48 using DNeasy Blood and Tissue Kit
+* **21May2020** DNA extraction of isolates #49-72 using DNeasy Blood and Tissue Kit
+* **28May2020** DNA extraction of isolates #73-96 using DNeasy Blood and Tissue Kit
+* List of samples that need to re-extract DNA: 28May2020, 29May2020, 3June2020, 11June2020
+* **11June2020** Submission of FS19C 96-well plate of E. coli isolates 1-96 DNA to David Alt for NovaSeq sequencing.
+
+### Additional files of importance
 * FS19C Samples 1-96 Final Data.xlsx
 * Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
 * Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
 * KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * FS19C_metadata.xlsx
+* FS19C 96 S-S+ E. coli gDNA gels.pdf
 
 ## Conda environments
 ### fastanienv
@@ -141,8 +149,198 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 #rm REPLACE.SLURM
 ```
 
+### Ran BBmap + spades assembly slurm script with the following genomes:
+**2Nov2020**
+1. Read ProkEvo
+
+2. Made bash shell script to rename *fastq.gz filenames (shorten to wellID-SampleID_1/2.fastq.gz) and saved regex bash shell script as "renamefiles.batch"
+
+3. Copy over samples.txt to Ceres project folder
+
+4. Ran on SLURM the following genomes:
+* 2-437RN1A.slurm: Submitted batch job 5262838
+* 3-437REN7A.slurm: Submitted batch job 5262849
+* 4-437REN7B.slurm: Submitted batch job 5262852
+* 5-437REN3A.slurm: Submitted batch job 5262865
+* 6-437REN3B.slurm: Submitted batch job 5262868
+* 7-426FEN5A.slurm: Submitted batch job 5262869
+* 8-426FEN5B.slurm: Submitted batch job 5262872
+* 9-429FN2A.slurm: Submitted batch job 5262877
+* 10-434FEN3.slurm: Submitted batch job 5262878
+
+5. Checked the assemblies on 3Nov2020 and filled out `FS19C slurm progress.xlsx`
+
+**10Nov2020**
+1. Ran the next 9 (#11-19).
+* 11-434FEN3.slurm: Submitted batch job 5275036
+* 12-435FEN3.slurm: Submitted batch job 5275046
+* 13-435FEN3.slurm: Submitted batch job 5275047
+* 14-437FEN5.slurm: Submitted batch job 5275050
+* 15-437FEN5.slurm: Submitted batch job 5275052
+* 16-427REC.slurm: Submitted batch job 5275053
+* 17-427RED.slurm: Submitted batch job 5275054
+* 18-429REC.slurm: Submitted batch job 5275056
+* 19-429RED.slurm: Submitted batch job 5275057
+
+**12Nov2020**
+1. Submitted the following jobs to slurm
+* 21-429FEC.slurm: Submitted batch job 5281670
+* 22-429FED.slurm: Submitted batch job 5281671
+* 23-430FEC.slurm: Submitted batch job 5281672
+* 24-430FED.slurm: Submitted batch job 5281679
+* 25-427FED.slurm: Submitted batch job 5281681
+* 26-433FEC.slurm: Submitted batch job 5281686
+* 27-433FED.slurm: Submitted batch job 5281687
+* 28-436FEC.slurm: Submitted batch job 5281688
+* 29-436FED.slurm: Submitted batch job 5281689
+* 30-440FEC.slurm: Submitted batch job 5281690
+
+**18Nov2020**
+1. Submitted the following jobs to slurm
+* 31-440FED.slurm: Submitted batch job 5291498
+* 32-436REC.slurm: Submitted batch job 5291535
+* 33-436RED.slurm: Submitted batch job 5291539
+* 34-440REC.slurm: Submitted batch job 5291543
+* 35-440RED.slurm: Submitted batch job 5291559
+* 36-441REC.slurm: Submitted batch job 5291560
+* 37-441RED.slurm: Submitted batch job 5291562
+* 38-426REC.slurm: Submitted batch job 5291563
+* 39-426RED.slurm: Submitted batch job 5291565
+* 40-427REC.slurm: Submitted batch job 5291566
+
+**19Nov2020**
+1. Previous jobs ran successfully. Submitted the following jobs to slurm
+* 41-427RED.slurm: Submitted batch job 5292113
+* 42-428REC.slurm: Submitted batch job 5292114
+* 43-428RED.slurm: Submitted batch job 5292122
+* 44-429REC.slurm: Submitted batch job 5292127
+* 45-429RED.slurm: Submitted batch job 5292128
+* 46-430REC.slurm: Submitted batch job 5292129
+* 47-430RED.slurm: Submitted batch job 5292130
+* 48-431RED.slurm: Submitted batch job 5292131
+* 49-432REC.slurm: Submitted batch job 5292132
+* 50-432RED.slurm: Submitted batch job 5292133
+
+**24Nov2020**
+1. Previous jobs ran successfully. Submitted the following jobs to slurm:
+* 51-433REC.slurm: Submitted batch job 5297378
+* 52-433RED.slurm: Submitted batch job 5297379
+* 53-434REC.slurm: Submitted batch job 5297380
+* 54-434RED.slurm: Submitted batch job 5297382
+* 55-435REC.slurm: Submitted batch job 5297384
+* 56-435RED.slurm: Submitted batch job 5297385
+* 57-436REC.slurm: Submitted batch job 5297386
+* 58-436RED.slurm: Submitted batch job 5297387
+* 59-437REC.slurm: Submitted batch job 5297388
+* 60-437RED.slurm: Submitted batch job 5297389
+
+**30Nov2020**
+1. Previous jobs ran successfully. Submitted the following jobs to slurm:
+* 61-438REC.slurm: Submitted batch job 5300684
+* 62-438RED.slurm: Submitted batch job 5300685
+* 63-439REC.slurm: Submitted batch job 5300686
+* 64-439RED.slurm: Submitted batch job 5300687
+* 65-440REC.slurm: Submitted batch job 5300688
+* 66-440RED.slurm: Submitted batch job 5300689
+* 67-441REC.slurm: Submitted batch job 5300690
+* 68-441RED.slurm: Submitted batch job 5300691
+* 69-426FEC.slurm: Submitted batch job 5300692
+* 70-426FED.slurm: Submitted batch job 5300693
+
+**4Dec2020**
+1. Previous jobs ran successfully. Submitted the following jobs to slurm:
+* 71-427FED.slurm: Submitted batch job 5307961
+• 72-428FEC.slurm: Submitted batch job 5307963
+• 73-428FED.slurm: Submitted batch job 5307964
+• 74-429FEC.slurm: Submitted batch job 5307965
+• 75-429FED.slurm: Submitted batch job 5307966
+• 76-430FEC.slurm: Submitted batch job 5307978
+• 77-430FED.slurm: Submitted batch job 5307979
+• 78-431FEC.slurm: Submitted batch job 5307980
+• 79-431FED.slurm: Submitted batch job 5307981
+• 80-432FEC.slurm: Submitted batch job 5307982
+• 81-432FED.slurm: Submitted batch job 5307984
+• 82-433FEC.slurm: Submitted batch job 5308053
+• 83-433FED.slurm: Submitted batch job 5308054
+• 84-434FEC.slurm: Submitted batch job 5308056
+• 85-434FED.slurm: Submitted batch job 5308057
+• 86-435FEC.slurm: Submitted batch job 5308058
+• 87-435FED.slurm: Submitted batch job 5308059
+• 88-436FEC.slurm: Submitted batch job 5308060
+• 89-436FED.slurm: Submitted batch job 5308061
+• 90-437FED.slurm: Submitted batch job 5308062
+• 91-438FEC.slurm: Submitted batch job 5308063
+• 92-438FED.slurm: Submitted batch job 5308064
+• 93-439FEC.slurm: Submitted batch job 5308065
+• 95-440FED.slurm: Submitted batch job 5308067
+
+2. 95 did not assemble as expected because Mike Baker said for samples 95 and 96, they could not get any sequences.
+
+3. In total, 20, 95, and 96 did not assemble. Ignore #20? Wait for 95 and 96.
+
+4. Finished assembling! Will need to transfer polished fasta sequences (#11-93) to `polished_genomes_100X directory`. Is it possible to move files from (11-93)_pol.fasta to directory? Learned to use grep.
+
+**18Nov2020** Received email from Darrell of re-sequenced isolates 95-96 fasta files.
+1. Darrell email:
+```
+Your NovaSeq data has been downloaded from the ISU Sequencing Center and has been archived here at the Center.  According to David, there were a couple of the original samples, 95 and 96 (H11 and H12) in the original plate, which did not provide data when completed.  This new data is the result after Dr. Baker has repeated the library preparation and rerun those samples.  
+ 
+I’ve placed the data on the Q: drive at: Q:\_TempTransfer\DBayles\mou.  Additionally, I put a copy on Ceres where you can access it at: /90daydata/shared/mou_201216/."
+```
+
+2. I initially didn't see the two files and asked Darrell. He said the following:
+```
+There is one file, but when unpacked contains multiple sample FASTQ files for both the repeats.  That’s just how the Sequencing Center bundles them.  I know it can be confusing when ISU uses the name of a single sample for their archive name and then includes multiple other samples inside that archive.
+ 
+When you unpack the archive, you will find the following files contain within:
+1-H11-95-440FED_S1_L002_R1_001.fastq.gz
+1-H11-95-440FED_S1_L002_R2_001.fastq.gz
+1-H12-96-441FEC_S2_L002_R1_001.fastq.gz
+1-H12-96-441FEC_S2_L002_R2_001.fastq.gz
+ 
+You should have all the replacement data."
+```
+
+3. Yep! I un-tarred the files, transferred them to `/project/fsepru/kmou/FS19C/lane1/`
+```
+1_33298_01_1-A01-1-428RN3A_HVHJT_1839.tar
+1-H11-95-440FED_S1_L002_R1_001.fastq.gz
+1-H11-95-440FED_S1_L002_R2_001.fastq.gz
+1-H12-96-441FEC_S2_L002_R1_001.fastq.gz
+1-H12-96-441FEC_S2_L002_R2_001.fastq.gz
+```
+
+4. Rename old 96 fastq.gz files with "_old" so I don't confuse the re-sequenced files with the old sequence files.
+```
+mv 96-441FEC_1.fastq.gz 96-441FEC_1_old.fastq.gz
+mv 96-441FEC_2.fastq.gz 96-441FEC_2_old.fastq.gz
+```
+
+5. Copy 95 and 96 fastq.gz files to `linked` directory. Rename them to
+```
+95-440FED_1.fastq.gz
+95-440FED_2.fastq.gz
+96-441FEC_1.fastq.gz
+96-441FEC_2.fastq.gz
+```
+
+6. Made new slurm script for #96 because it didn't exist in linked/ directory.
+
+7. Submitted the following jobs to slurm:
+* 95-440FED.slurm: Submitted batch job 5361148
+* 96-441FEC.slurm: Submitted batch job 5361152
+
+8. Jobs completed with no issues. Copied polished fasta genomes to `polished_genomes` directory from `linked` directory with `mv *pol.fasta` command
+
+9. Ran this to get complete list of polished genomes
+```
+ls -v *pol.fasta > polishedfasta.txt
+```
+
 ##### Files generated:
-*
+* polishedfasta.txt
+* *_1.fastq.gz
+* *_2.fastq.gz
 
 ## QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
@@ -756,6 +954,19 @@ roary -f ./roary_output -e -n -v -p 16 *.gff
 sbatch roary.slurm
 Submitted batch job 5507099
 ```
+
+10. Job ran from 10:24am to 1:10pm and completed! Copied `roary_output` directory to local desktop
+```
+scp -r ceres:~/project/fsepru/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/roary_output ./
+```
+
+
+
+
+
+
+
+
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
