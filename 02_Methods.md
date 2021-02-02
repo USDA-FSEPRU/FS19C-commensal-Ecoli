@@ -990,7 +990,7 @@ query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
 #End of file
 ```
 
-12. (2Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R
+12. (2Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R. Analyze results.
 
 #### Files generated:
 * accessory.header.embl			

@@ -115,6 +115,10 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   * Great step-by-step tutorial: https://github.com/microgenomics/tutorials/blob/master/pangenome.md
 
 
+## Additional papers to consider
+* Adhesins for non-STEC isolates on leafy green vegetables: https://link.springer.com/article/10.1007/s42770-020-00251-y#Sec2
+* Mash-based analysis and pangenome of 10K+ E. coli genomes: https://www.nature.com/articles/s42003-020-01626-5#code-availability
+
 ## Relevant email and other communication
 
 ```

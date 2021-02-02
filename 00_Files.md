@@ -14,6 +14,7 @@
   * Files for isolates 1, 20, 94, and 96
 * FS19C_4Samples250X
   * Files for isolates 1, 20, 94, and 96
+* 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
 
 **(Ceres) /project/fsepru/kmou/FS19C/lane1/**
 * *.fastq.gz sequence data for samples 1-96
@@ -48,7 +49,6 @@
   * *.slurm
   * stderr.*
   * stdout.*
-* renamefiles.batch
 
 ### FastQC-related files of importance
 * *fastqc.zip
