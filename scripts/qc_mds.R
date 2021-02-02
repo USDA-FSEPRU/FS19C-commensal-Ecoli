@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 #####################################################################################################
 #FS19C QC - MDS of fastANI and Mash output
 #Kathy Mou
@@ -16,27 +18,27 @@ sessionInfo()
 
 #####################################################################################################
 
-#In mash and fastani files, I removed extra path names (/home/..., _pol.fasta and .fasta) from elements in reference_id and query_id 
+#In mash and fastani files, I removed extra path names (/home/..., _pol.fasta and .fasta) from elements in reference_id and query_id
 #in excel before importing distances.tab to R so that distance calculation would work
 #Otherwise, it produces errors saying duplicate 'row.names' are not allowed, non-unique values when setting 'row.names'
-#fastANI gives you ANI similarity in percentage, mash already did the distance calculation for you (hence the small decimal numbers) 
+#fastANI gives you ANI similarity in percentage, mash already did the distance calculation for you (hence the small decimal numbers)
 #so you don't need to do distance calculation (1-ANI).
 #You will need to convert fastANI ANI percentage values to decimal and then subtract that from 1 to get distance calculation.
-#I did a little experiment to see if reordering reference_id of mash file (distance.tab) with mixedorder() would change MDS and 
+#I did a little experiment to see if reordering reference_id of mash file (distance.tab) with mixedorder() would change MDS and
 #heatmap structure compared to if I didn't reorder reference_id. In conclusion, no difference, so don't need to reorder reference_id
 
 ################################### FastANI ##################################################################
 ######## Import fastani file, remove orthologous_matches, total_seq_fragments columns ########
 fast_tab <- read_tsv('./Files/fs19cfastanioutput2.out.tab', col_names = c("reference_id", "query_id", "ani", "orthologous_matches", "total_seq_fragments")) %>%
-  select(-orthologous_matches) %>% 
-  select(-total_seq_fragments) %>% 
+  select(-orthologous_matches) %>%
+  select(-total_seq_fragments) %>%
   mutate(ani_dist= 1-(ani/100)) %>% #add new ani_dist column to calculate distance
   select(-ani)
 
 ######## Make distance matrix ########
 fast_dist <- fast_tab %>%
   pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
-  column_to_rownames(var='query_id') 
+  column_to_rownames(var='query_id')
 
 ######## Heatmap of fastani distance matrix as another way of looking at clustering ########
 #Adapted code from: https://www.datanovia.com/en/blog/clustering-using-correlation-as-distance-measures-in-r/
@@ -80,23 +82,23 @@ ggsave("FS19C_fastaniMDS.tiff", plot=plot_fast_mds, width = 9, height = 8, dpi =
 ############################################ Mash #########################################################
 ######## Import mash file, add ani_dist column, remove pvalue, matching_hashes columns ########
 mash_tab <- read_tsv('./Files/distances.tab', col_names = c("reference_id", "query_id", "ani_dist", "pvalue", "matching_hashes")) %>%
-  select(-pvalue) %>% 
+  select(-pvalue) %>%
   select(-matching_hashes)
-mash_tab2 <- mash_tab[mixedorder(as.character(mash_tab$reference_id)),] #I reordered reference_id to make samples list in numerical order versus 
+mash_tab2 <- mash_tab[mixedorder(as.character(mash_tab$reference_id)),] #I reordered reference_id to make samples list in numerical order versus
 #ordering like 1, 10-19, 2, 20-29, etc.
-#I hoped this could fix FS19C_mash_correlation_heatmap.tiff so that it could list samples on the right of heatmap in the same order as 
+#I hoped this could fix FS19C_mash_correlation_heatmap.tiff so that it could list samples on the right of heatmap in the same order as
 #FS19C_fastani_correlation_heatmap.tiff. Did not work :(
 
 ######## Make distance matrix ########
 #mash_dist with mash_tab
 mash_dist <- mash_tab %>%
-  arrange(reference_id) %>% 
+  arrange(reference_id) %>%
   pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
   column_to_rownames(var='query_id')
 
 #mash_dist2 with mash_tab2
 mash_dist2 <- mash_tab2 %>%
-  arrange(reference_id) %>% 
+  arrange(reference_id) %>%
   pivot_wider(names_from = reference_id, values_from=ani_dist) %>%
   column_to_rownames(var='query_id')
 
