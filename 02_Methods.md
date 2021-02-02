@@ -439,18 +439,18 @@ source activate fastanienv
 conda install -c bioconda fastani
 ```
 
-2. Testing fastani on sample genomes provided by https://github.com/ParBLiSS/FastANI
+2. (28Dec2020) Testing fastani on sample genomes provided by https://github.com/ParBLiSS/FastANI
 ```
 fastANI -q Shigella_flexneri_2a_01.fna -r Escherichia_coli_str_K12_MG1655.fna -o testfastani.out
 ```
 Viewed output testfastani.out and it looked the same as output from https://github.com/ParBLiSS/FastANI. Awesome!
 
-3. Made query list in polished_genomes/ with this command and checked to make sure query list only contains sample names (tells the path to where reference genome files are):
+3. (28Dec2020) Made query list in polished_genomes/ with this command and checked to make sure query list only contains sample names (tells the path to where reference genome files are):
 ```
 ls -dv "$PWD"/* > quertylist.txt
 ```
 
-4. Made reference list with this (tells the path to where reference genome files are):
+4. (28Dec2020) Made reference list with this (tells the path to where reference genome files are):
 ```
 ls -dv "$PWD"/* > referencelist.txt
 ```
@@ -468,14 +468,14 @@ Reference genomes include:
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
   * Saved as Ecoli_O157H7_EDL933.fasta
 
-5. Moved querylist.txt and referencelist.txt to same directory and ran fastani:
+5. (28Dec2020) Moved querylist.txt and referencelist.txt to same directory and ran fastani:
 ```
 fastANI --ql querylist.txt --rl referencelist.txt -o fs19cfastanioutput.out
 ```
 
-6. Downloaded fs19cfastanioutput.out and made FS19CfastANIoutput.xlsx
+6. (28Dec2020) Downloaded fs19cfastanioutput.out and made FS19CfastANIoutput.xlsx
 
-7. After discussion with Jules about how I'd run mash, I realized I ran fastani incorrectly. I should be measuring distances of all genomes (references and samples) between each other. So combine all file names in a new querylist2.txt and run fastani with this file listed as query and as reference lists.
+7. (29Dec2020, 11Jan2021) After discussion with Jules about how I'd run mash, I realized I ran fastani incorrectly. I should be measuring distances of all genomes (references and samples) between each other. So combine all file names in a new querylist2.txt and run fastani with this file listed as query and as reference lists.
 ```
 fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 ```
@@ -761,16 +761,16 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 * Completed on: 28Jan2021
 * Platform: Ceres, prokka_env conda environment
 
-1. Find E. coli pangenome (pan proteome) on UniProt:
+1. (20Jan2021) Find E. coli pangenome (pan proteome) on UniProt:
   * [Escherichia coli (strain K12) (Strain: K12 / MG1655 / ATCC 47076)](https://www.uniprot.org/proteomes/UP000000625)
   * [Escherichia coli O157:H7 (Strain: O157:H7 / Sakai / RIMD 0509952 / EHEC)](https://www.uniprot.org/proteomes/UP000000558)
 
-2. Read Prokka paper
+2. (20Jan2021) Read Prokka paper
   * DOI: 10.1093/bioinformatics/btu153
 
-3. Find prokka github page: https://github.com/tseemann/prokka
+3. (20Jan2021) Find prokka github page: https://github.com/tseemann/prokka
 
-4. install prokka in fastanienv conda environment on Ceres in FS19C/polished_genomes_100X
+4. (20Jan2021) install prokka in fastanienv conda environment on Ceres in FS19C/polished_genomes_100X
 ```
 salloc
 module load miniconda
@@ -797,14 +797,14 @@ prokka --listdb
 #CMs: Archaea Bacteria Viruses
 ```
 
-6. Made a new directory polishedgenomesprokka/, copied fasta files from polished_genomes_100X to this directory, renamed .fasta to .fna
+6. (21Jan2021) Made a new directory polishedgenomesprokka/, copied fasta files from polished_genomes_100X to this directory, renamed .fasta to .fna
 ```
 rename .fasta .fna *.fasta
 ```
 
-7. Download [E. coli strain K12 proteome (fasta)](https://www.uniprot.org/proteomes/UP000000625) - Try this annotation first.
+7. (21Jan2021) Download [E. coli strain K12 proteome (fasta)](https://www.uniprot.org/proteomes/UP000000625) - Try this annotation first.
 
-8. Need to ask Jules what kind of fasta file do I need to use for annotation first. The fasta file I have doesn't have the ~~~ symbols that prokka says is needed for annotation tag formats: https://github.com/tseemann/prokka/blob/master/README.md#fasta-database-format
+8. (21Jan2021) Need to ask Jules what kind of fasta file do I need to use for annotation first. The fasta file I have doesn't have the ~~~ symbols that prokka says is needed for annotation tag formats: https://github.com/tseemann/prokka/blob/master/README.md#fasta-database-format
 
 9. (22Jan2021) At lab meeting, Jules recommended not spending too much time finding the "perfect" annotation (custom or publicly-available ones) because there will always be something missing. Instead, find annotations that have the genes you want. So I looked up what genes the project plan had mentioned (see 01_Background) and came up with this list:
   * EA utilization, eut operon for utilization ethanolamine as a nitrogen source (see project plan)
@@ -819,7 +819,7 @@ rename .fasta .fna *.fasta
   * List of substrate-related genes not in [Escherichia coli O157:H7 str. Sakai EMBL file](https://www.ebi.ac.uk/ena/browser/view/BA000007): it has genes related to all substrates (not sure if the complete metabolic pathways are present for each substrate, but there are proteins associated with all these substrates)
       * File: BA000007.3.txt
 
-11. Looked through each EMBL file and print out all proteins associated with each of the substrates:
+11. (27Jan2021) Looked through each EMBL file and print out all proteins associated with each of the substrates:
   * Escherichia coli O157:H7 str. Sakai
     ```
     grep -f carbohydratelist.txt BA000007.3.txt > completecarblistO157H7.txt
@@ -829,13 +829,13 @@ rename .fasta .fna *.fasta
     grep -f carbohydratelist.txt U00096.3.txt > completecarblistK12.txt
     ```
 
-12. Compared the two files and printed out genes unique to each strains
+12. (27Jan2021) Compared the two files and printed out genes unique to each strains
   ```
   comm -1 -3 completecarblistO157H7.txt completecarblistK12.txt > genesnotpresentinO157H7.txt #not present in O157H7
   comm -1 -3 completecarblistK12.txt completecarblistO157H7.txt > genesnotpresentinK12.txt
   ```
 
-13. So, at least one of the strains' proteomes have genes associated with each of the metabolites listed in OSQR plan. I will also go through review papers referenced in OSQR plan to see what other genes to include.
+13. (27Jan2021) So, at least one of the strains' proteomes have genes associated with each of the metabolites listed in OSQR plan. I will also go through review papers referenced in OSQR plan to see what other genes to include.
  * Maltby et al.: EMBL files missing glucuronate, galacuronate; however, based on a paper referenced by Maltby et al., glucoronate, galacuronate, and hexuronate are one sugar
 
 14. (28Jan2021) Decide to run prokka on Ceres using the for loop to run prokka on 95 genomes, taken from: https://doi.org/10.3389/fvets.2020.582297
@@ -860,7 +860,7 @@ Get error message:
 [09:45:50] '–prefix' is not a readable non-empty FASTA file
 ```
 
-15. Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit, and prokka ran past the part I got stuck on. However, it didn't like the length of contig IDs in my fasta files, so it suggested renaming contigs or try '--centre X --compliant' to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
+15. (28Jan2021) Looked up issues page on prokka: https://github.com/tseemann/prokka/issues/86 and checked that my files are fasta format, they are readable, and are more than 0 bytes. Emailed Jules how to fix error. He says it looks like my prokka command has some weird formatting applied and some special characters were inserted where they shouldn't be. This is a danger when copying things from the internet. There's a difference between long and short dash. Shell scripts don't take too kindly to things like long dashes and it confuses them, along with other hidden special characters. So I retyped the command on bbedit, and prokka ran past the part I got stuck on. However, it didn't like the length of contig IDs in my fasta files, so it suggested renaming contigs or try '--centre X --compliant' to generate clean contig names. Need to shorten them to less than or equal to 37 characters long.
 ```
 [10:20:41] Contig ID must <= 37 chars long: NODE_1_length_378381_cov_16.779345_pilon_pilon_pilon
 [10:20:41] Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.
@@ -870,7 +870,7 @@ I added --centre X --compliant command line options
 for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
 ```
 
-16. It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
+16. (28Jan2021) It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
 #### Files generated (for each isolate):
 * *_pol.fasta%.fasta_prokka/
@@ -891,20 +891,20 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 * Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
-* Completed on: 1Feb2021
+* Completed on:
 * Platform: Ceres
 
-1. Notes from Roary publication (including supplemental info)
+1. (29Jan2021) Notes from Roary publication (including supplemental info)
   * pass in the flag '-e' to get multi-fasta file to use with RAxML or FastTree to generate phylogenetic tree based on SNPs in core genes. The file you want for those applications is called *core_gene_alignment.aln*. This flag also generates *pan_genome_reference.fa* file
   * Access this tutorial for step-by-step: https://github.com/microgenomics/tutorials/blob/master/pangenome.md
 
-2. Roary is on Ceres. I will copy all gff from each folder and make a new folder of only gff files. Then I can roary with them with some kind of loop on slurm.
+2. (29Jan2021) Roary is on Ceres. I will copy all gff from each folder and make a new folder of only gff files. Then I can roary with them with some kind of loop on slurm.
 ```
 find . -name *.gff -exec cp '{}' "./prokka_gff/" ";"
 ```
 Adapted from this [forum](https://unix.stackexchange.com/questions/67503/move-all-files-with-a-certain-extension-from-multiple-subdirectories-into-one-di).
 
-3. Ran md5sum checksum to compare isolate 96's gff file from prokka_gff/ with 96's gff file from 96-441FEC_pol.fasta%.fasta_prokka/
+3. (29Jan2021) Ran md5sum checksum to compare isolate 96's gff file from prokka_gff/ with 96's gff file from 96-441FEC_pol.fasta%.fasta_prokka/
 ```
 md5sum 96-441FEC_pol.fasta%.fasta.gff ../prokka_gff/96-441FEC_pol.fasta%.fasta.gff > cksum96.txt
 md5sum -c cksum96.txt
@@ -912,7 +912,7 @@ md5sum -c cksum96.txt
 # ../prokka_gff/96-441FEC_pol.fasta%.fasta.gff: OK
 ```
 
-4. The find command worked, so I will generate slurm script (roary.slurm) to run roary.
+4. (29Jan2021) The find command worked, so I will generate slurm script (roary.slurm) to run roary.
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -929,7 +929,7 @@ roary -f ./roary_output -e -n -v *.gff
 #End of file
 ```
 
-5. Submitted job on SLURM
+5. (29Jan2021) Submitted job on SLURM
 ```
 sbatch roary.slurm
 Submitted batch job 5495686
@@ -937,12 +937,12 @@ Submitted batch job 5495686
 
 6. (1Feb2021) Job didn't finish because my job reached the time limit of the partition: short partition for 48 hours. Job got cancelled. I will need to re-run roary using a partition with longer simulation time (medium, 7 days). I emailed Jules to ask about how to know how much of each resource from Ceres to use for a job.
 
-7. Jules asked what command I used with roary, so I sent him my slurm script. After looking through, he says my initial resource request should be more than enough. The problem is I'm not telling roary to use more than one cpu/core/thread. Check out roary documentation to see how to tell roary to use more than one processor/thread. I looked up and found an option to include:
+7. (1Feb2021) Jules asked what command I used with roary, so I sent him my slurm script. After looking through, he says my initial resource request should be more than enough. The problem is I'm not telling roary to use more than one cpu/core/thread. Check out roary documentation to see how to tell roary to use more than one processor/thread. I looked up and found an option to include:
 ```
 roary -f ./roary_output -e -n -v -p 16 *.gff
 ```
 
-8. Modified roary.slurm script to the following:
+8. (1Feb2021) Modified roary.slurm script to the following:
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -959,16 +959,38 @@ roary -f ./roary_output -e -n -v -p 16 *.gff
 #End of file
 ```
 
-9. Submitted job on SLURM
+9. (1Feb2021) Submitted job on SLURM
 ```
 sbatch roary.slurm
 Submitted batch job 5507099
 ```
 
-10. Job ran from 10:24am to 1:10pm and completed! Copied `roary_output` directory to local desktop
+10. (1Feb2021) Job ran from 10:24am to 1:10pm and completed! Copied `roary_output` directory to local desktop
 ```
 scp -r ceres:~/fsepru_kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/roary_output ./
 ```
+
+11. (2Feb2021) See gene differences between groups of isolates using `query_pan_genome` command
+```
+#!/bin/bash
+#SBATCH --job-name=roary                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+module load roary
+#roary -f ./roary_output -e -n -v -p 16 *.gff
+query_pan_genome  -o pan_genome_results_union -v -a union *.gff
+query_pan_genome  -o pan_genome_results_core -v -a intersection *.gff
+query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
+#End of file
+```
+
+12. (2Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R
 
 #### Files generated:
 * accessory.header.embl			
