@@ -128,6 +128,10 @@
   * summary_statistics.txt
   * stderr.*.roary
   * stdout.*.roary
+* pan_genome_reference.fa
+* pan_genome_results_accessory
+* pan_genome_results_core
+* pan_genome_results_union
 
 ## Files in Files directory
 * FS19C_metadata.xlsx

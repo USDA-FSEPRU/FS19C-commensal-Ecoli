@@ -970,7 +970,7 @@ Submitted batch job 5507099
 scp -r ceres:~/fsepru_kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/roary_output ./
 ```
 
-11. (2Feb2021) See gene differences between groups of isolates using `query_pan_genome` command
+11. (2Feb2021) See gene differences between groups of isolates using `query_pan_genome` command. Copy all files from `roary_output` directory to same directory as gff files because `query_pan_genome` uses some of those output files (as I found out the first time I ran the slurm script below. The job cancelled because it couldn't find `clustered_proteins` file).
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -989,8 +989,15 @@ query_pan_genome  -o pan_genome_results_core -v -a intersection *.gff
 query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
 #End of file
 ```
+```
+Submitted batch job 5511086
+```
+
+12. Job completed, downloaded `pan_genome_results_core`, `pan_genome_results_accessory`, and `pan_genome_results_union` to local `roary_output/querypangenome_output` directory.
 
 12. (2Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R. Analyze results.
+
+13. Check out http://sanger-pathogens.github.io/Roary/ to analyze results output from roary.
 
 #### Files generated:
 * accessory.header.embl			
