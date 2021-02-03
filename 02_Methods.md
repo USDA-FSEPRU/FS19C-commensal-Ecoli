@@ -993,11 +993,13 @@ query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
 Submitted batch job 5511086
 ```
 
-12. Job completed, downloaded `pan_genome_results_core`, `pan_genome_results_accessory`, and `pan_genome_results_union` to local `roary_output/querypangenome_output` directory.
+12. (2Feb2021) Job completed, downloaded `pan_genome_results_core`, `pan_genome_results_accessory`, and `pan_genome_results_union` to local `roary_output/querypangenome_output` directory.
 
-12. (2Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R. Analyze results.
+13. (3Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R. Analyze results.
 
-13. Check out http://sanger-pathogens.github.io/Roary/ to analyze results output from roary.
+14. (3Feb2021) Check out the following to analyze roary results
+http://sanger-pathogens.github.io/Roary/
+https://github.com/sanger-pathogens/Roary/tree/master/contrib/roary_plots
 
 #### Files generated:
 * accessory.header.embl			
