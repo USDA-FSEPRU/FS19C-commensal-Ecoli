@@ -120,7 +120,7 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 | fucAO<sup>1</sup>, fucK<sup>2</sup> | fucose | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
 | galK | galactose | 10.1128/IAI.01386-07 |
 | uxaB | galacturonate | 10.1128/IAI.01386-07 |
-| gntK (idnK)<sup>1<sup/>, edd/eda<sup>2</sup> | gluconate | 10.1128/IAI.01386-07<sup>1</sup>, https://iai.asm.org/content/64/9/3504<sup>2</sup> |
+| gntK (idnK)<sup>1</sup>, edd/eda<sup>2</sup> | gluconate | 10.1128/IAI.01386-07<sup>1</sup>, https://iai.asm.org/content/64/9/3504<sup>2</sup> |
 | manXYZ | glucosamine | 10.1128/IAI.01386-07 |
 | uxaC | hexuronate<sup>1</sup>, glucuronate<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
 | lacZ | lactose | https://doi.org/10.1371/journal.pone.0053957 |
