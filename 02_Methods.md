@@ -1036,14 +1036,14 @@ Submitted batch job 5511086
 * RM6067 - no assembly publicly available, also no annotation found (only found RNAseq-related info about this strain)
 * FRIK1989 - no assembly or annotation publicly available
 
-17. (3Feb2021) Uploaded 6 E. coli reference genomes' gff files to `project/fsepru/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/EcoliReferenceGenomes` directory on Ceres. Unzipped files with `gzip -d *.gz` and copied to `prokka_gff` directory. Ran slurm job of roary on gff files of 95 isolates + 6 reference E. coli using `roary.slurm` script
+17. (3Feb2021) Uploaded 6 E. coli reference genomes' gff files to `project/fsepru/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/EcoliReferenceGenomes` directory on Ceres. Unzipped files with `gzip -d *.gz` and copied to `prokka_gff` directory. Ran slurm job of roary on gff files of 95 isolates + 6 reference E. coli using `roary.slurm` script. Job completed in 3h49m.
 ```
 module load roary
 roary -f ./roary_95isolates_6referencestrains_output -e -n -v -p 16 *.gff
 Submitted batch job 5518586
 ```
 
-18. (3Feb2021) Job completed in 3h49m.
+18. (4Feb2021) Run query_pan_genome. Download roary files and analyze.
 
 #### Files generated:
 * accessory.header.embl			
