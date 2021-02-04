@@ -10,4 +10,8 @@
 #Enter commands here:
 module load roary
 roary -f ./roary_output -e -n -v -p 16 *.gff
+#roary -f ./roary_95isolates_6referencestrains_output -e -n -v -p 16 *.gff
+#query_pan_genome  -o pan_genome_results_union -v -a union *.gff
+#query_pan_genome  -o pan_genome_results_core -v -a intersection *.gff
+#query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
 #End of file

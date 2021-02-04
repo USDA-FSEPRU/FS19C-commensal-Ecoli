@@ -102,10 +102,10 @@
   * *_pol.fasta%.fasta.tsv
   * *_pol.fasta%.fasta.txt
 
-### Pan-genome analysis (roary)
+### Pan-genome analysis
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff**
 * *_pol.fasta%.fasta.gff
-* roary_output/
+* roary_95isolates_6referencestrains_output/ or roary_95_isolates_output/
   * accessory.header.embl			
   * core_alignment_header.embl
   * accessory.tab				
@@ -132,6 +132,9 @@
 * pan_genome_results_accessory
 * pan_genome_results_core
 * pan_genome_results_union
+
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk**
+* *_pol.fasta%.fasta.gbk
 
 ## Files in Files directory
 * FS19C_metadata.xlsx

@@ -887,8 +887,8 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
   * *_pol.fasta%.fasta.tsv
   * *_pol.fasta%.fasta.txt
 
-## Pangenome analysis
-* Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates. I will also try Ppanggolin if there is time.
+## Pangenome analysis with roary
+* Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
 * Completed on:
@@ -912,7 +912,7 @@ md5sum -c cksum96.txt
 # ../prokka_gff/96-441FEC_pol.fasta%.fasta.gff: OK
 ```
 
-4. (29Jan2021) The find command worked, so I will generate slurm script (roary.slurm) to run roary.
+4. (29Jan2021) The find command worked, so I will generate slurm script (roary.slurm) to run roary on the 95 isolates.
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -995,11 +995,55 @@ Submitted batch job 5511086
 
 12. (2Feb2021) Job completed, downloaded `pan_genome_results_core`, `pan_genome_results_accessory`, and `pan_genome_results_union` to local `roary_output/querypangenome_output` directory.
 
-13. (3Feb2021) Load gene_presence_absence.Rtab in R, run create_pan_genome_plots.R. Analyze results.
+13. (3Feb2021) Looked at the following roary output files:
+* `gene_presence_absence.csv`
+  * Order within fragment, combined with the genome fragment this gives an indication of the order of genes within the graph. In Excel, sort on Column G and H.
+  * Accessory order with fragment, combined with the Accessory fragment this gives an indication of the order of genes within the accessory graph. In Excel, sort on columns I and J.
+  * QC column: many that have "investigate" or "hypothetical"
+  * How to group gene names by pathways?
+* `gene_presence_absence.Rtab`
+  * simple tab delimited binary matrix with presence and absence of each gene in each sample.
+  * The first row is the header containing the name of each sample, and the first column contains the gene name. A 1 indicates the gene is present in the sample, a 0 indicates it is absent.
+  * read Rtab file in `roary.R`
 
-14. (3Feb2021) Check out the following to analyze roary results
-http://sanger-pathogens.github.io/Roary/
-https://github.com/sanger-pathogens/Roary/tree/master/contrib/roary_plots
+14. (3Feb2021) Run `create_pan_genome_plots.R` from [Roary github](https://github.com/sanger-pathogens/Roary/blob/master/bin/). Saved as `roary.R`. Generated many plots, below are comments of each plot made.
+* `number_of_new_genes.Rtab`: 95 genomes show very few new genes
+* `number_of_conserved_genes.Rtab`: 95 genomes suggest a little over 3K conserved genes
+* `number_of_genes_in_pan_genome.Rtab`: 95 genomes show approaching 14000 genes in pan-genome
+* `number_of_unique_genes.Rtab`: 95 genomes show between 2000-3000 unique genes
+* `blast_identity_frequency.Rtab`: 95 genomes show below 5000 blastp results with 98%, 99% blastp identity; between 5000-10000 blastp results with 95-97% blastp identity, and more than 15000 blastp results with 100% blastp identity.
+* `conserved_vs_total_genes.png` graph showing number of conserved genes to number of total genes in pan-genome (no surprise, more total genes than conserved genes)
+* `unique_vs_new_genes.png` graph showing number of new genes vs unique genes (more unique than new genes)
+
+15. (3Feb2021) Looking through FS19C plan, I realized I forgot to add other reference genomes gff files to roary analysis as landmarks for comparing with FS19C isolates. I downloaded GFF files from the following isolates via accessing their Genbank file (see hyperlink above in fastANI section), click on "Assembly" under "Related Information" on the right-side panel, then click on the only organism listed on results page, then click on "Download Assembly" on upper right side of page, select RefSeq (Source database) and Genomic GFF (File type), and download:
+* E. coli MG1655 https://www.ncbi.nlm.nih.gov/assembly/GCF_000005845.2
+  * Saved as Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.gff.gz
+* E. coli HS https://www.ncbi.nlm.nih.gov/assembly/GCF_000017765.1
+  * Saved as Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gff.gz
+* E. coli Nissle 1917 https://www.ncbi.nlm.nih.gov/assembly/GCF_000714595.1
+  * Saved as Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff.gz
+* E. coli O157:H7 str. NADC 6564 https://www.ncbi.nlm.nih.gov/assembly/GCF_001806285.1
+  * Saved as Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff.gz
+* E. coli O157:H7 EDL933 https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
+  * Saved as EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff.gz
+* TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
+  * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff.gz
+* Notes:
+  * What is the difference between GenBank and RefSeq genome assembly? https://www.ncbi.nlm.nih.gov/datasets/docs/gca-and-gcf-explained/
+  * [RefSeq FAQS](https://www.ncbi.nlm.nih.gov/books/NBK50679/#RefSeqFAQ.what_is_a_reference_sequence_r)
+
+16. (3Feb2021) No annotated assemblies available for these two E. coli isolates used in FS19 studies:
+* RM6067 - no assembly publicly available, also no annotation found (only found RNAseq-related info about this strain)
+* FRIK1989 - no assembly or annotation publicly available
+
+17. (3Feb2021) Uploaded 6 E. coli reference genomes' gff files to `project/fsepru/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff/EcoliReferenceGenomes` directory on Ceres. Unzipped files with `gzip -d *.gz` and copied to `prokka_gff` directory. Ran slurm job of roary on gff files of 95 isolates + 6 reference E. coli using `roary.slurm` script
+```
+module load roary
+roary -f ./roary_95isolates_6referencestrains_output -e -n -v -p 16 *.gff
+Submitted batch job 5518586
+```
+
+18. (3Feb2021) Job completed in 3h49m.
 
 #### Files generated:
 * accessory.header.embl			
@@ -1024,6 +1068,69 @@ https://github.com/sanger-pathogens/Roary/tree/master/contrib/roary_plots
 * summary_statistics.txt
 
 
+## Pangenome analysis with PPanGGOLiN
+* Summary: ran PPanGGOLiN on FS19C gff data by running in prokka_env conda environment on Ceres to generate pangenome analysis of *E. coli* isolates.
+* PPanGGOLiN publication DOI: https://doi.org/10.1371/journal.pcbi.1007732
+* Github: https://github.com/labgem/PPanGGOLiN/wiki/Basic-usage-and-practical-information, https://github.com/labgem/PPanGGOLiN
+* Began on: 3Feb2021
+* Completed on:
+* Platform: Ceres, prokka_env conda
+
+1. (3Feb2021) Copy gbk files from 95 isolates on Ceres and place in `project/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk` directory
+```
+find . -name *.gbk -exec cp '{}' "./prokka_gbk/" ";"
+```
+
+2. (3Feb2021) Download gbk files from GenBank of the 6 E. coli reference strains via RefSeq (source database) and Genomic GenBank format .gbff (file type). PPanGGOLiN says can use .gbff/.gbk files. Uploaded 6 E. coli reference genomes' gbff files to `project/fsepru/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk/Ecolireferencegenomes` directory on Ceres. Unzipped files with `gzip -d *.gz` and copied to `prokka_gbk` directory.
+* E. coli MG1655 https://www.ncbi.nlm.nih.gov/assembly/GCF_000005845.2
+  * Saved as Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.gbff.gz
+* E. coli HS https://www.ncbi.nlm.nih.gov/assembly/GCF_000017765.1
+  * Saved as Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gbff.gz
+* E. coli Nissle 1917 https://www.ncbi.nlm.nih.gov/assembly/GCF_000714595.1
+  * Saved as Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gbff.gz
+* E. coli O157:H7 str. NADC 6564 https://www.ncbi.nlm.nih.gov/assembly/GCF_001806285.1
+  * Saved as Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gbff.gz
+* E. coli O157:H7 EDL933 https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
+  * Saved as EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gbff.gz
+* TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
+  * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gbff.gz
+
+3. (3Feb2021) Created text file listing all filenames in `prokka_gbk` directory and downloaded text file `Ecoligbk.txt`. Removed unnecessary filenames from list and opened in R. In R, made organism list with 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Save as txt file. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. R code used:
+```
+library(tidyverse)
+tsv <- read_tsv('Ecoligbk.txt', col_names = FALSE)
+tsv$X3 <- paste(tsv$X2, tsv$X1, sep= "/")
+head(tsv$X3)
+tsv2 <- tsv[c("X1", "X3")]
+head(tsv$X3)
+write_tsv(tsv2, "Ecoligbkpath.txt")
+```
+
+4. (3Feb2021) Upload `Ecoligbkpath.txt` to Ceres.
+
+5. Install and run PPanGGOLiN in prokka_env environment on Ceres in the prokka_gbk directory
+```
+salloc
+source activate prokka_env
+conda install -c bioconda ppanggolin
+ppanggolin workflow --anno ORGANISMS_ANNOTATION_LIST
+```
+
+#### Files generated:
+
+
+
+## Create phylogenetic tree with RAxML-NG
+* Summary: ran ... on FS19C ... data by running in ... to generate ...
+* RAxML-NG publication DOI: 10.1093/bioinformatics/btz305
+* Github: https://github.com/amkozlov/raxml-ng
+* Began on: 3Feb2021
+* Completed on:
+* Platform: Ceres ...
+
+1. Is this on bioconda?
+
+#### Files generated:
 
 
 

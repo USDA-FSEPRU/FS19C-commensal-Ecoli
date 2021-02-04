@@ -69,3 +69,9 @@ xlim(c(1,length(unique_genes)))+
 xlab("No. of genomes") +
 ylab("No. of genes")+ theme_bw(base_size = 16) +  theme(legend.justification=c(1,1),legend.position=c(1,1))
 ggsave(filename="unique_vs_new_genes.png", scale=1)
+
+######################
+presenceabsence <-read.table("gene_presence_absence.Rtab", header = TRUE, sep = "\t",
+                    quote = "")
+presenceabsence[1:5,1:5] # 1 = present, 0 = absent
+
