@@ -1,5 +1,5 @@
 # Methods
-Written summary of sequence analyses methods performed on FS19C samples 1-96 in this repo. Includes lab notes of how methods performed
+Details of sequence analyses methods performed on FS19C samples 1-96 in this repo. Includes lab notes of how methods performed
 
 ## Sample Collection
 ### OneNote FS19C lab notebook entries on E. coli isolates 1-96 from 24Apr2020 to 11June2020: streaking plates, DNA extraction, re-extraction of DNA, DNA cleanup, nanodrop, Qubit, gel
@@ -27,7 +27,7 @@ Written summary of sequence analyses methods performed on FS19C samples 1-96 in 
   * Directions: http://mash.readthedocs.org
 
 ### prokka_env
-* prokka
+* prokka, PPanGGOLiN
 
 ## Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
@@ -1043,7 +1043,48 @@ roary -f ./roary_95isolates_6referencestrains_output -e -n -v -p 16 *.gff
 Submitted batch job 5518586
 ```
 
-18. (4Feb2021) Run query_pan_genome. Download roary files and analyze.
+18. (4Feb2021) Copy files from `roary_95isolates_6referencestrains_output` to `prokka_gff` and run `query_pan_genome` with `roary.slurm` script.
+```
+module load roary
+#roary -f ./roary_95isolates_6referencestrains_output -e -n -v -p 16 *.gff
+query_pan_genome  -o pan_genome_results_union -v -a union *.gff
+query_pan_genome  -o pan_genome_results_core -v -a intersection *.gff
+query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
+```
+```
+Submitted batch job 5521850
+#stderr.5521850.ceres14-compute-33.roary
+2021/02/04 12:26:43 Could not extract any protein sequences from Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:26:45 Could not extract any protein sequences from Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:26:47 Could not extract any protein sequences from Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:26:48 Could not extract any protein sequences from EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:26:50 Could not extract any protein sequences from Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:26:52 Could not extract any protein sequences from Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:33:28 Could not extract any protein sequences from Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:33:29 Could not extract any protein sequences from Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:33:31 Could not extract any protein sequences from Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:33:33 Could not extract any protein sequences from EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:33:34 Could not extract any protein sequences from Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:33:36 Could not extract any protein sequences from Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:40:11 Could not extract any protein sequences from Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:40:12 Could not extract any protein sequences from Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:40:14 Could not extract any protein sequences from Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:40:15 Could not extract any protein sequences from EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:40:17 Could not extract any protein sequences from Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+2021/02/04 12:40:19 Could not extract any protein sequences from Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff. Does the file contain the assembly as well as the annotation?
+```
+
+19. (4Feb2021) Looked up error message and found this issue post: https://github.com/sanger-pathogens/Roary/issues/417. Tested with the gff and fna files of Mycoplasma pneumoniae FH that was mentioned in post: https://www.ncbi.nlm.nih.gov/assembly/GCF_001272835.1 (see script below). Seemed to work? I will download the fna files and cat the gff and fna files together to make gff3 and run them with roary.
+```
+cat GCF_001272835.1_ASM127283v1_genomic.gff GCF_001272835.1_ASM127283v1_genomic.fna > GCF_001272835.1_ASM127283v1_genomic.gff3
+```
+
+20.
+
+
+Download roary files and analyze.
+
+
 
 #### Files generated:
 * accessory.header.embl			
@@ -1108,12 +1149,37 @@ write_tsv(tsv2, "Ecoligbkpath.txt")
 
 4. (3Feb2021) Upload `Ecoligbkpath.txt` to Ceres.
 
-5. Install and run PPanGGOLiN in prokka_env environment on Ceres in the prokka_gbk directory
+5. Install PPanGGOLiN in prokka_env environment on Ceres
 ```
 salloc
+module load miniconda
 source activate prokka_env
 conda install -c bioconda ppanggolin
+```
+
+6. Tested ppanggolin.slurm script on Ceres in the prokka_gbk directory using test.slurm script via allocate a debug node to see if ppanggolin.slurm script will run on salloc.
+```
 ppanggolin workflow --anno ORGANISMS_ANNOTATION_LIST
+```
+
+7. Ran ppanggolin.slurm on Ceres as a slurm job.
+```
+#!/bin/bash
+#SBATCH --job-name=ppanggolin                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+module load miniconda
+source activate prokka_env
+ppanggolin workflow --anno Ecoligbkpath.txt
+```
+```
+Submitted batch job 5524245
 ```
 
 #### Files generated:
@@ -1121,7 +1187,7 @@ ppanggolin workflow --anno ORGANISMS_ANNOTATION_LIST
 
 
 ## Create phylogenetic tree with RAxML-NG
-* Summary: ran ... on FS19C ... data by running in ... to generate ...
+* Summary: ran ... on FS19C ... data by running in ... to generate phylogenetic tree of the core genome of isolates. See how related isolates are.
 * RAxML-NG publication DOI: 10.1093/bioinformatics/btz305
 * Github: https://github.com/amkozlov/raxml-ng
 * Began on: 3Feb2021
@@ -1133,6 +1199,10 @@ ppanggolin workflow --anno ORGANISMS_ANNOTATION_LIST
 #### Files generated:
 
 
+
+## Metabolic pathways in pangenome with gapseq
+
+## Screen for AMR or virulence genes with abricate
 
 
 ## WGS submission to SRA
