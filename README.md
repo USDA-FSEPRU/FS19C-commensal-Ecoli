@@ -10,6 +10,7 @@ This is a lab notebook for the comparative genomics project of 96 commensal E. c
 | 01_Background.md | Notes taken from OSQR plan, references listed in OSQR that are related to this project |
 | 02_Methods.md | Lists entries from OneNote FS19C lab notebook of relevance, conda environments created for sequence analysis, description and scripts for each method|
 | 02a_Pre-Methods.md | Lists entries from OneNote FS19C lab notebook on practicing using tools (bbmap and spades) on 4 FS19C isolates' sequence data |
+| 02b_MethodsSummary.md| Summary of sequence analyses methods performed. Only shows the final corrected code + procedures for each of the tools used.|
 | 03_Results.md | Notes to include in paper |
 | 04_Introduction.md | Notes to include in paper |
 | 05_Discussion.md | Notes to include in paper |
