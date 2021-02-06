@@ -3,6 +3,7 @@
 ## Raw data location
 ### Illumina NovaSeq Reads
 **Q:/_TempTransfer/DBayles/mou**
+**I:/Mou**
 * 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
   * Samples 1-96 from Sept. 15, 2020
 * 1_33298_01_1-A01-1-428RN3A_HVHJT_1839.tar

@@ -1078,9 +1078,27 @@ Submitted batch job 5521850
 ```
 cat GCF_001272835.1_ASM127283v1_genomic.gff GCF_001272835.1_ASM127283v1_genomic.fna > GCF_001272835.1_ASM127283v1_genomic.gff3
 ```
+* FNA files to download:
+* E. coli MG1655 https://www.ncbi.nlm.nih.gov/assembly/GCF_000005845.2
+  * Saved as Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.fna.gz
+* E. coli HS https://www.ncbi.nlm.nih.gov/assembly/GCF_000017765.1
+  * Saved as Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gff.gz
+* E. coli Nissle 1917 https://www.ncbi.nlm.nih.gov/assembly/GCF_000714595.1
+  * Saved as Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff.gz
+* E. coli O157:H7 str. NADC 6564 https://www.ncbi.nlm.nih.gov/assembly/GCF_001806285.1
+  * Saved as Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff.gz
+* E. coli O157:H7 EDL933 https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
+  * Saved as EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff.gz
+* TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
+  * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff.gz
 
-20.
+20. (5Feb2021) Need to annotate reference strain genomes with isolate genomes - get the same annotation. Asked Jules for specifics.
 
+21. (5Feb2021) Moved dot files from home directory on ceres to /project/fsepru/kmou/dot_files and made symbolic link to home
+```
+ln -s /project/fsepru/kmou/dot_files/software/ . # this is for software folder
+ln -s /project/fsepru/kmou/dot_files/ . # this is for conda
+```
 
 Download roary files and analyze.
 
@@ -1181,6 +1199,8 @@ ppanggolin workflow --anno Ecoligbkpath.txt
 ```
 Submitted batch job 5524245
 ```
+
+8. (5Feb2021) Will need to re-run ppanggolin by re-running prokka on 95 isolates with E. coli reference genomes to get same annotation. Then can take the gbk files and run through ppanggolin.
 
 #### Files generated:
 
