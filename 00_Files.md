@@ -9,8 +9,40 @@
 * 1_33298_01_1-A01-1-428RN3A_HVHJT_1839.tar
   * Re-sequenced samples 95 and 96 from 16Dec2020 because there were no sequences in the first NovaSeq run
 
+## Ceres /project/fsepru/kmou/ directory setup
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_dot_files/
+                |_.conda
+                |_software/
+                  |_adapt_polish.sh
+                  |_bbmap/
+                  |_good_contig_names.R
+                  |_SPAdes-3.14.1-Linux/
+            |_for_hannah_fs9/
+            |_FS9/
+            |_FS9_R/
+            |_FS19C/
+                |_lane1/
+                |_polished_genomes_100X/
+                    |_polishedgenomesprokka_95isolatesonly/
+                    |_polishedgenomesprokka/
+                        |_prokka_gff/
+                        |_prokka_gbk/
+```
+
 ## Data generated from sequence analysis
 **(Ceres) /project/fsepru/kmou/FS19C/**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_FS19C_4Samples100X/
+                |_FS19C_4Samples250X/
+```
 * FS19C_4Samples100X/
   * Files for isolates 1, 20, 94, and 96
 * FS19C_4Samples250X
@@ -18,6 +50,17 @@
 * 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
 
 **(Ceres) /project/fsepru/kmou/FS19C/lane1/**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_lane1/
+                    |_*.fastq.gz
+                    |_badsequencedata/
+                    |_fastqc/
+                    |_linked/
+```
 * *.fastq.gz sequence data for samples 1-96
 * badsequencedata/
   * 1-B08-20-427FEC_S27_L001_R*_001.fastq.gz
@@ -71,6 +114,19 @@
 
 ### Genome Assembly (BBMap, spades, mash, fastani)
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_*_pol.fastANI
+                    |_fs19cfastanioutput.out2
+                    |_referencegenomes/
+                    |_querylist2.txt
+                    |_referencelist.txt
+                    |_mash_all/
+```
 * *_pol.fasta
 * fs19cfastanioutput.out2
 * referencegenomes/
@@ -89,6 +145,16 @@
 
 ### Genome Annotation (prokka)
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolatesonly**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_polishedgenomesprokka_95isolatesonly/
+                        |_*_pol.fasta
+                        |_*_pol.fasta%.fasta_prokka/
+```
 * *_pol.fasta
 * *_pol.fasta%.fasta_prokka/
   * *_pol.fasta%.fasta.err
@@ -106,6 +172,17 @@
 
 ### Pan-genome analysis
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_polishedgenomesprokka/
+                        |_prokka_gff/
+                            |_*_pol.fasta%.fasta.gff
+                            |_roary_95isolates_6referencestrains_output/
+```
 * *_pol.fasta%.fasta.gff
 * roary_95isolates_6referencestrains_output/
   * accessory.header.embl			
@@ -136,6 +213,16 @@
 * pan_genome_results_union
 
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_polishedgenomesprokka/
+                        |_prokka_gbk/
+                            |_*_pol.fasta%.fasta.gbk
+```
 * *_pol.fasta%.fasta.gbk
 
 ## Files in Files directory

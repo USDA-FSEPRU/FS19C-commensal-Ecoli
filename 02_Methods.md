@@ -29,6 +29,10 @@ Details of sequence analyses methods performed on FS19C samples 1-96 in this rep
 ### prokka_env
 * prokka, PPanGGOLiN
 
+## shortcuts in .bashrc
+alias debug='salloc -N 1 -p debug -t 01:00:00'
+alias myjobs='squeue | grep kathy.mo'
+
 ## Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
 * Began on: 16Sept2020
@@ -893,6 +897,28 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 Submitted batch job 5531180
 ```
 
+18. (9Feb2021) Prokka didn't like how long contig IDs were (over 37) for reference genome MG1655 and didn't continue on to do Ecoli_NADC6564, Ecoli_Nissle1917, Ecoli_O157H7_EDL933, and Ecoli_TW14588. So I'm shortening both file names and the header line in fasta files to see if that makes a difference. Will run `debug` to test if prokka will accept those files before running with all other 95 isolates.
+```
+EDL933.fasta
+>CP008957.1 EDL933, complete genome # header of EDL933.fasta
+TW14588.fasta
+>NZ_CM000662.1 TW14588, WGS shotgun # header of TW14588.fasta
+MG1655.fasta
+>NC_000913.3 MG1655, complete genome # header of MG1655.fasta
+NADC6564.fasta
+>CP017251.1 NADC6564, complete sequence # header of NADC6564.fasta
+Nissle1917.fasta
+>CP007799.1 Nissle 1917, complete genome # header of Nissle1917.fasta
+```
+
+19. Moved fasta files to test directory. Run debug mode and test following code. Seemed to work fine, although I can't run it long enough to see if the same contig ID error message will show up. But each of the reference strains got a prokka_fasta folder made.
+```
+module load miniconda
+source activate ~/dot_files/.conda/envs/prokka_env
+for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
+```
+
+20. Submitted slurm job using `prokka.slurm`. Job #5532526, started at 11:09am and finished at 3:25pm.
 
 #### Files generated (for each isolate):
 * *_pol.fasta%.fasta_prokka/
