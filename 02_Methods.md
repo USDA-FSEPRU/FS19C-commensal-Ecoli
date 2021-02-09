@@ -18,7 +18,7 @@ Details of sequence analyses methods performed on FS19C samples 1-96 in this rep
 * FS19C_metadata.xlsx
 * FS19C 96 S-S+ E. coli gDNA gels.pdf
 
-## Conda environments
+## Conda environments (saved in /project/fsepru/kmou/dot_files)
 ### fastanienv
 * FastANI, multiqc, prokka
 
@@ -872,6 +872,28 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 
 16. (28Jan2021) It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
+17. (8Feb2021) Need to re-run prokka to get same annotation for 6 E. coli reference fasta files and 95 isolates. Results from this prokka run will be used for ppangolin (use gbk files). Waiting to hear back from Jules on how to run prokka to get correct annotation and output for roary. Ran prokka.slurm (ask slurm to load miniconda and prokka_env).
+```
+#!/bin/bash
+#SBATCH --job-name=prokka                            # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+set -e #this causes the script to exit on error: https://marcc-hpc.github.io/tutorials/shortcourse_slurm.html
+module load miniconda
+source activate ~/dot_files/.conda/envs/prokka_env
+for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
+```
+```
+Submitted batch job 5531180
+```
+
+
 #### Files generated (for each isolate):
 * *_pol.fasta%.fasta_prokka/
   * *_pol.fasta%.fasta.err
@@ -1078,19 +1100,6 @@ Submitted batch job 5521850
 ```
 cat GCF_001272835.1_ASM127283v1_genomic.gff GCF_001272835.1_ASM127283v1_genomic.fna > GCF_001272835.1_ASM127283v1_genomic.gff3
 ```
-* FNA files to download:
-* E. coli MG1655 https://www.ncbi.nlm.nih.gov/assembly/GCF_000005845.2
-  * Saved as Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.fna.gz
-* E. coli HS https://www.ncbi.nlm.nih.gov/assembly/GCF_000017765.1
-  * Saved as Ecoli_HS_GCF_000017765.1_ASM1776v1_genomic.gff.gz
-* E. coli Nissle 1917 https://www.ncbi.nlm.nih.gov/assembly/GCF_000714595.1
-  * Saved as Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff.gz
-* E. coli O157:H7 str. NADC 6564 https://www.ncbi.nlm.nih.gov/assembly/GCF_001806285.1
-  * Saved as Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff.gz
-* E. coli O157:H7 EDL933 https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
-  * Saved as EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff.gz
-* TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
-  * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff.gz
 
 20. (5Feb2021) Need to annotate reference strain genomes with isolate genomes - get the same annotation. Asked Jules for specifics.
 
@@ -1100,9 +1109,30 @@ ln -s /project/fsepru/kmou/dot_files/software/ . # this is for software folder
 ln -s /project/fsepru/kmou/dot_files/ . # this is for conda
 ```
 
+22. (8Feb2021) Remove prokka_gbk/ and prokka_gff/, polishedgenomesprokka/.
+Check FNA files (same as fasta files on Ceres?). Also uploaded Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.fna.gz fasta file to Ceres and unzipped with `gzip -d Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.fna.gz`
+
+* FNA files:
+* E. coli MG1655: already uploaded to Ceres (Ecoli_K-12_MG1655.fasta)
+  * Ran md5sum checksum to compare fna file (downloaded from assembly page: RefSeq) with fasta file. They're both the same.
+```
+md5sum 96-441FEC_pol.fasta%.fasta.gff ../prokka_gff/96-441FEC_pol.fasta%.fasta.gff > cksum96.txt
+md5sum -c cksum96.txt
+# Ecoli_K-12_MG1655.fasta: OK
+#Ecoli_K12_MG1655_GCF_000005845.2_ASM584v2_genomic.fna: OK
+```
+* E. coli HS: already uploaded to Ceres (Ecoli_HS.fasta)
+* E. coli Nissle 1917: already uploaded to Ceres (Ecoli_Nissle1917.fasta)
+* E. coli O157:H7 str. NADC 6564: already uploaded to Ceres (Ecoli_NADC6564.fasta)
+* E. coli O157:H7 EDL933: already uploaded to Ceres (Ecoli_O157H7_EDL933.fasta)
+* TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
+  * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.fna.gz
+  * Renamed this file to Ecoli_TW14588.fasta on Ceres
+
+
+
+
 Download roary files and analyze.
-
-
 
 #### Files generated:
 * accessory.header.embl			
@@ -1202,6 +1232,8 @@ Submitted batch job 5524245
 
 8. (5Feb2021) Will need to re-run ppanggolin by re-running prokka on 95 isolates with E. coli reference genomes to get same annotation. Then can take the gbk files and run through ppanggolin.
 
+
+
 #### Files generated:
 
 
@@ -1214,7 +1246,7 @@ Submitted batch job 5524245
 * Completed on:
 * Platform: Ceres ...
 
-1. Is this on bioconda?
+1. It is on bioconda: https://bioconda.github.io/recipes/raxml-ng/README.html
 
 #### Files generated:
 

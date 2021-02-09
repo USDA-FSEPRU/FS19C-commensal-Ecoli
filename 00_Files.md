@@ -79,6 +79,7 @@
   * Ecoli_NADC6564.fasta  
   * Ecoli_Nissle1917.fasta  
   * Ecoli_O157H7_EDL933.fasta
+  * Ecoli_TW14588.fasta
 * querylist2.txt
 * referencelist.txt
 * mash_all/
@@ -87,7 +88,7 @@
   * distances.tab
 
 ### Genome Annotation (prokka)
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolatesonly**
 * *_pol.fasta
 * *_pol.fasta%.fasta_prokka/
   * *_pol.fasta%.fasta.err
@@ -106,7 +107,7 @@
 ### Pan-genome analysis
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff**
 * *_pol.fasta%.fasta.gff
-* roary_95isolates_6referencestrains_output/ or roary_95_isolates_output/
+* roary_95isolates_6referencestrains_output/
   * accessory.header.embl			
   * core_alignment_header.embl
   * accessory.tab				
