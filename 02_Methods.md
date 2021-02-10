@@ -1252,7 +1252,7 @@ write_tsv(tsv2, "Ecoligbkpath.txt")
 
 4. (3Feb2021) Upload `Ecoligbkpath.txt` to Ceres.
 
-5. Install PPanGGOLiN in prokka_env environment on Ceres
+5. (4Feb2021) Install PPanGGOLiN in prokka_env environment on Ceres
 ```
 salloc
 module load miniconda
@@ -1260,12 +1260,12 @@ source activate prokka_env
 conda install -c bioconda ppanggolin
 ```
 
-6. Tested ppanggolin.slurm script on Ceres in the prokka_gbk directory using test.slurm script via allocate a debug node to see if ppanggolin.slurm script will run on salloc.
+6. (4Feb2021) Tested ppanggolin.slurm script on Ceres in the prokka_gbk directory using test.slurm script via allocate a debug node to see if ppanggolin.slurm script will run on salloc.
 ```
 ppanggolin workflow --anno ORGANISMS_ANNOTATION_LIST
 ```
 
-7. Ran ppanggolin.slurm on Ceres as a slurm job.
+7. (4Feb2021) Ran ppanggolin.slurm on Ceres as a slurm job.
 ```
 #!/bin/bash
 #SBATCH --job-name=ppanggolin                             # name of the job submitted
@@ -1287,6 +1287,43 @@ Submitted batch job 5524245
 
 8. (5Feb2021) Will need to re-run ppanggolin by re-running prokka on 95 isolates with E. coli reference genomes to get same annotation. Then can take the gbk files and run through ppanggolin.
 
+9. (9Feb2021) Copy gbk files from `polishedgenomesprokka_95isolates5refgenomes/` and place in `project/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk` directory
+```
+find ../polishedgenomesprokka_95isolates5refgenomes/ -name *.gbk -exec cp '{}' "./" ";"
+```
+
+10. (9Feb2021) Created text file listing all filenames in `prokka_gbk` directory and downloaded text file `Ecoligbk.txt`.
+
+11. (10Feb2021) Removed unnecessary filenames from list and opened in R. In R, made organism list with 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Save as txt file. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. R code used:
+```
+library(tidyverse)
+tsv <- read_tsv('Ecoligbk.txt', col_names = FALSE)
+tsv$X3 <- paste(tsv$X2, tsv$X1, sep= "/")
+head(tsv$X3)
+tsv2 <- tsv[c("X1", "X3")]
+head(tsv$X3)
+write_tsv(tsv2, "Ecoligbkpath.txt")
+```
+
+11. (10Feb2021) Ran ppanggolin.slurm on Ceres as a slurm job.
+```
+#!/bin/bash
+#SBATCH --job-name=ppanggolin                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+module load miniconda
+source activate prokka_env
+ppanggolin workflow --anno Ecoligbkpath.txt
+```
+```
+Submitted batch job 5524245
+```
 
 
 #### Files generated:

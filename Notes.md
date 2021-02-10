@@ -8,7 +8,8 @@
 * Platform:
 
 #To do
-* roary analysis: get fna files for E. coli reference genomes, combine gff and fna files to make gff3, run roary on reference genomes gff3 with isolates gff files.
+* PPanGGOLiN: make text file, run slurm job
+* roary analysis: look at output
 * reduce space used on Ceres: /project/fsepru/kmou/FS19C/lane1/**
   * *.fastq.gz sequence data for samples 1-96
   * tar these files once finish running assembly slurm scripts and get covstats.txt
