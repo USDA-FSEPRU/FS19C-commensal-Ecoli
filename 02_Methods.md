@@ -911,14 +911,14 @@ Nissle1917.fasta
 >CP007799.1 Nissle 1917, complete genome # header of Nissle1917.fasta
 ```
 
-19. Moved fasta files to test directory. Run debug mode and test following code. Seemed to work fine, although I can't run it long enough to see if the same contig ID error message will show up. But each of the reference strains got a prokka_fasta folder made.
+19. (9Feb2021) Moved fasta files to test directory. Run debug mode and test following code. Seemed to work fine, although I can't run it long enough to see if the same contig ID error message will show up. But each of the reference strains got a prokka_fasta folder made.
 ```
 module load miniconda
 source activate ~/dot_files/.conda/envs/prokka_env
 for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
 ```
 
-20. Submitted slurm job using `prokka.slurm`. Job #5532526, started at 11:09am and finished at 3:25pm.
+20. (9Feb2021) Submitted slurm job using `prokka.slurm`. Job #5532526, started at 11:09am and finished at 3:25pm. Stderr and stdout logs say job was completed with no errors.
 
 #### Files generated (for each isolate):
 * *_pol.fasta%.fasta_prokka/
@@ -1128,6 +1128,13 @@ cat GCF_001272835.1_ASM127283v1_genomic.gff GCF_001272835.1_ASM127283v1_genomic.
 ```
 
 20. (5Feb2021) Need to annotate reference strain genomes with isolate genomes - get the same annotation. Asked Jules for specifics.
+(9Feb2021) Response from Jules
+```
+I mentioned using genbank files during the prokka annotation step.  This is optional and only necessary if you want the genes to be annotated in a similar way to an established reference genome.
+
+For example, when I annotate Salmonella genomes I will often call prokka using something like “--proteins LT2.gbk”.  This will make prokka try and annotate the experimental genomes using the annotations from the LT2 genome as a first priority.  I don’t believe this will change what genes are identified, just what they are called.  Again, this is totally optional.
+```
+* **I will ask E. coli group if they want me to annotate with a specific reference genome. For now, I will keep going and analyze results as is.**
 
 21. (5Feb2021) Moved dot files from home directory on ceres to /project/fsepru/kmou/dot_files and made symbolic link to home
 ```
@@ -1155,8 +1162,30 @@ md5sum -c cksum96.txt
   * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.fna.gz
   * Renamed this file to Ecoli_TW14588.fasta on Ceres
 
+23. (9Feb2021) Copied gff files to `prokka_gff` and place in `project/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff` directory
+```
+find ../polishedgenomesprokka_95isolates5refgenomes/ -name *.gff -exec cp '{}' "./" ";"
+```
 
-
+24. (9Feb2021) Ran roary.slurm script to the following:
+```
+#!/bin/bash
+#SBATCH --job-name=roary                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                   # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                     # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+module load roary
+roary -f ./roary_95isolates_5referencestrains_output -e -n -v -p 16 *.gff
+#End of file
+```
+```
+Submitted batch job 5533863
+```
 
 Download roary files and analyze.
 

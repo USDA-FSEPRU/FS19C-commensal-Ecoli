@@ -154,6 +154,9 @@
                     |_polishedgenomesprokka_95isolatesonly/
                         |_*_pol.fasta
                         |_*_pol.fasta%.fasta_prokka/
+                    |_polishedgenomesprokka_95isolates5refgenomes/
+                        |_*_pol.fasta
+                        |_*_pol.fasta%.fasta_prokka/
 ```
 * *_pol.fasta
 * *_pol.fasta%.fasta_prokka/
@@ -181,7 +184,7 @@
                     |_polishedgenomesprokka/
                         |_prokka_gff/
                             |_*_pol.fasta%.fasta.gff
-                            |_roary_95isolates_6referencestrains_output/
+                            |_roary_95isolates_5referencestrains_output/
 ```
 * *_pol.fasta%.fasta.gff
 * roary_95isolates_6referencestrains_output/
