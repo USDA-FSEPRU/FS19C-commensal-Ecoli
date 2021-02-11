@@ -12,7 +12,7 @@
 set -e
 set -u
 module load miniconda
-source activate /project/fsepru/kmou/dot_files/.conda/envs/prokka_env
+source activate /project/fsepru/kmou/prokka_env
 ppanggolin workflow --anno Ecoligbkpath.txt
 
 #End of file
