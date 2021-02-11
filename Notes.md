@@ -8,7 +8,10 @@
 * Platform:
 
 #To do
-* PPanGGOLiN: make text file, run slurm job
+* re-install ppangolin and prokka in prokka_env
+  * installing prokka right now
+  * ppangolin next
+* run PPanGGOLiN.slurm again (in fsepru account)!
 * roary analysis: look at output
 * reduce space used on Ceres: /project/fsepru/kmou/FS19C/lane1/**
   * *.fastq.gz sequence data for samples 1-96

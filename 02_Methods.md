@@ -18,16 +18,22 @@ Details of sequence analyses methods performed on FS19C samples 1-96 in this rep
 * FS19C_metadata.xlsx
 * FS19C 96 S-S+ E. coli gDNA gels.pdf
 
-## Conda environments (saved in /project/fsepru/kmou/dot_files)
-### fastanienv
-* FastANI, multiqc, prokka
+## Conda environment (updated on 11Feb2021 - condensed to one conda environment)
+### **Make sure when calling environments, to use this path: /project/fsepru/kmou/dot_files/.conda/envs/**
+See: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda
 
-### mashenv
-* Mash
-  * Directions: http://mash.readthedocs.org
-
-### prokka_env
-* prokka, PPanGGOLiN
+### /project/fsepru/kmou/prokka_env
+* fastani, multiqc, mash prokka, PPanGGOLiN
+* created .condarc file in home directory to re-direct downloading packages in package cache from home directory to project directory
+```
+pkgs_dirs:
+  - /project/fsepru/kmou/my_pkg_cache
+channels:
+  - r
+  - conda-forge
+  - bioconda
+  - defaults
+```
 
 ## shortcuts in .bashrc
 alias debug='salloc -N 1 -p debug -t 01:00:00'
@@ -506,7 +512,7 @@ source activate mashenv
 conda install -c bioconda mash
 ```
 
-2. Make a new directory mash_all that has all polished genomes and reference genomes together. Then sketch all the genomes together.
+2. Make a new directory `mash_all` that has all polished genomes and reference genomes together. Then sketch all the genomes together.
 ```
 mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
 ```
@@ -532,6 +538,32 @@ mash dist -p 1 .msh .msh > distances.tab
 ```
 
 4. distances.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
+
+5. (10Feb2021) Run Mash with all 95 isolates, and 5 reference genomes including TW14588 on slurm with `mash.slurm` script
+```
+#!/bin/bash
+#SBATCH --job-name=mash                           # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+set -e
+module load miniconda
+source activate /project/fsepru/kmou/dot_files/.conda/envs/mashenv
+mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
+mash dist -p 1 .msh .msh > distances_secondrun.tab
+```
+```
+Submitted batch job 5533997
+```
+
+6. Downloaded `distances_secondrun.tab` to local computer, moved file to `Files/` and import to `mash_mds.R` script and created MDS. The plot is pretty much the same as previous mash results with TW14588 buried within the large cluster. Not sure why roary is giving so many errors.
+
+
 
 ##### Files generated:
   * distances.tab
@@ -1187,6 +1219,58 @@ roary -f ./roary_95isolates_5referencestrains_output -e -n -v -p 16 *.gff
 Submitted batch job 5533863
 ```
 
+25. (10Feb2021) Job 5533863 had more errors! I forgot to put `set -e` in slurm script, so it kept going. Some example error messages listed below. I looked at a few gff files and they have the annotation and the sequence data. I looked up the first error message (sequence without letters) and found this forum post: https://www.biostars.org/p/365927/. Also this issue page on roary: https://github.com/sanger-pathogens/Roary/issues/229. Could be that I have some reference genomes that are unrelated to my 95 isolates. Maybe it's TW14588? I'll try running mash to see what the distances are when I add TW14588 to the mix. In the meantime, I will also run `roary.slurm` without TW14588 (deleted `TW14588.fasta%.fasta.gff` from directory) and see how that goes.
+```
+#line 5:
+2021/02/09 23:34:18 Extracting proteins from GFF files
+Warning: unable to close filehandle $bed_fh properly: Disk quota exceeded at /usr/share/perl5/Bio/Roary/BedFromGFFRole.pm line 41.
+2021/02/10 11:43:18 Could not extract any protein sequences from /project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff/10-434FEN3_pol.fasta%.fasta.gff.
+
+2021/02/09 23:34:21 Could not extract any protein sequences from /project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff/10-434FEN3_pol.fasta%.fasta.gff. Does the file contain the assembly as well as the annotation?
+--------------------- WARNING ---------------------
+MSG: Got a sequence without letters. Could not guess alphabet
+---------------------------------------------------
+```
+```
+Submitted batch job 5533972
+```
+
+26. (10Feb2021) Same error messages popped up for job 5533972. Will test run roary on just the 95 isolates. I was able to get it to work the first time I ran roary with just the 95 isolates. Moved reference strain fasta files to `refgenomes/`. Run `roary.slurm`
+```
+set -e
+set -u
+module load roary
+roary -f ./roary_95isolates_testrun_output -e -n -v -p 16 *.gff
+```
+```
+Submitted batch job 5534101
+```
+
+27. (10Feb2021) Job 5534101 did not complete. Same error messages popped up. Something related to disk quota exceeding? I tried to find `/usr/share/perl5/Bio/Roary/BedFromGFFRole.pm` but could not find it on my end. Emailed vsrc support for help.
+
+28. (11Feb2021) Re-installed conda environment `prokka_env` in correct directory (`/project/fsepru/kmou/`) following SciNet best practices: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda. This may help with disk quota in home directory? Will try running `roary.slurm` again and see if that changes.
+```
+#!/bin/bash
+#SBATCH --job-name=roary                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#SBATCH --account fsepru
+#Enter commands here:
+set -e
+set -u
+module load roary
+roary -f ./roary_95isolates5genomes_testrun_output -e -n -v -p 16 *.gff
+```
+```
+Submitted batch job 5545690
+```
+
+
 Download roary files and analyze.
 
 #### Files generated:
@@ -1294,18 +1378,16 @@ find ../polishedgenomesprokka_95isolates5refgenomes/ -name *.gbk -exec cp '{}' "
 
 10. (9Feb2021) Created text file listing all filenames in `prokka_gbk` directory and downloaded text file `Ecoligbk.txt`.
 
-11. (10Feb2021) Removed unnecessary filenames from list and opened in R. In R, made organism list with 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Save as txt file. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. R code used:
+11. (10Feb2021) Opened `Ecoligbk.txt` in R, duplicated 1st column to make second column. Goal is to have 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Save as txt file. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. R code used:
 ```
 library(tidyverse)
 tsv <- read_tsv('Ecoligbk.txt', col_names = FALSE)
-tsv$X3 <- paste(tsv$X2, tsv$X1, sep= "/")
-head(tsv$X3)
-tsv2 <- tsv[c("X1", "X3")]
-head(tsv$X3)
-write_tsv(tsv2, "Ecoligbkpath.txt")
+tsv$X2 <- tsv$X1 #duplicated X1 column and name as X2
+write_tsv(tsv, "Ecoligbkpath.txt")
 ```
+In Excel, deleted the path name `/lustre/project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gbk/` in first column, and deleted `/lustre/` in second column. Saved tsv. Uploaded to Ceres. Ran `ppanggolin.slurm` and found out it was looking for `prokka_env` in home, which didn't exist. I accidentally deleted `.conda` from project directory so I had to reinstall prokka, PPanGGOLiN in `prokka_env` in project directory following the correct guidelines on SciNet: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda
 
-11. (10Feb2021) Ran ppanggolin.slurm on Ceres as a slurm job.
+12. (11Feb2021) Ran ppanggolin.slurm on Ceres as a slurm job.
 ```
 #!/bin/bash
 #SBATCH --job-name=ppanggolin                             # name of the job submitted
@@ -1316,15 +1398,20 @@ write_tsv(tsv2, "Ecoligbkpath.txt")
 #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
 #SBATCH --mem=32G   # memory
+#SBATCH --account fsepru
 #Enter commands here:
+set -e
+set -u
 module load miniconda
-source activate prokka_env
+source activate /project/fsepru/kmou/prokka_env
 ppanggolin workflow --anno Ecoligbkpath.txt
 ```
 ```
-Submitted batch job 5524245
+Submitted batch job 5545691
 ```
-
+Job cancelled. Looked at stderr file and saw the only line:
+`/project/fsepru/kmou/prokka_env/etc/conda/activate.d/java_home.sh: line 1: JAVA_HOME: unbound variable`
+How to address this??
 
 #### Files generated:
 

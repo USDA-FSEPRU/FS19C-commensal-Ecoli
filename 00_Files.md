@@ -141,7 +141,7 @@
 * mash_all/
   * *_pol.fasta
   * *.fasta
-  * distances.tab
+  * distances_firstrun.tab
 
 ### Genome Annotation (prokka)
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolatesonly**

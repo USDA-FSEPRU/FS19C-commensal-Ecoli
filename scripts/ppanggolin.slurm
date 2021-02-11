@@ -7,9 +7,12 @@
 #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
 #SBATCH --mem=32G   # memory
+#SBATCH --account fsepru
 #Enter commands here:
+set -e
+set -u
 module load miniconda
-source activate prokka_env
+source activate /project/fsepru/kmou/dot_files/.conda/envs/prokka_env
 ppanggolin workflow --anno Ecoligbkpath.txt
 
 #End of file
