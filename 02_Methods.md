@@ -1269,9 +1269,51 @@ roary -f ./roary_95isolates5genomes_testrun_output -e -n -v -p 16 *.gff
 ```
 Submitted batch job 5545690
 ```
+Looked at stderr and stdout and no error messages were found. It is strange that stdout is so short, but the output files are all there. `summary_statistics.txt` looks good too:
+```
+Core genes	(99% <= strains <= 100%)	3135
+Soft core genes	(95% <= strains < 99%)	329
+Shell genes	(15% <= strains < 95%)	3413
+Cloud genes	(0% <= strains < 15%)	9383
+Total genes	(0% <= strains <= 100%)	16260
+```
 
+29. Renamed `roary_95isolates5genomes_testrun_output` to `roary_95isolates5refgenomes_final`. I also deleted output directories from previous failed roary runs (`roary_95isolates_5referencestrains_output/`, `roary_95isolates_5referencestrains_output_BAD/`)
 
-Download roary files and analyze.
+30. Run the the `query_pan_genome` commands on slurm. Made sure to make soft link for `clustered_proteins` in same location as *.gff files.
+```
+module load roary
+query_pan_genome  -o pan_genome_results_union -v -a union *.gff
+query_pan_genome  -o pan_genome_results_core -v -a intersection *.gff
+query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
+```
+```
+Submitted batch job 5550887
+```
+
+31. Download `roary_95isolates5refgenomes_final/` files and analyze.
+Looked at the following roary output files:
+* `gene_presence_absence.csv`
+  * Order within fragment, combined with the genome fragment this gives an indication of the order of genes within the graph. In Excel, sort on Column G and H.
+  * Accessory order with fragment, combined with the Accessory fragment this gives an indication of the order of genes within the accessory graph. In Excel, sort on columns I and J.
+  * QC column: "investigate", "hypothetical" or blank
+  * How to group gene names by pathways?
+* `gene_presence_absence.Rtab`
+  * simple tab delimited binary matrix with presence and absence of each gene in each sample.
+  * The first row is the header containing the name of each sample, and the first column contains the gene name. A 1 indicates the gene is present in the sample, a 0 indicates it is absent.
+  * read Rtab file in `roary.R`
+* `pan_genome_results_union`: Union of genes found in isolates
+* `pan_genome_results_core`: Intersection of genes found in isolates (core genes)
+* `pan_genome_results_accessory`: Complement of genes found in isolates (accessory genes)
+
+14. (3Feb2021) Run `create_pan_genome_plots.R` from [Roary github](https://github.com/sanger-pathogens/Roary/blob/master/bin/). Saved as `roary.R`. Generated many plots, below are comments of each plot made.
+* `number_of_new_genes.Rtab`: 95 genomes show very few new genes
+* `number_of_conserved_genes.Rtab`: 95 genomes suggest a little over 3K conserved genes
+* `number_of_genes_in_pan_genome.Rtab`: 95 genomes show approaching 14000 genes in pan-genome
+* `number_of_unique_genes.Rtab`: 95 genomes show between 3000-4000 unique genes
+* `blast_identity_frequency.Rtab`: The 95 genomes show that between 5000-10,000 blastp results have 95-97% blast identity, less than 5000 blastp hits with 98 and 99% blastp identity; over 20,000 blastp results with 100% blastp identity.
+* `conserved_vs_total_genes.png` graph showing number of conserved genes to number of total genes in pan-genome (no surprise, more total genes than conserved genes)
+* `unique_vs_new_genes.png` graph showing number of new genes vs unique genes (more unique than new genes)
 
 #### Files generated:
 * accessory.header.embl			
@@ -1294,6 +1336,9 @@ Download roary files and analyze.
 * pan_genome_reference.fa
 * core_accessory_graph.dot		
 * summary_statistics.txt
+* pan_genome_results_accessory
+* pan_genome_results_core
+* pan_genome_results_union
 
 
 ## Pangenome analysis with PPanGGOLiN

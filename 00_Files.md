@@ -184,10 +184,10 @@
                     |_polishedgenomesprokka/
                         |_prokka_gff/
                             |_*_pol.fasta%.fasta.gff
-                            |_roary_95isolates_5referencestrains_output/
+                            |_roary_95isolates5refgenomes_final/
 ```
 * *_pol.fasta%.fasta.gff
-* roary_95isolates_6referencestrains_output/
+* roary_95isolates5refgenomes_final/
   * accessory.header.embl			
   * core_alignment_header.embl
   * accessory.tab				
