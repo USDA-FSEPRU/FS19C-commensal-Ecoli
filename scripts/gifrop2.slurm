@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ppanggolin                             # name of the job submitted
+#SBATCH --job-name=gifrop2                             # name of the job submitted
 #SBATCH -p short                                    # name of the queue you are submitting to
 #SBATCH -N 1                                            # number of nodes in this job
 #SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
@@ -8,12 +8,14 @@
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
 #SBATCH --mem=32G   # memory
 #SBATCH --account fsepru
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
 #Enter commands here:
 set -e
 set -u
 set +eu
-module load miniconda
-source activate /project/fsepru/conda_envs/ppanggolin
-ppanggolin workflow --anno Ecoligbkpath.txt
 
-#End of file
+module load miniconda
+source activate /project/fsepru/conda_envs/gifrop2
+gifrop --get_islands

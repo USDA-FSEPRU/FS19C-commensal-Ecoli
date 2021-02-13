@@ -185,6 +185,8 @@
                         |_prokka_gff/
                             |_*_pol.fasta%.fasta.gff
                             |_roary_95isolates5refgenomes_final/
+                            |_gifrop_out/
+                            |_refgenomes/
 ```
 * *_pol.fasta%.fasta.gff
 * roary_95isolates5refgenomes_final/
@@ -210,10 +212,45 @@
   * summary_statistics.txt
   * stderr.*.roary
   * stdout.*.roary
-* pan_genome_reference.fa
-* pan_genome_results_accessory
-* pan_genome_results_core
-* pan_genome_results_union
+  * pan_genome_reference.fa
+  * pan_genome_results_accessory
+  * pan_genome_results_core
+  * pan_genome_results_union
+  * RAxML_bestTree.core_genome_tree_1
+  * RAxML_bipartitionsBranchLabels.core_genome_tree_1
+  * RAxML_bipartitions.core_genome_tree_1
+  * RAxML_bootstrap.core_genome_tree_1
+  * RAxML_info.core_genome_tree_1
+* gifrop_out/
+  * clustered_island_info.csv  
+  * gifrop.log                 
+  * my_islands/
+    * abricate/
+      * All_islands.megares2  
+      * All_islands.ncbi  
+      * All_islands.plasmidfinder  
+      * All_islands.vfdb
+      * All_islands.viroseqs
+    * All_islands.fasta  
+    * island_info.csv
+  * pan_with_island_info.csv
+  * figures/
+    * island_length_histogram.png          
+    * islands_per_isolate.png   
+    * Number_of_occurances_secondary.png
+    * islands_per_isolate_no_unknowns.png  
+    * Number_of_occurances.png
+  * islands_pangenome_gff.csv  
+  * pan_only_islands.csv  
+  * sequence_data/
+    * *_pol.fasta%.fasta_short.gff
+    * _pol.fasta%.fasta.fna
+* refgenomes/
+  * EDL933.fasta%.fasta.gff  
+  * NADC6564.fasta%.fasta.gff    
+  * TW14588.fasta%.fasta.gff
+  * MG1655.fasta%.fasta.gff  
+  * Nissle1917.fasta%.fasta.gff
 
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk**
 ```
@@ -225,8 +262,24 @@
                     |_polishedgenomesprokka/
                         |_prokka_gbk/
                             |_*_pol.fasta%.fasta.gbk
+                            |_ppanggolin_output_DATE2021-02-12_HOUR15.58.33_PID2302/
 ```
 * *_pol.fasta%.fasta.gbk
+* Ecoligbkpath.txt
+* Ecoligbk.txt
+* ppanggolin_output_DATE2021-02-12_HOUR15.58.33_PID2302/
+  * gene_presence_absence.Rtab       
+  * organisms_statistics.tsv  
+  * pangenomeGraph_light.gexf  
+  * projection/
+  * matrix.csv                       
+  * pangenomeGraph.gexf       
+  * pangenome.h5               
+  * tile_plot.html
+  * mean_persistent_duplication.tsv  
+  * pangenomeGraph.json       
+  * partitions/
+  * Ushaped_plot.html
 
 ## Files in Files directory
 * FS19C_metadata.xlsx
@@ -247,6 +300,9 @@
 * KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
 * FS19C 96 S-S+ E. coli gDNA gels.pdf
+
+
+
 
 ## Files I need to add in Files directory
 * querylist.txt (genome assembly)

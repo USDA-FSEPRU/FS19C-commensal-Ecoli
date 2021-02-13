@@ -1,7 +1,7 @@
 # Methods
 Details of sequence analyses methods performed on FS19C samples 1-96 in this repo. Includes lab notes of how methods performed
 
-## Sample Collection
+## (1) Sample Collection
 ### OneNote FS19C lab notebook entries on E. coli isolates 1-96 from 24Apr2020 to 11June2020: streaking plates, DNA extraction, re-extraction of DNA, DNA cleanup, nanodrop, Qubit, gel
 * **20May2020** DNA extraction of isolates #1-24 using DNeasy Blood and Tissue Kit
 * **14May2020** DNA extraction of isolates #25-48 using DNeasy Blood and Tissue Kit
@@ -19,8 +19,9 @@ Details of sequence analyses methods performed on FS19C samples 1-96 in this rep
 * FS19C 96 S-S+ E. coli gDNA gels.pdf
 
 ## Conda environment (updated on 11Feb2021 - condensed to one conda environment)
-### **Make sure when calling environments, to use this path: /project/fsepru/kmou/dot_files/.conda/envs/**
+* **Make sure when calling environments, to use this path: /project/fsepru/kmou/dot_files/.conda/envs/**
 See: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda
+* Also can use conda environments loaded on `/project/fsepru/conda_envs/`
 
 ### /project/fsepru/kmou/prokka_env
 * fastani, multiqc, mash prokka, PPanGGOLiN
@@ -39,7 +40,7 @@ channels:
 alias debug='salloc -N 1 -p debug -t 01:00:00'
 alias myjobs='squeue | grep kathy.mo'
 
-## Sequence assembly
+## (2) Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
 * Began on: 16Sept2020
 * Completed on: 18Dec2020
@@ -358,7 +359,7 @@ ls -v *pol.fasta > polishedfasta.txt
 * *.fasta
 * *_spades_out/
 
-## QC with FastQC
+## (3) QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc (forgot to do this prior to sequence assembly)
 * Began on: 6Jan2021
 * Completed on: 7Jan2021
@@ -386,7 +387,7 @@ ls -v *pol.fasta > polishedfasta.txt
   * *fastqc.zip
   * *fastqc.html
 
-## QC with MultiQC
+## (4) QC with MultiQC
 * Tutorial: https://www.youtube.com/watch?v=qPbIlO_KWN0
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94 (forgot to do this prior to sequence assembly). I did not include samples 95 and 96 in the multiqc run as I realized these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (but I would only consider  samples 1-94 from that first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
 * Began and Completed on: 7Jan2021
@@ -430,7 +431,7 @@ ls -v *pol.fasta > polishedfasta.txt
  * 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
  * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
 
-## QC with FastANI
+## (5) QC with FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
 * Began on: 28Dec2020
@@ -496,7 +497,7 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
   * fs19cfastanioutput.out
   * fs19cfastanioutput2.out
 
-## QC with Mash
+## (6) QC with Mash
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
@@ -569,7 +570,7 @@ Submitted batch job 5533997
   * distances.tab
   * FS19Cmashdistances.xlsx
 
-## QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
+## (7) QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
 * Began on: 14Jan2021
 * Completed on: 15Jan2021
@@ -790,7 +791,7 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 * FS19C_mashMDS.tiff
 * qc_mds.R
 
-## Genome annotation with prokka
+## (8) Genome annotation with prokka
 * Summary: Identify annotation reference from UniProt (E. coli pangenome) and use prokka to annotate all 95 samples.
 * Prokka publication: DOI: 10.1093/bioinformatics/btu153
 * Began on: 20Jan2021
@@ -967,7 +968,7 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
   * *_pol.fasta%.fasta.tsv
   * *_pol.fasta%.fasta.txt
 
-## Pangenome analysis with roary
+## (9) Pangenome analysis with roary
 * Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
@@ -1341,7 +1342,7 @@ Looked at the following roary output files:
 * pan_genome_results_union
 
 
-## Pangenome analysis with PPanGGOLiN
+## (10) Pangenome analysis with PPanGGOLiN
 * Summary: ran PPanGGOLiN on FS19C gff data by running in prokka_env conda environment on Ceres to generate pangenome analysis of *E. coli* isolates.
 * PPanGGOLiN publication DOI: https://doi.org/10.1371/journal.pcbi.1007732
 * Github: https://github.com/labgem/PPanGGOLiN/wiki/Basic-usage-and-practical-information, https://github.com/labgem/PPanGGOLiN
@@ -1458,21 +1459,149 @@ Job cancelled. Looked at stderr file and saw the only line:
 `/project/fsepru/kmou/prokka_env/etc/conda/activate.d/java_home.sh: line 1: JAVA_HOME: unbound variable`
 How to address this??
 
+13. (12Feb2021) Modified `ppanngolin.slurm` slurm script. I've encountered the unbound variable issue before and it was fixed when I put in `set +eu` in slurm script. Also modified conda package path. Jules made one for ppanggolin in `/project/fsepru/conda_envs` directory so I will use that.
+```
+set -e
+set -u
+set +eu
+module load miniconda
+source activate /project/fsepru/conda_envs/ppanggolin
+ppanggolin workflow --anno Ecoligbkpath.txt
+```
+```
+Submitted batch job 5566707
+```
+Job completed successfully.
+
 #### Files generated:
+* gene_presence_absence.Rtab       
+* organisms_statistics.tsv  
+* pangenomeGraph_light.gexf  
+* projection/
+* matrix.csv                       
+* pangenomeGraph.gexf       
+* pangenome.h5               
+* tile_plot.html
+* mean_persistent_duplication.tsv  
+* pangenomeGraph.json       
+* partitions/
+* Ushaped_plot.html
 
 
-
-## Create phylogenetic tree with RAxML-NG
-* Summary: ran ... on FS19C ... data by running in ... to generate phylogenetic tree of the core genome of isolates. See how related isolates are.
-* RAxML-NG publication DOI: 10.1093/bioinformatics/btz305
-* Github: https://github.com/amkozlov/raxml-ng
-* Began on: 3Feb2021
+## (11) Create phylogenetic tree with RAxML
+* Summary: ran core_gene_alignment.aln (generated from roary) in raxml to generate phylogenetic tree of the core genome of isolates. Goal is to identify units of horizontal gene transfer within very closely related strains using a pangenome framework.
+* RAxML-NG publication DOI: 10.1093/bioinformatics/btu033
+* Github: https://github.com/stamatak/standard-RAxML/blob/master/README
+* Began on: 12Feb2021
 * Completed on:
-* Platform: Ceres ...
+* Platform: Ceres
 
-1. It is on bioconda: https://bioconda.github.io/recipes/raxml-ng/README.html
+1. (12Feb2021) Ran raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`.
+```
+#!/bin/bash
+
+#SBATCH --job-name=RAXML                              # name of the job submitted
+#SBATCH -p short                                       # name of the queue you are submitting to
+#SBATCH -N 1                                         # number of nodes in this job
+#SBATCH -n 40                                       # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                     # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N"                               # optional but it prints our standard error
+#SBATCH --mem=120G   
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
+# ENTER COMMANDS HERE:
+
+module load raxml
+
+# -T is threads
+# -x takes a random seed and turns on rapid-bootstrapping
+# -N is how to do bootstrapping 'autoMRE' is an algorithm that will automatically determine when enough bootstraps have been done
+# -m is the model to use
+# -f select algorithm: "-f a": rapid Bootstrap analysis and search for best-scoring ML tree in one program run
+
+# -n is the name to use for the outputs
+# -p is a random seed to use for parsimony searches
+# -o is the name of the genome you want to use as an outgroup, must match exactly, not required
+
+raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignment.aln -T 40 -x 7 -N autoMRE -p 7
+
+#End of file
+```
+```
+Submitted batch job 5566413
+```
+Job ran successfully.
 
 #### Files generated:
+* RAxML_bestTree.core_genome_tree_1
+* RAxML_bipartitionsBranchLabels.core_genome_tree_1
+* RAxML_bipartitions.core_genome_tree_1
+* RAxML_bootstrap.core_genome_tree_1
+* RAxML_info.core_genome_tree_1
+
+## (12) Extract genomic islands with gifrop2
+* Summary: ran gifrop2 (developed by Julian Trachsel) via slurm on Ceres to identify ‘genomic islands’ from roary pangenomes. See how related isolates are.
+* Github: https://github.com/Jtrachsel/gifrop
+* Began on: 12Feb2021
+* Completed on:
+* Platform: Ceres
+
+1. (12Feb2021) Made `gifrop2.slurm` script and ran in `/project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff` where `*.gff` files and soft link for `gene_presence_absence.csv` is.
+```
+#!/bin/bash
+#SBATCH --job-name=gifrop2                             # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#SBATCH --account fsepru
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
+#Enter commands here:
+set -e
+set -u
+set +eu
+
+module load miniconda
+source activate /project/fsepru/conda_envs/gifrop2
+gifrop --get_islands
+```
+```
+Submitted batch job 5566653
+```
+Job ran successfully. Downloaded `gifrop_out/` to local computer
+
+#### Files generated:
+* clustered_island_info.csv  
+* gifrop.log                 
+* my_islands/
+  * abricate/
+    * All_islands.megares2  
+    * All_islands.ncbi  
+    * All_islands.plasmidfinder  
+    * All_islands.vfdb
+    * All_islands.viroseqs
+  * All_islands.fasta  
+  * island_info.csv
+* pan_with_island_info.csv
+* figures/
+  * island_length_histogram.png          
+  * islands_per_isolate.png   
+  * Number_of_occurances_secondary.png
+  * islands_per_isolate_no_unknowns.png  
+  * Number_of_occurances.png
+* islands_pangenome_gff.csv  
+* pan_only_islands.csv  
+* sequence_data/
+  * *_pol.fasta%.fasta_short.gff
+  * _pol.fasta%.fasta.fna
+
 
 
 

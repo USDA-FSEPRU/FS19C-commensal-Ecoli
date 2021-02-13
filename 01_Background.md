@@ -151,6 +151,13 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   * Github: https://github.com/sanger-pathogens/Roary
   * Roary site: http://sanger-pathogens.github.io/Roary/
   * Great step-by-step tutorial: https://github.com/microgenomics/tutorials/blob/master/pangenome.md
+7. PPanGGOLiN DOI: https://doi.org/10.1371/journal.pcbi.1007732
+  * Github: https://github.com/labgem/PPanGGOLiN
+8. RAxML DOI: 10.1093/bioinformatics/btu033
+  * Github: https://github.com/stamatak/standard-RAxML
+9. gifrop2
+  * Github: https://github.com/Jtrachsel/gifrop
+
 
 
 ## Additional papers to consider

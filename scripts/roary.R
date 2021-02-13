@@ -11,6 +11,8 @@
 #Load library packages
 library(ggplot2)
 library(tidyverse)
+install.packages('splitstackshape')
+library(splitstackshape)
 
 sessionInfo()
 #R version 4.0.2 (2020-06-22)
@@ -80,10 +82,47 @@ presenceabsence <- presenceabsence[,-1] # remove extra Gene column
 #pull out eut-only genes
 presenceabsence_eut <-presenceabsence[grep('^eut', rownames(presenceabsence)),]
 names(which(colSums(presenceabsence_eut == 1) > 0))
-names(which(rowSums(presenceabsence_eut == 1) > 0))
-
+#names(which(rowSums(presenceabsence_eut == 1) > 0))
 
 #pull out aaeA genes as a test
 presenceabsence_aae <-presenceabsence[grep('^aae', rownames(presenceabsence)),]
-names(which(colSums(presenceabsence_aaeA == 1) > 0))
-names(which(rowSums(presenceabsence_aaeA == 1) > 0))
+presenceabsence_aae
+
+#other metabolic genes?
+#arabinose
+presenceabsence_ara <-presenceabsence[grep('^ara', rownames(presenceabsence)),]
+presenceabsence_aae
+
+#fucose
+presenceabsence_fuc <-presenceabsence[grep('^fuc', rownames(presenceabsence)),]
+
+#galactose
+
+#galacturonate
+
+#gluconate
+
+#glucosamine
+
+#hexuronate
+
+#lactose
+
+#mannose
+
+#N-acetylgalactosamine
+
+#N-acetylglucosamine
+
+#N-acetyl-neuraminic acid
+
+#ribose
+
+#sucrose
+
+## read core pan-genome
+core <- read.delim("pan_genome_results_core", header = FALSE, sep = '\t')
+colnames(core)
+core2 <- cSplit(core, "V1", ":")
+row.names(core2) <- core2$V1_1
+row.names(core2)
