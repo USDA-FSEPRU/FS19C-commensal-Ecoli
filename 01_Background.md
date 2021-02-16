@@ -125,9 +125,9 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 | uxaC | hexuronate<sup>1</sup>, glucuronate<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
 | lacZ | lactose | https://doi.org/10.1371/journal.pone.0053957 |
 | manA | mannose | 10.1128/IAI.01386-07 |
-| **agaWEFA<sup>1</sup>**, nanAT<sup>2</sup> | N-acetylgalactosamine and galactosamine<sup>1</sup>, **N-acetylgalactosamine<sup>2</sup>** | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| nanAT | N-acetylgalactosamine and galactosamine<sup>1</sup>, **N-acetylgalactosamine<sup>2</sup>** | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
 | nagE | NAG (N-acetylglucosamine) | 10.1128/IAI.01386-07 |
-| nanAT | **NANA (N-acetyl-neuraminic acid)<sup>1</sup>**, N-acetylgalactosamine<sup>2</sup> | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
+| ?? | N-acetylneuraminic acid | 10.1128/IAI.01386-07, https://doi.org/10.1371/journal.pone.0053957 |
 | rbsK | ribose | 10.1128/IAI.01386-07 |
 | sacH | sucrose | https://doi.org/10.1371/journal.pone.0053957 |
 

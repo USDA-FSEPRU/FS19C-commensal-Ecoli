@@ -11,8 +11,8 @@
 #Load library packages
 library(ggplot2)
 library(tidyverse)
-install.packages('splitstackshape')
 library(splitstackshape)
+library(pheatmap)
 
 sessionInfo()
 #R version 4.0.2 (2020-06-22)
@@ -73,52 +73,33 @@ ylab("No. of genes")+ theme_bw(base_size = 16) +  theme(legend.justification=c(1
 #ggsave(filename="unique_vs_new_genes.png", scale=1)
 
 ######################
-presenceabsence <-read.table("gene_presence_absence.Rtab", header = TRUE, sep = "\t",
+presenceabsence <-read.table("gene_presence_absence.Rtab", header = FALSE, sep = "\t",
                     quote = "")
+colnames(presenceabsence) <- presenceabsence[1,]
+presenceabsence <- presenceabsence[-1,] # remove extra row
 presenceabsence[1:5,1:5] # 1 = present, 0 = absent
-rownames(presenceabsence) <- presenceabsence$Gene # set Gene as rownames
-presenceabsence <- presenceabsence[,-1] # remove extra Gene column
+colnames(presenceabsence)
+rownames(presenceabsence) <- presenceabsence[,1]
+presenceabsence <- presenceabsence[,-1]
+pa <- c("1-428RN3A_pol.fasta%.fasta", "10-434FEN3_pol.fasta%.fasta", "11-434FEN3_pol.fasta%.fasta", 
+        "12-435FEN3_pol.fasta%.fasta", "13-435FEN3_pol.fasta%.fasta", "14-437FEN5_pol.fasta%.fasta", 
+        "15-437FEN5_pol.fasta%.fasta", "57-436REC_pol.fasta%.fasta",  "58-436RED_pol.fasta%.fasta",  
+        "59-437REC_pol.fasta%.fasta",  "6-437REN3B_pol.fasta%.fasta", "60-437RED_pol.fasta%.fasta",
+        "61-438REC_pol.fasta%.fasta",  "62-438RED_pol.fasta%.fasta", "EDL933.fasta%.fasta", 
+        "MG1655.fasta%.fasta", "NADC6564.fasta%.fasta", "Nissle1917.fasta%.fasta", "TW14588.fasta%.fasta")
+pa1 <- presenceabsence[pa]
+keep_rows <- rownames(pa1) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .)
+pa2 <- pa1[keep_rows,]
+heatmap(as.matrix(pa2))
 
-#pull out eut-only genes
-presenceabsence_eut <-presenceabsence[grep('^eut', rownames(presenceabsence)),]
-names(which(colSums(presenceabsence_eut == 1) > 0))
-#names(which(rowSums(presenceabsence_eut == 1) > 0))
+write.csv(pa2, file = "paheatmap.csv")
 
-#pull out aaeA genes as a test
-presenceabsence_aae <-presenceabsence[grep('^aae', rownames(presenceabsence)),]
-presenceabsence_aae
-
-#other metabolic genes?
-#arabinose
-presenceabsence_ara <-presenceabsence[grep('^ara', rownames(presenceabsence)),]
-presenceabsence_aae
-
-#fucose
-presenceabsence_fuc <-presenceabsence[grep('^fuc', rownames(presenceabsence)),]
-
-#galactose
-
-#galacturonate
-
-#gluconate
-
-#glucosamine
-
-#hexuronate
-
-#lactose
-
-#mannose
-
-#N-acetylgalactosamine
-
-#N-acetylglucosamine
-
-#N-acetyl-neuraminic acid
-
-#ribose
-
-#sucrose
+#heatmap
+heatmap <- heatmap(pa2)
+#Error in heatmap(pa2) : 'x' must be a numeric matrix
+class(mpa2)
+# [1] "matrix" "array" 
+#Can't figure out how to make numeric matrix.
 
 ## read core pan-genome
 core <- read.delim("pan_genome_results_core", header = FALSE, sep = '\t')
