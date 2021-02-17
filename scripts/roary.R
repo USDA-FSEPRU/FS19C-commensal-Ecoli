@@ -94,8 +94,9 @@ pa1 <- presenceabsence[pa] #select only the isolates from pa
 keep_rows <- rownames(pa1) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
 pa2 <- pa1[keep_rows,]
 pheatmap(pa2) #Error during wrapup: 'x' must be numeric. 
-#See: https://www.programmingr.com/r-error-messages/list-object-cannot-be-coerced-to-type-double/
-pa2_num <- unlist(pa2) #convert to numeric
+#Tried a few different solutions from various forums, got an error message that list object cannot be coerced to type double. Checked out this site:
+#https://www.programmingr.com/r-error-messages/list-object-cannot-be-coerced-to-type-double/
+pa2_num <- unlist(pa2) #convert list to single vector
 pa2_numeric <- lapply(pa2_num, as.numeric) #convert to numeric
 as.matrix(pa2_numeric) #convert to matrix
 pheatmap(pa2_numeric,mean="pheatmap default") #Error during wrapup: must have n >= 2 objects to cluster
