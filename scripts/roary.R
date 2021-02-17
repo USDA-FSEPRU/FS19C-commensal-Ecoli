@@ -4,9 +4,7 @@
 #FS19C Roary
 #Kathy Mou
 
-#Purpose: Analyze pan-genome results from roary. It takes in the *.Rtab files and produces graphs on 
-#how the pan genome varies as genomes are added (in random orders).
-#Code taken from: https://github.com/sanger-pathogens/Roary/blob/master/bin/create_pan_genome_plots.R
+#Purpose: Analyze pan-genome results from roary. 
 
 #Load library packages
 library(ggplot2)
@@ -19,34 +17,40 @@ sessionInfo()
 
 #####################################################################################################
 
+#Code taken from: https://github.com/sanger-pathogens/Roary/blob/master/bin/create_pan_genome_plots.R
+#It takes in the *.Rtab files and produces graphs on 
+#how the pan genome varies as genomes are added (in random orders).
+
+#Number of new genes
 mydata = read.table('number_of_new_genes.Rtab')
 boxplot(mydata, data=mydata, main="Number of new genes",
          xlab="No. of genomes", ylab="No. of genes",varwidth=TRUE, ylim=c(0,max(mydata)), outline=FALSE)
 
+#Number of conserved genes
 mydata = read.table("number_of_conserved_genes.Rtab")
 boxplot(mydata, data=mydata, main="Number of conserved genes",
           xlab="No. of genomes", ylab="No. of genes",varwidth=TRUE, ylim=c(0,max(mydata)), outline=FALSE)
 
+#Number of genes in pan-genome
 mydata = read.table("number_of_genes_in_pan_genome.Rtab")
 boxplot(mydata, data=mydata, main="No. of genes in the pan-genome",
           xlab="No. of genomes", ylab="No. of genes",varwidth=TRUE, ylim=c(0,max(mydata)), outline=FALSE)
 
+#Number of unique genes
 mydata = read.table("number_of_unique_genes.Rtab")
 boxplot(mydata, data=mydata, main="Number of unique genes",
          xlab="No. of genomes", ylab="No. of genes",varwidth=TRUE, ylim=c(0,max(mydata)), outline=FALSE)
 
+#Blast identity frequency
 mydata = read.table("blast_identity_frequency.Rtab")
 plot(mydata,main="Number of blastp hits with \ndifferent percentage \n identity",  xlab="Blast percentage identity", ylab="No. blast results")
 
-##################
-
+#Number of conserved genes vs total genes
 conserved = colMeans(read.table("number_of_conserved_genes.Rtab"))
 total = colMeans(read.table("number_of_genes_in_pan_genome.Rtab"))
-
 genes = data.frame( genes_to_genomes = c(conserved,total),
                     genomes = c(c(1:length(conserved)),c(1:length(conserved))),
                     Key = c(rep("Conserved genes",length(conserved)), rep("Total genes",length(total))) )
-
 ggplot(data = genes, aes(x = genomes, y = genes_to_genomes, group = Key, linetype=Key)) +geom_line()+
 theme_classic() +
 ylim(c(1,max(total)))+
@@ -55,15 +59,12 @@ xlab("No. of genomes") +
 ylab("No. of genes")+ theme_bw(base_size = 16) +  theme(legend.justification=c(0,1),legend.position=c(0,1))
 #ggsave(filename="conserved_vs_total_genes.png", scale=1)
 
-######################
-
+#Number of unique genes vs new genes
 unique_genes = colMeans(read.table("number_of_unique_genes.Rtab"))
 new_genes = colMeans(read.table("number_of_new_genes.Rtab"))
-
 genes = data.frame( genes_to_genomes = c(unique_genes,new_genes),
                     genomes = c(c(1:length(unique_genes)),c(1:length(unique_genes))),
                     Key = c(rep("Unique genes",length(unique_genes)), rep("New genes",length(new_genes))) )
-
 ggplot(data = genes, aes(x = genomes, y = genes_to_genomes, group = Key, linetype=Key)) +geom_line()+
 theme_classic() +
 ylim(c(1,max(unique_genes)))+
@@ -72,14 +73,16 @@ xlab("No. of genomes") +
 ylab("No. of genes")+ theme_bw(base_size = 16) +  theme(legend.justification=c(1,1),legend.position=c(1,1))
 #ggsave(filename="unique_vs_new_genes.png", scale=1)
 
-######################
-presenceabsence <-read.table("gene_presence_absence.Rtab", header = FALSE, sep = "\t",
+
+#####################################################################################################
+#Heatmap of gene presence and absence of sugar catabolism genes
+presenceabsence <-read.table("./Files/gene_presence_absence.Rtab", header = FALSE, sep = "\t",
                     quote = "")
-colnames(presenceabsence) <- presenceabsence[1,]
+colnames(presenceabsence) <- presenceabsence[1,] #set first row as column name
 presenceabsence <- presenceabsence[-1,] # remove extra row
 presenceabsence[1:5,1:5] # 1 = present, 0 = absent
 colnames(presenceabsence)
-rownames(presenceabsence) <- presenceabsence[,1]
+rownames(presenceabsence) <- presenceabsence[,1] #set first column as row name
 presenceabsence <- presenceabsence[,-1]
 pa <- c("1-428RN3A_pol.fasta%.fasta", "10-434FEN3_pol.fasta%.fasta", "11-434FEN3_pol.fasta%.fasta", 
         "12-435FEN3_pol.fasta%.fasta", "13-435FEN3_pol.fasta%.fasta", "14-437FEN5_pol.fasta%.fasta", 
@@ -87,23 +90,12 @@ pa <- c("1-428RN3A_pol.fasta%.fasta", "10-434FEN3_pol.fasta%.fasta", "11-434FEN3
         "59-437REC_pol.fasta%.fasta",  "6-437REN3B_pol.fasta%.fasta", "60-437RED_pol.fasta%.fasta",
         "61-438REC_pol.fasta%.fasta",  "62-438RED_pol.fasta%.fasta", "EDL933.fasta%.fasta", 
         "MG1655.fasta%.fasta", "NADC6564.fasta%.fasta", "Nissle1917.fasta%.fasta", "TW14588.fasta%.fasta")
-pa1 <- presenceabsence[pa]
-keep_rows <- rownames(pa1) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .)
+pa1 <- presenceabsence[pa] #select only the isolates from pa
+keep_rows <- rownames(pa1) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
 pa2 <- pa1[keep_rows,]
-heatmap(as.matrix(pa2))
-
-write.csv(pa2, file = "paheatmap.csv")
-
-#heatmap
-heatmap <- heatmap(pa2)
-#Error in heatmap(pa2) : 'x' must be a numeric matrix
-class(mpa2)
-# [1] "matrix" "array" 
-#Can't figure out how to make numeric matrix.
-
-## read core pan-genome
-core <- read.delim("pan_genome_results_core", header = FALSE, sep = '\t')
-colnames(core)
-core2 <- cSplit(core, "V1", ":")
-row.names(core2) <- core2$V1_1
-row.names(core2)
+pheatmap(pa2) #Error during wrapup: 'x' must be numeric. 
+#See: https://www.programmingr.com/r-error-messages/list-object-cannot-be-coerced-to-type-double/
+pa2_num <- unlist(pa2) #convert to numeric
+pa2_numeric <- lapply(pa2_num, as.numeric) #convert to numeric
+as.matrix(pa2_numeric) #convert to matrix
+pheatmap(pa2_numeric,mean="pheatmap default") #Error during wrapup: must have n >= 2 objects to cluster
