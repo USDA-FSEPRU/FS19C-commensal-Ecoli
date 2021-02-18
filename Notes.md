@@ -10,9 +10,10 @@
 #To do
 * You can change your default Slurm account using running slurm-account-selector.sh on the login node.
   * To see all your Slurm accounts at any time, use “sacctmgr -Pns show user format=account”
+* re-run annotation with MG1655: encountered same error as last time with contig names being too long. Need to add `--centre X --compliant` to `pan_pipe` script
+* check out mash results (distances_thirdrun.tab)
 * get pheatmap to work: https://towardsdatascience.com/pheatmap-draws-pretty-heatmaps-483dab9a3cc, https://slowkow.com/notes/pheatmap-tutorial/
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
-* re-run annotation with MG1655
 * look at raxml tree
     * visualize tree via ...?
 * virulence genes (abricate)

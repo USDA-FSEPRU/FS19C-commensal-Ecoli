@@ -292,16 +292,22 @@ Reference genomes include:
 * E. coli O157:H7 EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
   * Saved as Ecoli_O157H7_EDL933.fasta
+* * (Enterobacteriaceae) Salmonella enterica subsp. enterica serovar Typhimurium str. LT2 aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000006945.2
+  * Saved as Styphimurium_LT2.fna.gz
+* (Non-Enterobacteriaceae, same phylum) Campylobacter jejuni subsp. jejuni NCTC 11168 aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000009085.1
+  * Saved as Cjejuni_11168.fna.gz
+* (Non-Proteobacteria, a Firmicutes) Clostridium saccharoperbutylacetonicum N1-4(HMT) aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000340885.1
+  * Saved as Clostridium_N1-4.fna.gz
 
 3. Run distance estimates comparing sketch genomes with itself. This runs really fast (less than a second)
 ```
 mash dist -p 1 .msh .msh > distances.tab
 ```
-* distances.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
+* distances_thirdrun.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
 
 ##### Files generated:
-  * distances.tab
-  * FS19Cmashdistances.xlsx
+  * distances_thirdrun.tab
+  * FS19Cmashdistances_thirdrun.xlsx
 
 ## QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
@@ -454,44 +460,26 @@ mash dist -p 1 .msh .msh > distances.tab
 * FS19C_mashMDS.tiff
 * qc_mds.R
 
-## Genome annotation with prokka
-* Summary: Use prokka default settings with some minor additions to annotate all 95 samples.
-* Prokka publication: DOI: 10.1093/bioinformatics/btu153
-* Platform: Ceres, prokka_env conda environment
-
-1. Run prokka in fastanienv conda environment on Ceres in FS19C/polished_genomes_100X. Use 'polished' fasta files of 95 isolates.
-```
-salloc
-module load miniconda
-conda create -n prokka_env -c conda-forge -c bioconda prokka
-source activate prokka_env
-for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag" -genus Escherichia -strain "$tag" -outdir "$tag"_prokka -force -addgenes "$file" -centre X -compliant; done
-```
-
-2. Takes about 12 hours. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
-
-#### Files generated (for each isolate):
-* *_pol.fasta%.fasta_prokka/
-  * *_pol.fasta%.fasta.err
-  * *_pol.fasta%.fasta.faa
-  * *_pol.fasta%.fasta.ffn
-  * *_pol.fasta%.fasta.fna
-  * *_pol.fasta%.fasta.fsa
-  * *_pol.fasta%.fasta.gbk
-  * *_pol.fasta%.fasta.gff
-  * *_pol.fasta%.fasta.log
-  * *_pol.fasta%.fasta.sqn
-  * *_pol.fasta%.fasta.tbl
-  * *_pol.fasta%.fasta.tsv
-  * *_pol.fasta%.fasta.txt
-
-## Pangenome analysis with roary
-* Summary: ran Roary on FS19C gff data with E. coli reference genomes (gff3) in Ceres to generate pangenome analysis of *E. coli* isolates.
-* Roary publication DOI: 10.1093/bioinformatics/btv421
+## Genome annotation with prokka, pan-genome analysis with roary, genomic island identification with gifrop
+* Summary: The pan_pipe slurm script, provided by Jules, runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all fasta genomes (`.fna` format) with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
+* Github: https://github.com/Jtrachsel/gifrop
 * Platform: Ceres
 
-## Pangenome analysis with PPanGGOLiN
-* Summary: ran PPanGGOLiN on FS19C gff data by running in prokka_env conda environment on Ceres to generate pangenome analysis of *E. coli* isolates.
-* PPanGGOLiN publication DOI: https://doi.org/10.1371/journal.pcbi.1007732
-* Github: https://github.com/labgem/PPanGGOLiN/wiki/Basic-usage-and-practical-information, https://github.com/labgem/PPanGGOLiN
-* Platform: Ceres, prokka_env conda
+
+#### Files generated (for each isolate):
+* Prokka
+  * *_pol.fasta%.fasta_prokka/
+    * *_pol.fasta%.fasta.err
+    * *_pol.fasta%.fasta.faa
+    * *_pol.fasta%.fasta.ffn
+    * *_pol.fasta%.fasta.fna
+    * *_pol.fasta%.fasta.fsa
+    * *_pol.fasta%.fasta.gbk
+    * *_pol.fasta%.fasta.gff
+    * *_pol.fasta%.fasta.log
+    * *_pol.fasta%.fasta.sqn
+    * *_pol.fasta%.fasta.tbl
+    * *_pol.fasta%.fasta.tsv
+    * *_pol.fasta%.fasta.txt
+* Roary
+* gifrop

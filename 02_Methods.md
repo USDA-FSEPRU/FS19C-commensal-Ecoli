@@ -295,20 +295,17 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 1. Darrell email:
 ```
 Your NovaSeq data has been downloaded from the ISU Sequencing Center and has been archived here at the Center.  According to David, there were a couple of the original samples, 95 and 96 (H11 and H12) in the original plate, which did not provide data when completed.  This new data is the result after Dr. Baker has repeated the library preparation and rerun those samples.  
- 
 I’ve placed the data on the Q: drive at: Q:\_TempTransfer\DBayles\mou.  Additionally, I put a copy on Ceres where you can access it at: /90daydata/shared/mou_201216/."
 ```
 
 2. I initially didn't see the two files and asked Darrell. He said the following:
 ```
 There is one file, but when unpacked contains multiple sample FASTQ files for both the repeats.  That’s just how the Sequencing Center bundles them.  I know it can be confusing when ISU uses the name of a single sample for their archive name and then includes multiple other samples inside that archive.
- 
 When you unpack the archive, you will find the following files contain within:
 1-H11-95-440FED_S1_L002_R1_001.fastq.gz
 1-H11-95-440FED_S1_L002_R2_001.fastq.gz
 1-H12-96-441FEC_S2_L002_R1_001.fastq.gz
 1-H12-96-441FEC_S2_L002_R2_001.fastq.gz
- 
 You should have all the replacement data."
 ```
 
@@ -564,7 +561,36 @@ Submitted batch job 5533997
 
 6. Downloaded `distances_secondrun.tab` to local computer, moved file to `Files/` and import to `mash_mds.R` script and created MDS. The plot is pretty much the same as previous mash results with TW14588 buried within the large cluster. Not sure why roary is giving so many errors.
 
+7. (17Feb2021) Re-run mash to also include additional reference genomes to contrast related vs unrelated strains with the 95 E. coli isolates. Downloaded RefSeq fna files of the following 3 organisms and uploaded to `/project/fsepru/kmou/FS19C/polished_genomes_100X/referencegenomes/`
+* (Enterobacteriaceae) Salmonella enterica subsp. enterica serovar Typhimurium str. LT2 aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000006945.2
+  * Saved as Styphimurium_LT2.fna.gz
+* (Non-Enterobacteriaceae, same phylum) Campylobacter jejuni subsp. jejuni NCTC 11168 aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000009085.1
+  * Saved as Cjejuni_11168.fna.gz
+* (Non-Proteobacteria, a Firmicutes) Clostridium saccharoperbutylacetonicum N1-4(HMT) aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000340885.1
+  * Saved as Clostridium_N1-4.fna.gz
 
+8. (17Feb2021) Ran `rename .fna .fasta *.fna` to change *.fna extension to *.fasta. Created softlink of the three genomes from `/project/fsepru/kmou/FS19C/polished_genomes_100X/referencegenomes/` to `/project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all`. Run `mash.slurm`
+```
+#!/bin/bash
+#SBATCH --job-name=mash                           # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#SBATCH --mail-user=kathy.mou@usda.gov
+#Enter commands here:
+set -e
+module load miniconda
+source activate /project/fsepru/kmou/prokka_env
+mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
+mash dist -p 1 .msh .msh > distances_thirdrun.tab
+```
+```
+Submitted batch job 5572662
+```
 
 ##### Files generated:
   * distances.tab
@@ -1164,7 +1190,6 @@ cat GCF_001272835.1_ASM127283v1_genomic.gff GCF_001272835.1_ASM127283v1_genomic.
 (9Feb2021) Response from Jules
 ```
 I mentioned using genbank files during the prokka annotation step.  This is optional and only necessary if you want the genes to be annotated in a similar way to an established reference genome.
-
 For example, when I annotate Salmonella genomes I will often call prokka using something like “--proteins LT2.gbk”.  This will make prokka try and annotate the experimental genomes using the annotations from the LT2 genome as a first priority.  I don’t believe this will change what genes are identified, just what they are called.  Again, this is totally optional.
 ```
 * **I will ask E. coli group if they want me to annotate with a specific reference genome. For now, I will keep going and analyze results as is.**
@@ -1221,20 +1246,20 @@ Submitted batch job 5533863
 ```
 
 25. (10Feb2021) Job 5533863 had more errors! I forgot to put `set -e` in slurm script, so it kept going. Some example error messages listed below. I looked at a few gff files and they have the annotation and the sequence data. I looked up the first error message (sequence without letters) and found this forum post: https://www.biostars.org/p/365927/. Also this issue page on roary: https://github.com/sanger-pathogens/Roary/issues/229. Could be that I have some reference genomes that are unrelated to my 95 isolates. Maybe it's TW14588? I'll try running mash to see what the distances are when I add TW14588 to the mix. In the meantime, I will also run `roary.slurm` without TW14588 (deleted `TW14588.fasta%.fasta.gff` from directory) and see how that goes.
-```
-#line 5:
-2021/02/09 23:34:18 Extracting proteins from GFF files
-Warning: unable to close filehandle $bed_fh properly: Disk quota exceeded at /usr/share/perl5/Bio/Roary/BedFromGFFRole.pm line 41.
-2021/02/10 11:43:18 Could not extract any protein sequences from /project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff/10-434FEN3_pol.fasta%.fasta.gff.
 
-2021/02/09 23:34:21 Could not extract any protein sequences from /project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff/10-434FEN3_pol.fasta%.fasta.gff. Does the file contain the assembly as well as the annotation?
---------------------- WARNING ---------------------
-MSG: Got a sequence without letters. Could not guess alphabet
----------------------------------------------------
-```
-```
-Submitted batch job 5533972
-```
+  ```
+  #line 5:
+  2021/02/09 23:34:18 Extracting proteins from GFF files
+  Warning: unable to close filehandle $bed_fh properly: Disk quota exceeded at /usr/share/perl5/Bio/Roary/BedFromGFFRole.pm line 41.
+  2021/02/10 11:43:18 Could not extract any protein sequences from /project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff/10-434FEN3_pol.fasta%.fasta.gff.
+  2021/02/09 23:34:21 Could not extract any protein sequences from /project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff/10-434FEN3_pol.fasta%.fasta.gff. Does the file contain the assembly as well as the annotation?
+  --------------------- WARNING ---------------------
+  MSG: Got a sequence without letters. Could not guess alphabet
+  ---------------------------------------------------
+  ```
+  ```
+  Submitted batch job 5533972
+  ```
 
 26. (10Feb2021) Same error messages popped up for job 5533972. Will test run roary on just the 95 isolates. I was able to get it to work the first time I ran roary with just the 95 isolates. Moved reference strain fasta files to `refgenomes/`. Run `roary.slurm`
 ```
@@ -1499,7 +1524,6 @@ Job completed successfully.
 1. (12Feb2021) Ran raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`.
 ```
 #!/bin/bash
-
 #SBATCH --job-name=RAXML                              # name of the job submitted
 #SBATCH -p short                                       # name of the queue you are submitting to
 #SBATCH -N 1                                         # number of nodes in this job
@@ -1510,23 +1534,17 @@ Job completed successfully.
 #SBATCH --mem=120G   
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
-
 # ENTER COMMANDS HERE:
-
 module load raxml
-
 # -T is threads
 # -x takes a random seed and turns on rapid-bootstrapping
 # -N is how to do bootstrapping 'autoMRE' is an algorithm that will automatically determine when enough bootstraps have been done
 # -m is the model to use
 # -f select algorithm: "-f a": rapid Bootstrap analysis and search for best-scoring ML tree in one program run
-
 # -n is the name to use for the outputs
 # -p is a random seed to use for parsimony searches
 # -o is the name of the genome you want to use as an outgroup, must match exactly, not required
-
 raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignment.aln -T 40 -x 7 -N autoMRE -p 7
-
 #End of file
 ```
 ```
@@ -1541,8 +1559,8 @@ Job ran successfully.
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-## (12) Extract genomic islands with gifrop2
-* Summary: ran gifrop2 (developed by Julian Trachsel) via slurm on Ceres to identify ‘genomic islands’ from roary pangenomes. See how related isolates are.
+## (12) Extract genomic islands with gifrop
+* Summary: ran gifrop2 (developed by Julian Trachsel. Gifrop2 = version 2 of gifrop) via slurm on Ceres to identify ‘genomic islands’ from roary pangenomes. See how related isolates are.
 * Github: https://github.com/Jtrachsel/gifrop
 * Began on: 12Feb2021
 * Completed on:
@@ -1562,12 +1580,10 @@ Job ran successfully.
 #SBATCH --account fsepru
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
-
 #Enter commands here:
 set -e
 set -u
 set +eu
-
 module load miniconda
 source activate /project/fsepru/conda_envs/gifrop2
 gifrop --get_islands
@@ -1575,7 +1591,23 @@ gifrop --get_islands
 ```
 Submitted batch job 5566653
 ```
-Job ran successfully. Downloaded `gifrop_out/` to local computer
+Job ran successfully. Downloaded `gifrop_out/` to local computer. I looked at `clustered_island_info.csv` and noticed all entries under columns `island_type,	RESISTANCE,	res_type,	vir_type,	plasmid_type,	viro_type,	megares_type` were `NA`. Jules said he'll check it out.
+
+2. (17Feb2021) Jules found my error, woo hoo!
+```
+It looks like you made a little mistake on your bash substitutions when you called prokka, that’s why all your files have the weird .fasta%.fasta.gff
+Suffix.  I’m not certain yet but I think that might be throwing a wrench into things.
+Your error is in the prokka slurm script when you are assigning the bash variable ‘tag’
+you need to use quotes and curly brackets for bash substitutions
+you had:
+tag=$file%.fasta
+you need:
+tag=“${file%.fasta}”
+Once I renamed the fastas I was able to run gifrop just fine and got lots of output.
+If you want to re-annotate these genomes once you have renamed them, Maybe you could try out the ‘pan_pipe’ script I include in gifrop.  
+I have made a SLURM script for you with an example of how I would do things and I placed it at:
+/project/fsepru/kmou/FS19C/polished_genomes_100X/GIFROP.slurm
+```
 
 #### Files generated:
 * clustered_island_info.csv  
@@ -1603,6 +1635,39 @@ Job ran successfully. Downloaded `gifrop_out/` to local computer
   * _pol.fasta%.fasta.fna
 
 
+## (13) Run pan_pipe slurm script provided by Jules.
+  * Summary: Re-run prokka because I forgot to set E. coli MG1655 genbank file as priority annotation when I first ran prokka. This slurm script was provided by Jules, which runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
+  * Github: https://github.com/Jtrachsel/gifrop
+  * Began on: 17Feb2021
+  * Completed on:
+  * Platform: Ceres
+
+1. (17Feb2021) Ran the following on slurm:
+```
+#!/bin/bash
+#SBATCH --job-name=prokka                            # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#Enter commands here:
+set -e
+module load miniconda
+source activate /project/fsepru/conda_envs/gifrop2
+# you should run this from a folder containing all your assemblies in fasta format with the suffix ".fna"
+# change "REFERENCE.GBK" to whatever the name of your desired reference genome is.
+# will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread)
+# run roary and generate a core genome alignment
+# run gifrop and extract classify and cluster genomic islands
+pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+```
+```
+Submitted batch job 5570779
+```
+Job failed because had message `Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.` Need to add that argument to `pan_pipe.slurm`
 
 
 ## Metabolic pathways in pangenome with gapseq

@@ -7,9 +7,10 @@
 #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
 #SBATCH --mem=32G   # memory
+#SBATCH --mail-user=kathy.mou@usda.gov
 #Enter commands here:
 set -e
 module load miniconda
-source activate /project/fsepru/kmou/dot_files/.conda/envs/mashenv
+source activate /project/fsepru/kmou/prokka_env
 mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
-mash dist -p 1 .msh .msh > distances_secondrun.tab
+mash dist -p 1 .msh .msh > distances_thirdrun.tab
