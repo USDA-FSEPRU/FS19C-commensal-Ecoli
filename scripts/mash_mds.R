@@ -21,7 +21,7 @@ sessionInfo()
 
 ############################################ Mash #########################################################
 ######## Import mash file, add ani_dist column, remove pvalue, matching_hashes columns ########
-mash_tab <- read_tsv('./Files/distances_secondrun.tab', col_names = c("reference_id", "query_id", "ani_dist", "pvalue", "matching_hashes")) %>%
+mash_tab <- read_tsv('./Files/distances_thirdrun.tab', col_names = c("reference_id", "query_id", "ani_dist", "pvalue", "matching_hashes")) %>%
   select(-pvalue) %>%
   select(-matching_hashes)
 
@@ -45,6 +45,19 @@ mash_mdsA <- cmdscale(mash_distA) %>% as.data.frame() %>%
 
 ######## Plot MDS ########
 #using mash_mdsA
+mash_mdsA$label <- mash_mdsA$reference_id
+mash_mdsA$label[1:95] <- "" 
+plot_mash_mdsA <-
+  mash_mdsA %>% ggplot(aes(x=V1, y=V2)) +
+  geom_point()+
+  geom_text_repel(aes(label=label), max.overlaps = 50) +
+  labs(x='MDS1', y='MDS2') +
+  ggtitle("Mash MDS")
+plot_mash_mdsA
+ggsave("FS19C_mashMDS_thirdrun_onlyrefgenomes.tiff", plot=plot_mash_mdsA, width = 9, height = 8, dpi = 500, units =c("in"))
+
+mash_mdsA$label <- mash_mdsA$reference_id
+mash_mdsA$label[1:95] <- "" 
 plot_mash_mdsA <-
   mash_mdsA %>% ggplot(aes(x=V1, y=V2)) +
   geom_point()+
@@ -52,4 +65,4 @@ plot_mash_mdsA <-
   labs(x='MDS1', y='MDS2') +
   ggtitle("Mash MDS")
 plot_mash_mdsA
-ggsave("FS19C_mashMDS_secondrun.tiff", plot=plot_mash_mdsA, width = 9, height = 8, dpi = 500, units =c("in"))
+ggsave("FS19C_mashMDS_thirdrun_all.tiff", plot=plot_mash_mdsA, width = 9, height = 8, dpi = 500, units =c("in"))
