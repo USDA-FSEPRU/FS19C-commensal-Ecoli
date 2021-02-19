@@ -27,10 +27,8 @@
             |_FS19C/
                 |_lane1/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolatesonly/
-                    |_polishedgenomesprokka/
-                        |_prokka_gff/
-                        |_prokka_gbk/
+                    |_polishedgenomesprokka_95isolates5refgenomes/
+
 ```
 
 ## Data generated from sequence analysis
@@ -105,7 +103,7 @@
 * FS19_1-94_multiqc_data/
 
 ### Mash-related files of importance
-* distances.tab
+* distances_thirdrun.tab
 * FS19Cmashdistances.xlsx
 
 ### FastANI-related files of importance
@@ -120,14 +118,12 @@
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_*_pol.fastANI
                     |_fs19cfastanioutput.out2
                     |_referencegenomes/
+                    |_polishedgenomesprokka_95isolates5refgenomes/
                     |_querylist2.txt
-                    |_referencelist.txt
                     |_mash_all/
 ```
-* *_pol.fasta
 * fs19cfastanioutput.out2
 * referencegenomes/
   * Ecoli_HS.fasta  
@@ -136,121 +132,106 @@
   * Ecoli_Nissle1917.fasta  
   * Ecoli_O157H7_EDL933.fasta
   * Ecoli_TW14588.fasta
+  * Cjejuni_11168.fasta
+  * Clostridium_N1-4.fasta
+  * Styphimurium_LT2.fasta
 * querylist2.txt
-* referencelist.txt
 * mash_all/
   * *_pol.fasta
   * *.fasta
-  * distances_firstrun.tab
+  * distances_1strun.tab
+  * distances_secondrun.tab
+  * distances_thirdrun.tab
 
-### Genome Annotation (prokka)
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolatesonly**
+### Genome Annotation, Pan-genome, Genomic Island ID
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates5refgenomes/**
 ```
 |_project/
     |_fsepru/
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolatesonly/
-                        |_*_pol.fasta
-                        |_*_pol.fasta%.fasta_prokka/
                     |_polishedgenomesprokka_95isolates5refgenomes/
                         |_*_pol.fasta
                         |_*_pol.fasta%.fasta_prokka/
 ```
-* *_pol.fasta
-* *_pol.fasta%.fasta_prokka/
-  * *_pol.fasta%.fasta.err
-  * *_pol.fasta%.fasta.faa
-  * *_pol.fasta%.fasta.ffn
-  * *_pol.fasta%.fasta.fna
-  * *_pol.fasta%.fasta.fsa
-  * *_pol.fasta%.fasta.gbk
-  * *_pol.fasta%.fasta.gff
-  * *_pol.fasta%.fasta.log
-  * *_pol.fasta%.fasta.sqn
-  * *_pol.fasta%.fasta.tbl
-  * *_pol.fasta%.fasta.tsv
-  * *_pol.fasta%.fasta.txt
+* *_pol.fna
+* *_pol/
+  * *_pol.err
+  * *_pol.faa
+  * *_pol.ffn
+  * *_pol.fna
+  * *_pol.fsa
+  * *_pol.gbk
+  * *_pol.gff
+  * *_pol.log
+  * *_pol.sqn
+  * *_pol.tbl
+  * *_pol.tsv
+  * *_pol.txt
+  * proteins.*
+    * .faa
+    * .pdb
+    * .pot
+    * .ptf
+    * .pto
+* pan/
+  * *.gff
+  ```
+  accessory_binary_genes.fa
+accessory_binary_genes.fa.newick
+_accessory_clusters
+_accessory_clusters.clstr
+accessory_graph.dot
+accessory.header.embl
+accessory.tab
+blast_identity_frequency.Rtab
+_blast_results
+_clustered
+_clustered.clstr
+clustered_proteins
+_combined_files
+_combined_files.groups
+core_accessory_graph.dot
+core_accessory.header.embl
+core_accessory.tab
+core_alignment_header.embl
+core_gene_alignment.aln
+Ecoli_HS.gff
+Ecoli_K-12_MG1655.gff
+Ecoli_NADC6564.gff
+Ecoli_Nissle1917.gff
+Ecoli_O157H7_EDL933.gff
+Ecoli_TW14588.gff
+gene_presence_absence.csv
+gene_presence_absence.Rtab
+_inflated_mcl_groups
+_inflated_unsplit_mcl_groups
+_labeled_mcl_groups
+number_of_conserved_genes.Rtab
+number_of_genes_in_pan_genome.Rtab
+number_of_new_genes.Rtab
+number_of_unique_genes.Rtab
+P7mObRUGMX
+pan_genome_reference.fa
 
-### Pan-genome analysis
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gff**
-```
-|_project/
-    |_fsepru/
-        |_kmou/
-            |_FS19C/
-                |_polished_genomes_100X/
-                    |_polishedgenomesprokka/
-                        |_prokka_gff/
-                            |_*_pol.fasta%.fasta.gff
-                            |_roary_95isolates5refgenomes_final/
-                            |_gifrop_out/
-                            |_refgenomes/
-```
-* *_pol.fasta%.fasta.gff
-* roary_95isolates5refgenomes_final/
-  * accessory.header.embl			
-  * core_alignment_header.embl
-  * accessory.tab				
-  * core_gene_alignment.aln
-  * accessory_binary_genes.fa		
-  * gene_presence_absence.Rtab
-  * accessory_binary_genes.fa.newick
-  * gene_presence_absence.csv
-  * accessory_graph.dot			
-  * number_of_conserved_genes.Rtab
-  * blast_identity_frequency.Rtab		
-  * number_of_genes_in_pan_genome.Rtab
-  * clustered_proteins			
-  * number_of_new_genes.Rtab
-  * core_accessory.header.embl		
-  * number_of_unique_genes.Rtab
-  * core_accessory.tab			
-  * pan_genome_reference.fa
-  * core_accessory_graph.dot		
-  * summary_statistics.txt
-  * stderr.*.roary
-  * stdout.*.roary
-  * pan_genome_reference.fa
-  * pan_genome_results_accessory
-  * pan_genome_results_core
-  * pan_genome_results_union
-  * RAxML_bestTree.core_genome_tree_1
-  * RAxML_bipartitionsBranchLabels.core_genome_tree_1
-  * RAxML_bipartitions.core_genome_tree_1
-  * RAxML_bootstrap.core_genome_tree_1
-  * RAxML_info.core_genome_tree_1
-* gifrop_out/
-  * clustered_island_info.csv  
-  * gifrop.log                 
-  * my_islands/
-    * abricate/
-      * All_islands.megares2  
-      * All_islands.ncbi  
-      * All_islands.plasmidfinder  
-      * All_islands.vfdb
-      * All_islands.viroseqs
-    * All_islands.fasta  
-    * island_info.csv
-  * pan_with_island_info.csv
-  * figures/
-    * island_length_histogram.png          
-    * islands_per_isolate.png   
-    * Number_of_occurances_secondary.png
-    * islands_per_isolate_no_unknowns.png  
-    * Number_of_occurances.png
-  * islands_pangenome_gff.csv  
-  * pan_only_islands.csv  
-  * sequence_data/
-    * *_pol.fasta%.fasta_short.gff
-    * _pol.fasta%.fasta.fna
-* refgenomes/
-  * EDL933.fasta%.fasta.gff  
-  * NADC6564.fasta%.fasta.gff    
-  * TW14588.fasta%.fasta.gff
-  * MG1655.fasta%.fasta.gff  
-  * Nissle1917.fasta%.fasta.gff
+summary_statistics.txt
+_uninflated_mcl_groups
+  ```
+  * pan_genome_sequences/
+    * *.aln
+  * gifrop_out/
+    ```
+    clustered_island_info.csv  my_islands
+    figures                    pan_only_islands.csv
+    gifrop.log                 pan_with_island_info.csv
+    islands_pangenome_gff.csv  sequence_data
+    ```
+* panpipe_logs/
+  * gifrop.log  
+  * prokka_logs.txt  
+  * roary.log
+* prokka_cmds.txt
 
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk**
 ```
@@ -259,15 +240,15 @@
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka/
+                    |_polishedgenomesprokka_95isolates5refgenomes
                         |_prokka_gbk/
                             |_*_pol.fasta%.fasta.gbk
-                            |_ppanggolin_output_DATE2021-02-12_HOUR15.58.33_PID2302/
+                            |_ppanggolin_output_DATE/
 ```
 * *_pol.fasta%.fasta.gbk
 * Ecoligbkpath.txt
 * Ecoligbk.txt
-* ppanggolin_output_DATE2021-02-12_HOUR15.58.33_PID2302/
+* ppanggolin_output_DAT
   * gene_presence_absence.Rtab       
   * organisms_statistics.tsv  
   * pangenomeGraph_light.gexf  
@@ -287,7 +268,7 @@
 * 1-H12-96-441FEC_S2_L002_R1_001_fastqc.html
 * 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
 * 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
-* distances.tab
+* distances_thirdrun.tab
 * FS19_1-94_multiqc_report.html
 * FS19_outline_09.23.19.docx
 * FS19all_multiqc_report.html

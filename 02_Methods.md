@@ -1552,6 +1552,12 @@ Submitted batch job 5566413
 ```
 Job ran successfully.
 
+2. (18Feb2021) Re-run RAxML on Ceres with slurm script `raxml.slurm` in `project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates5refgenomes/pan` where `core_gene_alignment.aln` file is located
+```
+Submitted batch job 5573447
+```
+
+
 #### Files generated:
 * RAxML_bestTree.core_genome_tree_1
 * RAxML_bipartitionsBranchLabels.core_genome_tree_1
@@ -1669,6 +1675,14 @@ Submitted batch job 5570779
 ```
 Job failed because had message `Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.` Need to add that argument to `pan_pipe.slurm`
 
+2. (18Feb2021) Revised `GIFROP.slurm` with the following, removed all previous prokka output files including `panpipe_logs` and ran slurm job:
+```
+pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+```
+```
+Submitted batch job 5573240
+```
+Job completed successfully! Downloaded `gifrop_out/` and roary output.
 
 ## Metabolic pathways in pangenome with gapseq
 

@@ -10,13 +10,14 @@
 #To do
 * You can change your default Slurm account using running slurm-account-selector.sh on the login node.
   * To see all your Slurm accounts at any time, use “sacctmgr -Pns show user format=account”
-* re-run annotation with MG1655: encountered same error as last time with contig names being too long. Need to add `--centre X --compliant` to `pan_pipe` script
-* check out mash results (distances_thirdrun.tab)
 * get pheatmap to work: https://towardsdatascience.com/pheatmap-draws-pretty-heatmaps-483dab9a3cc, https://slowkow.com/notes/pheatmap-tutorial/
+* run ppanggolin
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
-* look at raxml tree
-    * visualize tree via ...?
-* virulence genes (abricate)
+* look at raxml file
+    * visualize tree via FigTree
+* check out roary and gifrop output
+  * downloaded `*.Rtab`, `*.csv`, `*.tab`
+  * need to download `*.txt`
 * stx1, stx2 genes: what are the gene names?
 * read up on gapseq: https://doi.org/10.1101/2020.03.20.000737
   * https://github.com/jotech/gapseq
