@@ -100,3 +100,21 @@ pa2_num <- unlist(pa2) #convert list to single vector
 pa2_numeric <- lapply(pa2_num, as.numeric) #convert to numeric
 as.matrix(pa2_numeric) #convert to matrix
 pheatmap(pa2_numeric,mean="pheatmap default") #Error during wrapup: must have n >= 2 objects to cluster
+
+
+
+
+
+##### Jules Zone #####
+library(tidyverse)
+
+PA <- read_tsv('./Files/gene_presence_absence.Rtab') %>%
+        column_to_rownames(var = 'Gene') %>% 
+        as.matrix()
+
+
+PA2 <- PA[keep_rows,pa]
+rownames(PA2)
+colnames(PA2)
+
+pheatmap(PA2)
