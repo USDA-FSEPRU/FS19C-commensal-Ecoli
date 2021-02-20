@@ -47,11 +47,14 @@ Ran multiqc for isolates #1-94 and report shows sequences are good. Looked at fa
 
 #### mash
 ##### Files generated:
-  * distances.tab
+  * distances_thirdrun.tab
   * FS19Cmashdistances.xlsx
 
 #### MDS
 There weren't any obvious outliers, like what Jules had hinted when he ran the code on his end. At microbe meeting (22Jan2021), Crystal pointed out that it's good we're seeing some differences of the commensal isolates (like isolates collected from EDL933 group cluster separately from EDL933 isolate) from the STEC isolates in this plot. Regardless of whether we do find any differences in metabolic genes or not, there are other differences we can explore too.
+
+Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 reference strains + 3 non-*E. coli* isolates. The 3 non-*E. coli* isolates were either in the same family, different family, or non-proteobacteria: Salmonella enterica subsp. enterica serovar Typhimurium str. LT2, Campylobacter jejuni subsp. jejuni NCTC 11168, Clostridium saccharoperbutylacetonicum N1-4(HMT), respectively. We got what we expected where non-*E. coli* isolates were very distant from *E. coli* isolates and reference strains.
+
 ##### Files generated:
 * fastANImashMDSheatmaps.pptx
 * FS19C_fastaniMDS.tiff
@@ -97,3 +100,13 @@ Ran prokka without specifying a specific reference genome to use for annotation.
 * pan_genome_reference.fa
 * core_accessory_graph.dot		
 * summary_statistics.txt
+
+### roary
+
+#### R pheatmap package to create heatmap of select genes and select isolates from `gene_presence_absence.csv`
+
+### gifrop
+
+### PPanGGOLiN
+
+### RAxML

@@ -1,4 +1,4 @@
-# Files generated for FS19C project and their location
+polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project and their location
 
 ## Raw data location
 ### Illumina NovaSeq Reads
@@ -27,7 +27,7 @@
             |_FS19C/
                 |_lane1/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates5refgenomes/
+                    |_polishedgenomesprokka_95isolates6refgenomes/
 
 ```
 
@@ -120,7 +120,7 @@
                 |_polished_genomes_100X/
                     |_fs19cfastanioutput.out2
                     |_referencegenomes/
-                    |_polishedgenomesprokka_95isolates5refgenomes/
+                    |_polishedgenomesprokka_95isolates6refgenomes/
                     |_querylist2.txt
                     |_mash_all/
 ```
@@ -144,14 +144,14 @@
   * distances_thirdrun.tab
 
 ### Genome Annotation, Pan-genome, Genomic Island ID
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates5refgenomes/**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/**
 ```
 |_project/
     |_fsepru/
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates5refgenomes/
+                    |_polishedgenomesprokka_95isolates6refgenomes/
                         |_*_pol.fasta
                         |_*_pol.fasta%.fasta_prokka/
 ```
@@ -240,7 +240,7 @@ _uninflated_mcl_groups
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates5refgenomes
+                    |_polishedgenomesprokka_95isolates6refgenomes/
                         |_prokka_gbk/
                             |_*_pol.fasta%.fasta.gbk
                             |_ppanggolin_output_DATE/

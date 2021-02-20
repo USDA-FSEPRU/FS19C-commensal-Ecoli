@@ -1,22 +1,8 @@
 # Methods
 Details of sequence analyses methods performed on FS19C samples 1-96 in this repo. Includes lab notes of how methods performed
 
-## (1) Sample Collection
-### OneNote FS19C lab notebook entries on E. coli isolates 1-96 from 24Apr2020 to 11June2020: streaking plates, DNA extraction, re-extraction of DNA, DNA cleanup, nanodrop, Qubit, gel
-* **20May2020** DNA extraction of isolates #1-24 using DNeasy Blood and Tissue Kit
-* **14May2020** DNA extraction of isolates #25-48 using DNeasy Blood and Tissue Kit
-* **21May2020** DNA extraction of isolates #49-72 using DNeasy Blood and Tissue Kit
-* **28May2020** DNA extraction of isolates #73-96 using DNeasy Blood and Tissue Kit
-* Lists of samples had additional DNA re-extractions found on entries: 28May2020, 29May2020, 3June2020, 11June2020
-* **11June2020** Submission of FS19C 96-well plate of E. coli isolates 1-96 DNA to David Alt for NovaSeq sequencing.
-
-### Additional files of importance
-* FS19C Samples 1-96 Final Data.xlsx
-* Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
-* Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
-* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
-* FS19C_metadata.xlsx
-* FS19C 96 S-S+ E. coli gDNA gels.pdf
+## Notes
+GFF file description: http://gmod.org/wiki/GFF3
 
 ## Conda environment (updated on 11Feb2021 - condensed to one conda environment)
 * **Make sure when calling environments, to use this path: /project/fsepru/kmou/dot_files/.conda/envs/**
@@ -39,6 +25,23 @@ channels:
 ## shortcuts in .bashrc
 alias debug='salloc -N 1 -p debug -t 01:00:00'
 alias myjobs='squeue | grep kathy.mo'
+
+## (1) Sample Collection
+### OneNote FS19C lab notebook entries on E. coli isolates 1-96 from 24Apr2020 to 11June2020: streaking plates, DNA extraction, re-extraction of DNA, DNA cleanup, nanodrop, Qubit, gel
+* **20May2020** DNA extraction of isolates #1-24 using DNeasy Blood and Tissue Kit
+* **14May2020** DNA extraction of isolates #25-48 using DNeasy Blood and Tissue Kit
+* **21May2020** DNA extraction of isolates #49-72 using DNeasy Blood and Tissue Kit
+* **28May2020** DNA extraction of isolates #73-96 using DNeasy Blood and Tissue Kit
+* Lists of samples had additional DNA re-extractions found on entries: 28May2020, 29May2020, 3June2020, 11June2020
+* **11June2020** Submission of FS19C 96-well plate of E. coli isolates 1-96 DNA to David Alt for NovaSeq sequencing.
+
+### Additional files of importance
+* FS19C Samples 1-96 Final Data.xlsx
+* Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
+* Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
+* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
+* FS19C_metadata.xlsx
+* FS19C 96 S-S+ E. coli gDNA gels.pdf
 
 ## (2) Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
@@ -1557,6 +1560,12 @@ Job ran successfully.
 Submitted batch job 5573447
 ```
 
+3. (19Feb2021) Visualized 3 trees in FigTree with `RAxML_bestTree.core_genome_tree_1`, `RAxML_bipartitions.core_genome_tree_1`, `RAxML_bootstrap.core_genome_tree_1`.
+What's the difference between ML and bootstrap-created trees? https://www.biostars.org/p/226407/
+```
+ML search and bootstrap search are different things in RAxML. The ML search is performed to find the best-scoring ML tree among 20 ML trees calculated from different stepwise-addition parsimony starting trees.This is based on the original alignment. On the other hand, bootstrapping resamples the alignment positions randomly with replacement to the length of the original alignment (100 times in this case) and generates a single tree on each round to infer statistical support of the branches. Afterwards, the bootstrap values are placed on the corresponding branches of the best-scoring ML tree.
+```
+Defines output files: https://cme.h-its.org/exelixis/resource/download/NewManual.pdf
 
 #### Files generated:
 * RAxML_bestTree.core_genome_tree_1
@@ -1641,7 +1650,7 @@ I have made a SLURM script for you with an example of how I would do things and 
   * _pol.fasta%.fasta.fna
 
 
-## (13) Run pan_pipe slurm script provided by Jules.
+## (13) Run pan_pipe from gifrop to run prokka, roary, and gifrop altogether.
   * Summary: Re-run prokka because I forgot to set E. coli MG1655 genbank file as priority annotation when I first ran prokka. This slurm script was provided by Jules, which runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
   * Github: https://github.com/Jtrachsel/gifrop
   * Began on: 17Feb2021
@@ -1683,6 +1692,34 @@ pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1 --centre X --co
 Submitted batch job 5573240
 ```
 Job completed successfully! Downloaded `gifrop_out/` and roary output.
+
+3. (19Feb2021) Gifrop output still have NA for `clustered_island_info`. In lab meeting, Jules says he has a bash script for manually changing the contig names.
+
+4. (19Feb2021) See `BashScriptLesson.md` for details about `rename_contigs` and for-loop bash script `~/scripts/renamecontigs.sh` to run `rename_contigs` in desired fasta file directory. I saved `rename_contigs` in `~/.bashrc`, copied *.fna files from `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/` to a new directory `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran `~/scripts/renamecontigs.sh` in this new directory.
+
+5. (19Feb2021) Moved `GIFROP.slurm` to new directory and modified script via removing `--centre X --compliant`. Run job on slurm.
+```
+#!/bin/bash
+#SBATCH --job-name=panpipe                            # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#SBATCH --mail-user=kathy.mou@usda.gov
+#Enter commands here:
+set -e
+module load miniconda
+source activate /project/fsepru/conda_envs/gifrop2
+
+pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+```
+```
+Submitted batch job 5576687
+```
+
 
 ## Metabolic pathways in pangenome with gapseq
 

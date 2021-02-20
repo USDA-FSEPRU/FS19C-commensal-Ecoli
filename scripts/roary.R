@@ -76,30 +76,50 @@ ylab("No. of genes")+ theme_bw(base_size = 16) +  theme(legend.justification=c(1
 
 #####################################################################################################
 #Heatmap of gene presence and absence of sugar catabolism genes
-presenceabsence <-read.table("./Files/gene_presence_absence.Rtab", header = FALSE, sep = "\t",
-                    quote = "")
-colnames(presenceabsence) <- presenceabsence[1,] #set first row as column name
-presenceabsence <- presenceabsence[-1,] # remove extra row
-presenceabsence[1:5,1:5] # 1 = present, 0 = absent
-colnames(presenceabsence)
-rownames(presenceabsence) <- presenceabsence[,1] #set first column as row name
-presenceabsence <- presenceabsence[,-1]
-pa <- c("1-428RN3A_pol.fasta%.fasta", "10-434FEN3_pol.fasta%.fasta", "11-434FEN3_pol.fasta%.fasta", 
-        "12-435FEN3_pol.fasta%.fasta", "13-435FEN3_pol.fasta%.fasta", "14-437FEN5_pol.fasta%.fasta", 
-        "15-437FEN5_pol.fasta%.fasta", "57-436REC_pol.fasta%.fasta",  "58-436RED_pol.fasta%.fasta",  
-        "59-437REC_pol.fasta%.fasta",  "6-437REN3B_pol.fasta%.fasta", "60-437RED_pol.fasta%.fasta",
-        "61-438REC_pol.fasta%.fasta",  "62-438RED_pol.fasta%.fasta", "EDL933.fasta%.fasta", 
-        "MG1655.fasta%.fasta", "NADC6564.fasta%.fasta", "Nissle1917.fasta%.fasta", "TW14588.fasta%.fasta")
-pa1 <- presenceabsence[pa] #select only the isolates from pa
-keep_rows <- rownames(pa1) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
-pa2 <- pa1[keep_rows,]
-pheatmap(pa2) #Error during wrapup: 'x' must be numeric. 
-#Tried a few different solutions from various forums, got an error message that list object cannot be coerced to type double. Checked out this site:
-#https://www.programmingr.com/r-error-messages/list-object-cannot-be-coerced-to-type-double/
-pa2_num <- unlist(pa2) #convert list to single vector
-pa2_numeric <- lapply(pa2_num, as.numeric) #convert to numeric
-as.matrix(pa2_numeric) #convert to matrix
-pheatmap(pa2_numeric,mean="pheatmap default") #Error during wrapup: must have n >= 2 objects to cluster
+
+# Previous issues with as.matrix()
+# 1. I read `./Files/gene_presence_absence.Rtab` with read.table  %>%  column_to_rownames and it couldn't find column "Gene" in data.
+# 1b. Also, when I assigned `Gene` as rownames, and removed extra column, as.matrix() wouldn't convert the dataframe to a matrix. It stayed as a dataframe.
+# 2. I ran read.csv and read_tsv  %>%  column_to_rownames. When I ran as.matrix() separately, it wouldn't convert to matrix and stayed as a dataframe.
+# 3. So it looks like I need to read.csv or read_tsv %>% column_rownames %>% as.matrix() all at the same time and then object stays as a matrix
+
+#read_tsv
+PA <- read_tsv('./Files/gene_presence_absence.Rtab') %>%
+        column_to_rownames(var = 'Gene') %>% 
+        as.matrix()
+colnames(PA)
+rownames(PA)
+pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol", 
+        "12-435FEN3_pol", "13-435FEN3_pol", "14-437FEN5_pol", 
+        "15-437FEN5_pol", "57-436REC_pol",  "58-436RED_pol",  
+        "59-437REC_pol",  "6-437REN3B_pol", "60-437RED_pol",
+        "61-438REC_pol",  "62-438RED_pol", "Ecoli_HS", "Ecoli_K-12_MG1655", 
+        "Ecoli_NADC6564", "Ecoli_Nissle1917", "Ecoli_O157H7_EDL933", "Ecoli_TW14588")
+keep_rows <- rownames(PA) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
+PA2 <- PA[keep_rows,pa]
+rownames(PA2)
+colnames(PA2)
+class(PA2) #matrix and array
+pheatmap(PA2, cellheight = 6) #increased cell height so easier to read gene names on right side of heatmap
+#export as 500 width, 1300 height
+pheatmap(PA2)
+
+#Test with read.csv and get same results as read_tsv
+PA <-read.csv("./Files/gene_presence_absence.Rtab",  sep = "\t", quote = "") %>% 
+        column_to_rownames(var="Gene") %>% 
+        as.matrix()
+class(PA)
+pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol", 
+            "12-435FEN3_pol", "13-435FEN3_pol", "14-437FEN5_pol", 
+            "15-437FEN5_pol", "57-436REC_pol",  "58-436RED_pol",  
+            "59-437REC_pol",  "6-437REN3B_pol", "60-437RED_pol",
+            "61-438REC_pol",  "62-438RED_pol", "EDL933", 
+            "MG1655", "NADC6564", "Nissle1917", "TW14588")
+keep_rows <- rownames(PA) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
+PA2 <- PA[keep_rows,pa]
+rownames(PA2)
+colnames(PA2)
+pheatmap(PA2, cellheight = 6)
 
 
 
