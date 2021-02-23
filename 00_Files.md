@@ -197,12 +197,6 @@ core_accessory.header.embl
 core_accessory.tab
 core_alignment_header.embl
 core_gene_alignment.aln
-Ecoli_HS.gff
-Ecoli_K-12_MG1655.gff
-Ecoli_NADC6564.gff
-Ecoli_Nissle1917.gff
-Ecoli_O157H7_EDL933.gff
-Ecoli_TW14588.gff
 gene_presence_absence.csv
 gene_presence_absence.Rtab
 _inflated_mcl_groups
@@ -212,9 +206,7 @@ number_of_conserved_genes.Rtab
 number_of_genes_in_pan_genome.Rtab
 number_of_new_genes.Rtab
 number_of_unique_genes.Rtab
-P7mObRUGMX
 pan_genome_reference.fa
-
 summary_statistics.txt
 _uninflated_mcl_groups
   ```

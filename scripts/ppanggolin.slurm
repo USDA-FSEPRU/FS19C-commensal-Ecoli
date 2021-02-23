@@ -8,6 +8,7 @@
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
 #SBATCH --mem=32G   # memory
 #SBATCH --account fsepru
+#SBATCH --mail-user=kathy.mou@usda.gov
 #Enter commands here:
 set -e
 set -u

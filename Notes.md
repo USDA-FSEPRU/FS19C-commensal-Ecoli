@@ -17,8 +17,8 @@
   * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
 
 ## FS19C
-* check out gifrop output
-* run ppanggolin
+* check out gifrop output (didn't see any virulence genes... still NA [22Feb2021]), raxml
+* ppanggolin: need to generate Ecoligbkpath.txt, run on slurm
 * review which RAxML tree to use
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
 * read up on gapseq: https://doi.org/10.1101/2020.03.20.000737
