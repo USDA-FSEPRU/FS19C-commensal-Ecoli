@@ -15,6 +15,6 @@ set -u
 set +eu
 module load miniconda
 source activate /project/fsepru/conda_envs/ppanggolin
-ppanggolin workflow --anno Ecoligbkpath.txt
+ppanggolin workflow --anno Ecoligbk.txt
 
 #End of file

@@ -1512,14 +1512,20 @@ ls -d -1 "$PWD/"*.gbk > Ecoligbkpath.txt
 ls -v *.gbk > Ecoligbklist.txt
 ```
 
-16. (Feb2021) Opened `Ecoligbk.txt` in R, duplicated 1st column to make second column. Goal is to have 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Save as txt file. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. R code used:
+16. (23Feb2021) Opened `Ecoligbklist.txt` and `Ecoligbkpath.txt` and names of files in 1st column (containing unique organism name) and directory name of files in second column (as path to location of gbk file). Save as `Ecoligbk.txt`. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. Uploaded to ceres.
+
+17. (23Feb2021) Ran `ppanggolin.slurm` with this slurm script:
 ```
-library(tidyverse)
-tsv <- read_tsv('Ecoligbk.txt', col_names = FALSE)
-tsv$X2 <- tsv$X1 #duplicated X1 column and name as X2
-write_tsv(tsv, "Ecoligbkpath.txt")
+set -e
+set -u
+set +eu
+module load miniconda
+source activate /project/fsepru/conda_envs/ppanggolin
+ppanggolin workflow --anno Ecoligbk.txt
 ```
-In Excel, deleted the path name `/lustre/project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gbk/` in first column, and deleted `/lustre/` in second column. Saved tsv. Uploaded to Ceres. Ran `ppanggolin.slurm`
+```
+Submitted batch job 5587838
+```
 
 
 
@@ -1594,6 +1600,8 @@ Defines output files: https://cme.h-its.org/exelixis/resource/download/NewManual
 ```
 Submitted batch job 5584649
 ```
+
+5. (23Feb2021) Downloaded trees and open with FigTree. I notice the `RAxML_bestTree.core_genome_tree_1` and `RAxML_bipartitions.core_genome_tree_1` produce very similar trees (order nodes) compared to `RAxML_bootstrap.core_genome_tree_1`. I highlighted the 14 isolates with stx- genes. Saved png for tree from `RAxML_bestTree.core_genome_tree_1` as `bestTree_14isolates.png`. Relative to the reference strains, they are pretty far from them except for a couple neighboring E. coli K-12 MG1655 and less so with E. coli HS.
 
 #### Files generated:
 * RAxML_bestTree.core_genome_tree_1
