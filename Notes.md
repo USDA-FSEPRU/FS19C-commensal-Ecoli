@@ -17,13 +17,11 @@
   * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
 
 ## FS19C
-* check out gifrop output (didn't see any virulence genes... still NA [22Feb2021]), raxml
-* ppanggolin: need to generate Ecoligbkpath.txt, run on slurm
-* review which RAxML tree to use
+* highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
 * read up on gapseq: https://doi.org/10.1101/2020.03.20.000737
   * https://github.com/jotech/gapseq
-* update 02b_MethodsSummary.md, 03_Results.md (roary, ppanggolin, raxml)
+* update 03_Results.md (roary, ppanggolin, raxml)
 * stx1, stx2 genes: what are the gene names?
 * list of operons to focus on
 * lit review: read https://mbio.asm.org/content/3/3/e00050-12.long

@@ -115,8 +115,8 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 
 | Gene/Operon name | Description | Comments |
 | -- | -- | -- |
-| eut (17 genes including eutR transcriptional regulator) | ethanolamine utilization as nitrogen source | eut operon : https://academic.oup.com/jb/article-abstract/147/1/83/751773?redirectedFrom=fulltext, https://jb.asm.org/content/195/21/4947.long |
 | araBAD | arabinose | 10.1128/IAI.01386-07 |
+| eut (17 genes including eutR transcriptional regulator) | ethanolamine utilization as nitrogen source | eut operon : https://academic.oup.com/jb/article-abstract/147/1/83/751773?redirectedFrom=fulltext, https://jb.asm.org/content/195/21/4947.long |
 | fucAO<sup>1</sup>, fucK<sup>2</sup> | fucose | 10.1128/IAI.01386-07<sup>1</sup>, https://doi.org/10.1371/journal.pone.0053957<sup>2</sup> |
 | galK | galactose | 10.1128/IAI.01386-07 |
 | uxaB | galacturonate | 10.1128/IAI.01386-07 |

@@ -61,52 +61,107 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
 * FS19C_mashMDS.tiff
 * qc_mds.R
 
-### prokka
-Ran prokka without specifying a specific reference genome to use for annotation. I used their default lists of databases for annotation. I did specify Escherichia genus.
-#### Files generated (for each isolate):
-* *_pol.fasta%.fasta_prokka/
-  * *_pol.fasta%.fasta.err
-  * *_pol.fasta%.fasta.faa
-  * *_pol.fasta%.fasta.ffn
-  * *_pol.fasta%.fasta.fna
-  * *_pol.fasta%.fasta.fsa
-  * *_pol.fasta%.fasta.gbk
-  * *_pol.fasta%.fasta.gff
-  * *_pol.fasta%.fasta.log
-  * *_pol.fasta%.fasta.sqn
-  * *_pol.fasta%.fasta.tbl
-  * *_pol.fasta%.fasta.tsv
-  * *_pol.fasta%.fasta.txt
-
-### roary
-#### Files generated:
-* accessory.header.embl			
-* core_alignment_header.embl
-* accessory.tab				
-* core_gene_alignment.aln
-* accessory_binary_genes.fa		
-* gene_presence_absence.Rtab
-* accessory_binary_genes.fa.newick
-* gene_presence_absence.csv
-* accessory_graph.dot			
-* number_of_conserved_genes.Rtab
-* blast_identity_frequency.Rtab		
-* number_of_genes_in_pan_genome.Rtab
-* clustered_proteins			
-* number_of_new_genes.Rtab
-* core_accessory.header.embl		
-* number_of_unique_genes.Rtab
-* core_accessory.tab			
-* pan_genome_reference.fa
-* core_accessory_graph.dot		
-* summary_statistics.txt
-
-### roary
-
-#### R pheatmap package to create heatmap of select genes and select isolates from `gene_presence_absence.csv`
-
 ### gifrop
+##### Files generated:
+* **_pol/ or Ecoli_*/
+  * *_pol.err
+  * *_pol.faa
+  * *_pol.ffn
+  * *_pol.fna
+  * *_pol.fsa
+  * *_pol.gbk
+  * *_pol.gff
+  * *_pol.log
+  * *_pol.sqn
+  * *_pol.tbl
+  * *_pol.tsv
+  * *_pol.txt
+  * proteins.faa
+  * proteins.pdb
+  * proteins.pot
+  * proteins.ptf
+  * proteins.pto
+* pan/
+  * *.gff
+  * accessory_binary_genes.fa
+  * accessory_binary_genes.fa.newick
+  * _accessory_clusters
+  * _accessory_clusters.clstr
+  * accessory_graph.dot
+  * accessory.header.embl
+  * accessory.tab
+  * blast_identity_frequency.Rtab
+  * _blast_results
+  * _clustered
+  * _clustered.clstr
+  * clustered_proteins
+  * _combined_files
+  * _combined_files.groups
+  * core_accessory_graph.dot
+  * core_accessory.header.embl
+  * core_accessory.tab
+  * core_alignment_header.embl
+  * core_gene_alignment.aln
+  * core_gene_alignment.aln.reduced
+  * gene_presence_absence.csv
+  * gene_presence_absence.Rtab
+  * gifrop_out/
+    * clustered_island_info.csv
+    * figures/
+      * island_length_histogram.png
+      * islands_per_isolate_no_unknowns.png
+      * islands_per_isolate.png
+      * Number_of_occurances.png
+      * Number_of_occurances_secondary.png
+    * gifrop.log
+    * islands_pangenome_gff.csv
+    * my_islands/
+      * abricate/
+        * All_islands.megares2
+        * All_islands.ncbi
+        * All_islands.plasmidfinder
+        * All_islands.vfdb
+        * All_islands.viroseqs
+      * island_info.csv
+      * All_islands.fasta
+    * pan_only_islands.csv
+    * pan_with_island_info.csv
+    * sequence_data/
+      * *.fna
+      * *_short.gff
+  * _inflated_mcl_groups
+  * _inflated_unsplit_mcl_groups
+  * _labeled_mcl_groups
+  * M7lUUryBzC/
+    * *.gff.proteome.faa
+  * number_of_conserved_genes.Rtab
+  * number_of_genes_in_pan_genome.Rtab
+  * number_of_new_genes.Rtab
+  * number_of_unique_genes.Rtab
+  * pan_genome_reference.fa
+  * pan_genome_sequences/
+  * summary_statistics.txt
+  * _uninflated_mcl_groups
 
 ### PPanGGOLiN
+##### Files generated:
+* gene_presence_absence.Rtab       
+* organisms_statistics.tsv  
+* pangenomeGraph_light.gexf  
+* projection/
+* matrix.csv                       
+* pangenomeGraph.gexf       
+* pangenome.h5               
+* tile_plot.html
+* mean_persistent_duplication.tsv  
+* pangenomeGraph.json       
+* partitions/
+* Ushaped_plot.html
 
 ### RAxML
+##### Files generated:
+* RAxML_bestTree.core_genome_tree_1
+* RAxML_bipartitionsBranchLabels.core_genome_tree_1
+* RAxML_bipartitions.core_genome_tree_1
+* RAxML_bootstrap.core_genome_tree_1
+* RAxML_info.core_genome_tree_1

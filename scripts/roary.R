@@ -115,15 +115,18 @@ pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol",
             "59-437REC_pol",  "6-437REN3B_pol", "60-437RED_pol",
             "61-438REC_pol",  "62-438RED_pol", "EDL933", 
             "MG1655", "NADC6564", "Nissle1917", "TW14588")
-keep_rows <- rownames(PA) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
+
+#sugar genes
+keep_rows <- rownames(PA) %>% grep("^ara|^ed|^eut|^fuc|^gal|^lac|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
 PA2 <- PA[keep_rows,pa]
 rownames(PA2)
 colnames(PA2)
 pheatmap(PA2, cellheight = 6)
 
-
-
-
+#stx genes
+stx <- rownames(PA) %>% grep("^stx", .)
+PA3 <- PA[stx,pa]
+pheatmap(PA3, cellheight = 6)
 
 ##### Jules Zone #####
 library(tidyverse)

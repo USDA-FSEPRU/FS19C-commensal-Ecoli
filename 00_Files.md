@@ -104,14 +104,13 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
 
 ### Mash-related files of importance
 * distances_thirdrun.tab
-* FS19Cmashdistances.xlsx
 
 ### FastANI-related files of importance
 * fs19cfastanioutput2.out.tab
 * FS19CfastANIoutput2.xlsx
 
 ### Genome Assembly (BBMap, spades, mash, fastani)
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/**
 ```
 |_project/
     |_fsepru/
@@ -143,8 +142,8 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
   * distances_secondrun.tab
   * distances_thirdrun.tab
 
-### Genome Annotation, Pan-genome, Genomic Island ID
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/**
+### Genome Annotation, Pan-genome Analysis, Phylogenetic Tree, Genomic Island ID (prokka, roary, raxml, gifrop)
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 ```
 |_project/
     |_fsepru/
@@ -152,11 +151,11 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
             |_FS19C/
                 |_polished_genomes_100X/
                     |_polishedgenomesprokka_95isolates6refgenomes/
-                        |_*_pol.fasta
-                        |_*_pol.fasta%.fasta_prokka/
+                        |_*.fna
+                        |_renamed_contigs/
 ```
-* *_pol.fna
-* *_pol/
+* *.fna
+* */
   * *_pol.err
   * *_pol.faa
   * *_pol.ffn
@@ -207,25 +206,48 @@ number_of_genes_in_pan_genome.Rtab
 number_of_new_genes.Rtab
 number_of_unique_genes.Rtab
 pan_genome_reference.fa
+RAxML_bestTree.core_genome_tree_1
+RAxML_bipartitionsBranchLabels.core_genome_tree_1
+RAxML_bipartitions.core_genome_tree_1
+RAxML_bootstrap.core_genome_tree_1
+RAxML_info.core_genome_tree_1
 summary_statistics.txt
 _uninflated_mcl_groups
   ```
   * pan_genome_sequences/
     * *.aln
   * gifrop_out/
-    ```
-    clustered_island_info.csv  my_islands
-    figures                    pan_only_islands.csv
-    gifrop.log                 pan_with_island_info.csv
-    islands_pangenome_gff.csv  sequence_data
-    ```
+    * clustered_island_info.csv
+    * figures/
+      * island_length_histogram.png
+      * islands_per_isolate_no_unknowns.png
+      * islands_per_isolate.png
+      * Number_of_occurances.png
+      * Number_of_occurances_secondary.png
+    * gifrop.log
+    * islands_pangenome_gff.csv
+    * my_islands/
+      * abricate/
+        * All_islands.megares2
+        * All_islands.ncbi
+        * All_islands.plasmidfinder
+        * All_islands.vfdb
+        * All_islands.viroseqs
+      * island_info.csv
+      * All_islands.fasta
+    * pan_only_islands.csv
+    * pan_with_island_info.csv
+    * sequence_data/
+      * *.fna
+      * *_short.gff
 * panpipe_logs/
   * gifrop.log  
   * prokka_logs.txt  
   * roary.log
 * prokka_cmds.txt
 
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk**
+### Pan-genome Analysis with PPanGGOLiN
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/renamed_contigs/prokka_gbk/**
 ```
 |_project/
     |_fsepru/
@@ -233,18 +255,21 @@ _uninflated_mcl_groups
             |_FS19C/
                 |_polished_genomes_100X/
                     |_polishedgenomesprokka_95isolates6refgenomes/
-                        |_prokka_gbk/
-                            |_*_pol.fasta%.fasta.gbk
-                            |_ppanggolin_output_DATE/
+                        |_renamed_contigs/
+                            |_prokka_gbk/
+                                |_*_pol.gbk
+                                |_ppanggolin_output_DATE2021-02-24_HOUR09.59.47_PID10989/
 ```
-* *_pol.fasta%.fasta.gbk
+* *.gbk
 * Ecoligbkpath.txt
+* Ecoligbklist.txt
 * Ecoligbk.txt
-* ppanggolin_output_DAT
+* ppanggolin_output_DATE2021-02-24_HOUR09.59.47_PID10989/
   * gene_presence_absence.Rtab       
   * organisms_statistics.tsv  
   * pangenomeGraph_light.gexf  
   * projection/
+    * *.gbk.tsv
   * matrix.csv                       
   * pangenomeGraph.gexf       
   * pangenome.h5               
@@ -252,6 +277,11 @@ _uninflated_mcl_groups
   * mean_persistent_duplication.tsv  
   * pangenomeGraph.json       
   * partitions/
+    ```
+    cloud.txt            persistent.txt  S3.txt  shell.txt           undefined.txt
+    exact_accessory.txt  S1.txt          S4.txt  soft_accessory.txt
+    exact_core.txt       S2.txt          S5.txt  soft_core.txt
+    ```
   * Ushaped_plot.html
 
 ## Files in Files directory
@@ -264,15 +294,17 @@ _uninflated_mcl_groups
 * FS19_1-94_multiqc_report.html
 * FS19_outline_09.23.19.docx
 * FS19all_multiqc_report.html
+* FS19C 96 S-S+ E. coli gDNA gels.pdf
 * FS19C Samples 1-96 Final Data.xlsx
 * FS19C_metadata.xlsx
 * fs19cfastanioutput2.out.tab
 * FS19CfastANIoutput2.xlsx
-* FS19Cmashdistances.xlsx
+* gene_presence_absence.Rtab
 * Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
 * KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
 * Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
-* FS19C 96 S-S+ E. coli gDNA gels.pdf
+
+
 
 
 

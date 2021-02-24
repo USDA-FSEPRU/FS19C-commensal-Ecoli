@@ -20,15 +20,20 @@ Summary of sequence analyses methods performed on FS19C samples 1-96 in this rep
 * FS19C 96 S-S+ E. coli gDNA gels.pdf
 
 ## Conda environments
-### fastanienv
-* FastANI, multiqc, prokka
-
-### mashenv
-* Mash
-  * Directions: http://mash.readthedocs.org
-
-### prokka_env
-* prokka, PPanGGOLiN
+* Can use conda environments loaded on `/project/fsepru/conda_envs/`
+* `/project/fsepru/kmou/prokka_env`
+  * Includes tools: fastani, multiqc, mash prokka, PPanGGOLiN
+  * Follow SciNet directions on how to create and run conda environment: https://scinet.usda.gov/guide/conda/
+  * created .condarc file in home directory to re-direct downloading packages in package cache from home directory to project directory
+  ```
+  pkgs_dirs:
+    - /project/fsepru/kmou/my_pkg_cache
+  channels:
+    - r
+    - conda-forge
+    - bioconda
+    - defaults
+  ```
 
 ## Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
@@ -161,7 +166,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 
 ## QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc
-* Platform: Ceres, slurm
+* Platform: Ceres
 
 1. Run the following fastqc.batch slurm script (aka fastqc.slurm) on Ceres:
   ```
@@ -196,13 +201,13 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 ## QC with MultiQC
 * Tutorial: https://www.youtube.com/watch?v=qPbIlO_KWN0
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94. I did not include samples 95 and 96 in the multiqc run as these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (Samples 1-94 are from the first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
-* Platform: Ceres, fastanienv conda environment
+* Platform: Ceres, `prokka_env` conda environment
 
-1. Command ran on Ceres to run fastanienv conda environment:
+1. Command ran on Ceres to run `prokka_env` conda environment:
   ```
   salloc
   module load miniconda
-  source activate fastanienv
+  source activate /project/fsepru/kmou/prokka_env
   conda install -c bioconda multiqc
   multiqc *.fastqc.zip
   conda deactivate
@@ -220,22 +225,18 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 ## QC with FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
-* Platform: Ceres, fastanienv conda environment
+* Platform: Ceres, `prokka_env` conda environment
 
-1. Preparing conda environment on Ceres
+1. Preparing `prokka_env` conda environment on Ceres
 ```
 salloc
 module load miniconda
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda create --name fastanienv
-source activate fastanienv
+source activate /project/fsepru/kmou/prokka_env
 conda install -c bioconda fastani
 ```
 
 1. List of reference genomes to include in fastANI analysis:
-* E. coli MG1655 aka https://www.ncbi.nlm.nih.gov/nuccore/NC_000913.3
+* E. coli str. K-12 substr. MG1655 aka https://www.ncbi.nlm.nih.gov/nuccore/NC_000913.3
   * Saved as Ecoli_K-12_MG1655.fasta
 * E. coli HS aka https://www.ncbi.nlm.nih.gov/nuccore/NC_009800.1
   * Saved as Ecoli_HS.fasta
@@ -244,17 +245,17 @@ conda install -c bioconda fastani
 * E. coli O157:H7 str. NADC 6564 aka https://www.ncbi.nlm.nih.gov/nuccore/CP017251
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/#CR28
   * Saved as Ecoli_NADC6564.fasta
-* E. coli O157:H7 EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
+* E. coli O157:H7 str. EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
   * Saved as Ecoli_O157H7_EDL933.fasta
 
-2. Combine all file names of 95 isolates and 5 reference genomes in a querylist2.txt and run fastani with this file listed as query and as reference lists.
+2. Combine all file names of 95 isolates and 6 reference genomes in a querylist2.txt and run fastani with this file listed as query and as reference lists.
 ```
 ls -dv "$PWD"/* > quertylist2.txt
 fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 ```
 
-##### Files generated:
+##### Files generated (these are missing TW14588):
   * FS19CfastANIoutput.xlsx
   * FS19CfastANIoutput2.xlsx
   * fs19cfastanioutput.out
@@ -264,14 +265,13 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
-* Platform: Ceres, mashenv conda environment
+* Platform: Ceres, `prokka_env` conda environment
 
 1. Install and load mash in mashenv conda environment
 ```
 salloc
 module load miniconda
-conda create --name mashenv
-source activate mashenv
+source activate /project/fsepru/kmou/prokka_env
 conda install -c bioconda mash
 ```
 
@@ -280,7 +280,7 @@ conda install -c bioconda mash
 mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
 ```
 Reference genomes include:
-* E. coli MG1655 aka https://www.ncbi.nlm.nih.gov/nuccore/NC_000913.3
+* E. coli str. K-12 substr. MG1655 aka https://www.ncbi.nlm.nih.gov/nuccore/NC_000913.3
   * Saved as Ecoli_K-12_MG1655.fasta
 * E. coli HS aka https://www.ncbi.nlm.nih.gov/nuccore/NC_009800.1
   * Saved as Ecoli_HS.fasta
@@ -289,9 +289,11 @@ Reference genomes include:
 * E. coli O157:H7 str. NADC 6564 aka https://www.ncbi.nlm.nih.gov/nuccore/CP017251
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/#CR28
   * Saved as Ecoli_NADC6564.fasta
-* E. coli O157:H7 EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
+* E. coli O157:H7 str. EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
   * Saved as Ecoli_O157H7_EDL933.fasta
+* E. coli O157:H7 str. TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
+  * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.fna.gz
 * * (Enterobacteriaceae) Salmonella enterica subsp. enterica serovar Typhimurium str. LT2 aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000006945.2
   * Saved as Styphimurium_LT2.fna.gz
 * (Non-Enterobacteriaceae, same phylum) Campylobacter jejuni subsp. jejuni NCTC 11168 aka https://www.ncbi.nlm.nih.gov/assembly/GCF_000009085.1
@@ -465,21 +467,206 @@ mash dist -p 1 .msh .msh > distances.tab
 * Github: https://github.com/Jtrachsel/gifrop
 * Platform: Ceres
 
+1. Need to rename suffix of `.fasta` files to `.fna`. Also need to modify contig IDs in fasta files for gifrop to work properly (able to call virulence genes, etc. from various databases). Jules showed me his `rename_contigs` script:
+```
+rename_contigs() {
+        FILE=$1
+        BASE=$2
+        awk -v basev="$BASE" '/^>/{print ">"basev"_"++i;next}{print}' "$FILE" > "$BASE"_rename.fasta
+        rm $FILE
+        mv "$BASE"_rename.fasta $FILE
+}
+export -f rename_contigs
+```
 
-#### Files generated (for each isolate):
-* Prokka
-  * *_pol.fasta%.fasta_prokka/
-    * *_pol.fasta%.fasta.err
-    * *_pol.fasta%.fasta.faa
-    * *_pol.fasta%.fasta.ffn
-    * *_pol.fasta%.fasta.fna
-    * *_pol.fasta%.fasta.fsa
-    * *_pol.fasta%.fasta.gbk
-    * *_pol.fasta%.fasta.gff
-    * *_pol.fasta%.fasta.log
-    * *_pol.fasta%.fasta.sqn
-    * *_pol.fasta%.fasta.tbl
-    * *_pol.fasta%.fasta.tsv
-    * *_pol.fasta%.fasta.txt
-* Roary
-* gifrop
+2. I added this script in my `.bashrc` profile in home directory on Ceres. Do `source ~/.bashrc` from wherever you are to update bashrc profile.
+
+3. I created a for-loop to run `rename_contigs` on all fasta files of desired directory. See `BashScriptLesson.md` for-loop bash script `~/scripts/renamecontigs.sh` and other details to run `rename_contigs` in desired fasta file directory.
+
+4. I copied *.fna files from `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/` to a new directory `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran `~/scripts/renamecontigs.sh` in this new directory.
+
+5. (19Feb2021) Moved `GIFROP.slurm` to `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran the following script on slurm. Used Ecoli str. K-12 substr. MG1655 as priority annotation for prokka.
+```
+#!/bin/bash
+#SBATCH --job-name=panpipe                            # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#SBATCH --mail-user=kathy.mou@usda.gov
+#Enter commands here:
+set -e
+module load miniconda
+source activate /project/fsepru/conda_envs/gifrop2
+
+pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+```
+
+6. Download `gifrop_out/` and roary output. `clustered_island_info.csv` shows virulence genes, etc.
+
+#### Files generated:
+* **_pol/ or Ecoli_*/
+  * *_pol.err
+  * *_pol.faa
+  * *_pol.ffn
+  * *_pol.fna
+  * *_pol.fsa
+  * *_pol.gbk
+  * *_pol.gff
+  * *_pol.log
+  * *_pol.sqn
+  * *_pol.tbl
+  * *_pol.tsv
+  * *_pol.txt
+  * proteins.faa
+  * proteins.pdb
+  * proteins.pot
+  * proteins.ptf
+  * proteins.pto
+* pan/
+  * *.gff
+  * accessory_binary_genes.fa
+  * accessory_binary_genes.fa.newick
+  * _accessory_clusters
+  * _accessory_clusters.clstr
+  * accessory_graph.dot
+  * accessory.header.embl
+  * accessory.tab
+  * blast_identity_frequency.Rtab
+  * _blast_results
+  * _clustered
+  * _clustered.clstr
+  * clustered_proteins
+  * _combined_files
+  * _combined_files.groups
+  * core_accessory_graph.dot
+  * core_accessory.header.embl
+  * core_accessory.tab
+  * core_alignment_header.embl
+  * core_gene_alignment.aln
+  * core_gene_alignment.aln.reduced
+  * gene_presence_absence.csv
+  * gene_presence_absence.Rtab
+  * gifrop_out/
+    * clustered_island_info.csv
+    * figures/
+      * island_length_histogram.png
+      * islands_per_isolate_no_unknowns.png
+      * islands_per_isolate.png
+      * Number_of_occurances.png
+      * Number_of_occurances_secondary.png
+    * gifrop.log
+    * islands_pangenome_gff.csv
+    * my_islands/
+      * abricate/
+        * All_islands.megares2
+        * All_islands.ncbi
+        * All_islands.plasmidfinder
+        * All_islands.vfdb
+        * All_islands.viroseqs
+      * island_info.csv
+      * All_islands.fasta
+    * pan_only_islands.csv
+    * pan_with_island_info.csv
+    * sequence_data/
+      * *.fna
+      * *_short.gff
+  * _inflated_mcl_groups
+  * _inflated_unsplit_mcl_groups
+  * _labeled_mcl_groups
+  * M7lUUryBzC/
+    * *.gff.proteome.faa
+  * number_of_conserved_genes.Rtab
+  * number_of_genes_in_pan_genome.Rtab
+  * number_of_new_genes.Rtab
+  * number_of_unique_genes.Rtab
+  * pan_genome_reference.fa
+  * pan_genome_sequences/
+  * summary_statistics.txt
+  * _uninflated_mcl_groups
+
+## Pan-genome analysis with ppanggolin
+* Summary: PPanGGOLiN is another pan-genome analysis tool.
+* Github: https://github.com/labgem/PPanGGOLiN
+* Platform: Ceres, conda
+
+1. Created text files listing all filenames and their paths in `prokka_gbk` directory with the following commands. Then downloaded text files `Ecoligbklist.txt` and `Ecoligbkpath.txt`.
+```
+ls -d -1 "$PWD/"*.gbk > Ecoligbkpath.txt      #<= lists the files' full name (includes path)
+ls *.gbk > Ecoligbklist.txt     #<= lists the filenames (without path)
+```
+
+2. Opened `Ecoligbklist.txt` and `Ecoligbkpath.txt`. Opened up Excel and copied names of files from `Ecoligbklist.txt` in 1st column (containing unique organism name) and copied full directory name of files from `Ecoligbkpath.txt` to second column (as path to location of gbk file). Save as `Ecoligbk.txt`. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. Uploaded to ceres.
+
+17. Ran `ppanggolin.slurm` with this slurm script:
+```
+set -e
+set -u
+set +eu
+module load miniconda
+source activate /project/fsepru/conda_envs/ppanggolin
+ppanggolin workflow --anno Ecoligbk.txt
+```
+
+#### Files generated:
+* gene_presence_absence.Rtab       
+* organisms_statistics.tsv  
+* pangenomeGraph_light.gexf  
+* projection/
+* matrix.csv                       
+* pangenomeGraph.gexf       
+* pangenome.h5               
+* tile_plot.html
+* mean_persistent_duplication.tsv  
+* pangenomeGraph.json       
+* partitions/
+* Ushaped_plot.html
+
+## Phylogenetic Tree Analysis with RAxML and FigTree
+* Summary: The raxml.slurm script, provided by Jules, runs raxml via slurm on Ceres. It will generate tree files.
+* Github RAxML: https://github.com/stamatak/standard-RAxML/blob/master/README
+* Github FigTree: https://github.com/rambaut/figtree
+* Platform: Ceres, FigTree (standalone)
+
+1. Run raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`. Make sure you run this script in the same directory that has `core_gene_alignment.aln` file.
+```
+#!/bin/bash
+#SBATCH --job-name=RAXML                              # name of the job submitted
+#SBATCH -p short                                       # name of the queue you are submitting to
+#SBATCH -N 1                                         # number of nodes in this job
+#SBATCH -n 40                                       # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                     # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N"                               # optional but it prints our standard error
+#SBATCH --mem=120G   
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+# ENTER COMMANDS HERE:
+module load raxml
+# -T is threads
+# -x takes a random seed and turns on rapid-bootstrapping
+# -N is how to do bootstrapping 'autoMRE' is an algorithm that will automatically determine when enough bootstraps have been done
+# -m is the model to use
+# -f select algorithm: "-f a": rapid Bootstrap analysis and search for best-scoring ML tree in one program run
+# -n is the name to use for the outputs
+# -p is a random seed to use for parsimony searches
+# -o is the name of the genome you want to use as an outgroup, must match exactly, not required
+raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignment.aln -T 40 -x 7 -N autoMRE -p 7
+#End of file
+```
+
+2. Download the 3 files and open in FigTree: `RAxML_bestTree.core_genome_tree_1`, `RAxML_bipartitions.core_genome_tree_1`, `RAxML_bootstrap.core_genome_tree_1`.
+
+3. Options on left panel:
+  * Trees > Order nodes
+  * Select Tip Labels, Scale Bar
+
+#### Files generated:
+* RAxML_bestTree.core_genome_tree_1
+* RAxML_bipartitionsBranchLabels.core_genome_tree_1
+* RAxML_bipartitions.core_genome_tree_1
+* RAxML_bootstrap.core_genome_tree_1
+* RAxML_info.core_genome_tree_1
