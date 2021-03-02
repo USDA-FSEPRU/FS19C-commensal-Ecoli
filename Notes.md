@@ -24,6 +24,11 @@
 * update 03_Results.md (roary, ppanggolin, raxml)
 * stx1, stx2 genes: what are the gene names?
 * list of operons to focus on
+* Run isolates through Daniel's github tools
+  * https://github.com/nielsend/O157LineageAssignment
+    `./LSPA6Long.sh [output CSV File Name] [Fasta File(s)]`
+  * https://github.com/nielsend/ABRicateSequenceExtraction
+    * Not as sure how applicable the output from this will be... pull out specific genes of interest and search for polymorphisms, etc...
 * lit review: read https://mbio.asm.org/content/3/3/e00050-12.long
 
 # Journal Target
