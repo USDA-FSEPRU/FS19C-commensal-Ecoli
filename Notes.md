@@ -30,6 +30,16 @@
   * https://github.com/nielsend/ABRicateSequenceExtraction
     * Not as sure how applicable the output from this will be... pull out specific genes of interest and search for polymorphisms, etc...
 * lit review: read https://mbio.asm.org/content/3/3/e00050-12.long
+* List from Vijay
+```
+You can search sequenced genomes of E. coli isolates for the genes/operons involved in assimilation of following carbon/sugar substrates :
+glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuornate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine N-acetylneuraminate, sialic acid and D-gluconate.  E. coli strains use these sugar substrates in various combinations/hierarchy for growth in the animal intestine:
+E. coli O157, unlike most human commensal E. coli, can use galactose, hexuronate, mannose and ribose for in vivo growth.
+
+In addition you can screen the sequenced genomes for:
+Genes constituting eut operon (for ethanolamine utilization)
+Genes encoding bacteriocins and microcins (especially microcins M and H47)
+```
 
 # Journal Target
 * [Journal submission guidelines](link)
