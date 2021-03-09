@@ -15,6 +15,8 @@
   * *.fastq.gz sequence data for samples 1-96
   * tar these files once finish running assembly slurm scripts and get covstats.txt
   * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
+  * remove intermediate files 
+  * make sure raw data somehwere!
 
 ## FS19C
 * highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?

@@ -48,6 +48,7 @@ alias myjobs='squeue | grep kathy.mo'
 * Began on: 16Sept2020
 * Completed on: 18Dec2020
 * Platform: Ceres
+  * /project/fsepru/kmou/FS19C/**
 
 1. Make text file replace.sh
 ```
@@ -364,7 +365,9 @@ ls -v *pol.fasta > polishedfasta.txt
 * Began on: 6Jan2021
 * Completed on: 7Jan2021
 * Platform: Ceres, slurm
-* fastqc.batch slurm script (aka fastqc.slurm):
+  * /project/fsepru/kmou/FS19C/**
+
+1. fastqc.batch slurm script (aka fastqc.slurm):
 
   ```
   #!/bin/bash
@@ -392,6 +395,7 @@ ls -v *pol.fasta > polishedfasta.txt
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94 (forgot to do this prior to sequence assembly). I did not include samples 95 and 96 in the multiqc run as I realized these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (but I would only consider  samples 1-94 from that first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
 * Began and Completed on: 7Jan2021
 * Platform: Ceres, fastanienv conda environment
+  * /project/fsepru/kmou/FS19C/**
 
 1. Command ran:
   ```
@@ -437,6 +441,7 @@ ls -v *pol.fasta > polishedfasta.txt
 * Began on: 28Dec2020
 * Completed on: 11Jan2021
 * Platform: Ceres, fastanienv conda environment
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/**
 
 1. Preparing conda environment on Ceres
 ```
@@ -503,6 +508,7 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 * Source: http://mash.readthedocs.org
 * Began and Completed on: 11Jan2021
 * Platform: Ceres, mashenv conda environment
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/**
 
 1. Load environment and install mash
 ```
@@ -603,7 +609,7 @@ Submitted batch job 5572662
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
 * Began on: 14Jan2021
 * Completed on: 15Jan2021
-* Platform: R Studio
+* Platform: R Studio on local computer
 
 1. See scripts/qc_mds.R for details
 ```
@@ -826,6 +832,7 @@ ggsave("FS19C_mashMDS2.tiff", plot=plot_mash_mdsB, width = 9, height = 8, dpi = 
 * Began on: 20Jan2021
 * Completed on: 28Jan2021
 * Platform: Ceres, prokka_env conda environment
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
 1. (20Jan2021) Find E. coli pangenome (pan proteome) on UniProt:
   * [Escherichia coli (strain K12) (Strain: K12 / MG1655 / ATCC 47076)](https://www.uniprot.org/proteomes/UP000000625)
@@ -1001,8 +1008,9 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 * Summary: ran Roary on FS19C gff data by running in Ceres to generate pangenome analysis of *E. coli* isolates.
 * Roary publication DOI: 10.1093/bioinformatics/btv421
 * Began on: 29Jan2021
-* Completed on:
+* Completed on: 24Feb2021 (completed with gifrop)
 * Platform: Ceres
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
 1. (29Jan2021) Notes from Roary publication (including supplemental info)
   * pass in the flag '-e' to get multi-fasta file to use with RAxML or FastTree to generate phylogenetic tree based on SNPs in core genes. The file you want for those applications is called *core_gene_alignment.aln*. This flag also generates *pan_genome_reference.fa* file
@@ -1377,6 +1385,7 @@ Looked at the following roary output files:
 * Began on: 3Feb2021
 * Completed on:
 * Platform: Ceres, prokka_env conda
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/renamed_contigs/prokka_gbk/**
 
 1. (3Feb2021) Copy gbk files from 95 isolates on Ceres and place in `project/FS19C/polished_genomes_100X/polishedgenomesprokka/prokka_gbk` directory
 ```
@@ -1549,8 +1558,9 @@ Submitted batch job 5589844
 * RAxML-NG publication DOI: 10.1093/bioinformatics/btu033
 * Github: https://github.com/stamatak/standard-RAxML/blob/master/README
 * Began on: 12Feb2021
-* Completed on:
+* Completed on: 24Feb2021
 * Platform: Ceres
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
 1. (12Feb2021) Ran raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`.
 ```
@@ -1618,8 +1628,9 @@ I notice the `RAxML_bestTree.core_genome_tree_1` and `RAxML_bipartitions.core_ge
 * Summary: ran gifrop2 (developed by Julian Trachsel. Gifrop2 = version 2 of gifrop) via slurm on Ceres to identify ‘genomic islands’ from roary pangenomes. See how related isolates are.
 * Github: https://github.com/Jtrachsel/gifrop
 * Began on: 12Feb2021
-* Completed on:
+* Completed on: 24Feb2021
 * Platform: Ceres
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
 1. (12Feb2021) Made `gifrop2.slurm` script and ran in `/project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff` where `*.gff` files and soft link for `gene_presence_absence.csv` is.
 ```
@@ -1694,8 +1705,9 @@ I have made a SLURM script for you with an example of how I would do things and 
   * Summary: Re-run prokka because I forgot to set E. coli MG1655 genbank file as priority annotation when I first ran prokka. This slurm script was provided by Jules, which runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
   * Github: https://github.com/Jtrachsel/gifrop
   * Began on: 17Feb2021
-  * Completed on:
+  * Completed on: 24Feb2021
   * Platform: Ceres
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
 1. (17Feb2021) Ran the following on slurm:
 ```
