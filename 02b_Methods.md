@@ -1776,6 +1776,12 @@ Submitted batch job 5576687
 
 
 ## Metabolic pathways in pangenome with gapseq
+* Github: https://github.com/jotech/gapseq
+* Began on:
+* Completed on:
+* Platform:
+* gapseq publication DOI: https://doi.org/10.1186/s13059-021-02295-1
+* https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02295-1
 
 ## Screen for AMR or virulence genes with abricate
 

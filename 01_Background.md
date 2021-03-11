@@ -167,7 +167,27 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   * Comprehensive list of metabolic genes from 2013 (gene names may have changed since then)
 
 ## Relevant email and other communication
+List of genes from Vijay
+```
+You can search sequenced genomes of E. coli isolates for the genes/operons involved in assimilation of following carbon/sugar substrates :
+glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuornate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine N-acetylneuraminate, sialic acid and D-gluconate.  E. coli strains use these sugar substrates in various combinations/hierarchy for growth in the animal intestine:
+E. coli O157, unlike most human commensal E. coli, can use galactose, hexuronate, mannose and ribose for in vivo growth.
 
+In addition you can screen the sequenced genomes for:
+Genes constituting eut operon (for ethanolamine utilization)
+Genes encoding bacteriocins and microcins (especially microcins M and H47)
 ```
-email contents
-```
+
+## KEGG
+| Organism | KEGG genome information| KEGG Genome| KEGG Pathway | Comments |
+| -- | -- | -- | -- | -- |
+| Ecoli_O157H7_EDL933 | https://www.genome.jp/kegg-bin/show_organism?org=T00044 | https://www.genome.jp/dbget-bin/www_bget?gn:T00044 | https://www.genome.jp/dbget-bin/get_linkdb?-t+pathway+gn:T00044 | |
+| Ecoli_K12_MG1655 | https://www.genome.jp/kegg-bin/show_organism?org=T00007 | https://www.genome.jp/dbget-bin/www_bget?gn:T00007 | https://www.genome.jp/dbget-bin/get_linkdb?-t+pathway+gn:T00007 | |
+| Ecoli_O9_HS (commensal) | https://www.genome.jp/kegg-bin/show_organism?org=ecx | https://www.genome.jp/dbget-bin/www_bget?gn:T00591 | https://www.genome.jp/dbget-bin/get_linkdb?-t+pathway+gn:T00591 | |
+| Ecoli_Nissle1917 | NA | NA | NA | ENA: https://www.ebi.ac.uk/ena/browser/view/GCA_000714595.1 |
+| Ecoli_O157H7_NADC_6564 | NA | NA | NA | |
+| Ecoli_O157H7_TW14588 | NA | NA | NA |
+
+How to get a list of genes associated with metabolism of each carbon/sugar substrate? KEGG pathway has diagram and can click on individual genes, but hwo to get whole list?
+
+Or maybe try UniProt? Or gapseq? 
