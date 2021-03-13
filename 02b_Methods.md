@@ -1774,6 +1774,14 @@ Submitted batch job 5576687
 
 6. (24Feb2021) Downloaded `gifrop_out/` and roary output. Gifrop worked (yay!), `clustered_island_info.csv` showed virulence genes, etc. Will need to go through `clustered_island_info.csv` to search for specific gene groups (sugar utilization, virulence genes, etc)
 
+## Screen for LEE operon genes, hemolysin genes (hyl_), stx genes
+* look at gifrop output (gifrop runs abricate through Megares2.0, plasmid finder, vfdb, ProphET), look only the ones without stx genes (were the 14 you found confirmed to be stx- in the gifrop output?)
+* What are the LEE operon genes, hemolysin genes
+
+## Screen for bacteriocins, microcins
+* What are the genes for bacteriocins, microcins?
+* BACTIBASE or Bagel4 for bacteriocin ID
+
 
 ## Metabolic pathways in pangenome with gapseq
 * Github: https://github.com/jotech/gapseq

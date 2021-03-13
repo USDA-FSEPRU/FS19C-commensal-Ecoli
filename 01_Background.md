@@ -188,6 +188,6 @@ Genes encoding bacteriocins and microcins (especially microcins M and H47)
 | Ecoli_O157H7_NADC_6564 | NA | NA | NA | |
 | Ecoli_O157H7_TW14588 | NA | NA | NA |
 
-How to get a list of genes associated with metabolism of each carbon/sugar substrate? KEGG pathway has diagram and can click on individual genes, but hwo to get whole list?
+How to get a list of genes associated with metabolism of each carbon/sugar substrate? KEGG pathway has diagram and can click on individual genes, but how to get whole list?
 
-Or maybe try UniProt? Or gapseq? 
+Or maybe try UniProt? Or gapseq?
