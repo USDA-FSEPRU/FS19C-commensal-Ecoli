@@ -1776,7 +1776,7 @@ Submitted batch job 5576687
 
 ## Screen for LEE operon genes, hemolysin genes (hyl_), stx genes
 * look at gifrop output (gifrop runs abricate through Megares2.0, plasmid finder, vfdb, ProphET), look only the ones without stx genes (were the 14 you found confirmed to be stx- in the gifrop output?)
-* What are the LEE operon genes, hemolysin genes
+* What are the LEE operon genes, hemolysin genes -- see Vijay's email
 
 ## Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
@@ -1785,11 +1785,57 @@ Submitted batch job 5576687
 
 ## Metabolic pathways in pangenome with gapseq
 * Github: https://github.com/jotech/gapseq
-* Began on:
+* Began on: 15Mar2021
 * Completed on:
-* Platform:
+* Platform: personal MacOS via HomeBrew installation
 * gapseq publication DOI: https://doi.org/10.1186/s13059-021-02295-1
 * https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02295-1
+
+1. (15Mar2021) Followed installation instructions: https://gapseq.readthedocs.io/en/latest/install.html. Hit a couple snags and fixed with these commands:
+```
+brew update     # <= always update brew before installing anything new
+brew upgrade
+brew install coreutils binutils git glpk blast bedtools r brewsci/bio/barrnap grep bc
+vim ~/.Rprofile
+  options(repos=structure(c(CRAN="https://mirror.las.iastate.edu/CRAN/")))
+R -e 'install.packages(c("data.table", "stringr", "sybil", "getopt", "reshape2", "doParallel", "foreach", "R.utils", "stringi", "glpkAPI", "CHNOSZ", "jsonlite"))'
+R -e 'if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager"); BiocManager::install("Biostrings")'
+git clone https://github.com/jotech/gapseq && cd gapseq
+```
+
+2. (15Mar2021) This might be the closest tutorial? https://gapseq.readthedocs.io/en/latest/tutorials/yogurt.html. Need to look up how to run on all 95 isolates at once. I found in issues page for gapseq you can run parallel: https://github.com/jotech/gapseq/issues/52. I installed parallel like so:
+```
+brew install parallel
+# Next command taken from source
+parallel ./gapseq find -e 5.4.99.17 {} ::: toy/*.fna.gz
+```
+
+3. (15Mar2021) Prepare fasta files from Ceres as a tar file. On Ceres, created new directory `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/polishedgenomes/` and do the following:
+```
+cp /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/*.fna polishedgenomes/
+tar -czvf fs19cpolishedgenomes.tar.gz polishedgenomes/
+du -sh polishedgenomes/   # <= see size of polishedgenomes/
+```
+Tar file size is 156M.
+`polishedgenomes/` is 513M on Ceres.
+
+4. (15Mar2021) Download tar file to local Mac, untar via `tar -xvf fs19cpolishedgenomes.tar.gz`.
+
+5. Run gapseq with parallel, search for metabolic pathways:
+```
+parallel ./gapseq find -p all {} ::: ./gapseq/polishedgenomes/*.fna.gz
+```
+Gapseq options:
+* test = testing dependencies and basic functionality of gapseq
+```
+gapseq test
+```
+* find = pathway analysis, try to find enzymes based on homology
+```
+gapseq find (-p pathway | -e enzymes [-b bitscore] (genome)
+gapseq find -p all toy/myb71.fna.gz
+```
+
 
 ## Screen for AMR or virulence genes with abricate
 
