@@ -1886,6 +1886,7 @@ You can also check out the `INSTALL` file for directions
 
 <details><summary>template.slurm and gapseq.sh scripts</summary>
 template.slurm
+
   ```
   #!/bin/bash
   #SBATCH --job-name=gapseq                            # name of the job submitted
@@ -1901,6 +1902,7 @@ template.slurm
   ```
 
 gapseq.sh
+
   ```
   #!/bin/bash
 
