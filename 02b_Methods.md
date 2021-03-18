@@ -1750,24 +1750,24 @@ Job completed successfully! Downloaded `gifrop_out/` and roary output.
 4. (19Feb2021) See `BashScriptLesson.md` for details about `rename_contigs` and for-loop bash script `~/scripts/renamecontigs.sh` to run `rename_contigs` in desired fasta file directory. I saved `rename_contigs` in `~/.bashrc`, copied *.fna files from `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/` to a new directory `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran `~/scripts/renamecontigs.sh` in this new directory.
 
 5. (19Feb2021) Moved `GIFROP.slurm` to new directory and modified script via removing `--centre X --compliant`. Run job on slurm.
-```
-#!/bin/bash
-#SBATCH --job-name=panpipe                            # name of the job submitted
-#SBATCH -p short                                    # name of the queue you are submitting to
-#SBATCH -N 1                                            # number of nodes in this job
-#SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
-#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
-#SBATCH --mem=32G   # memory
-#SBATCH --mail-user=kathy.mou@usda.gov
-#Enter commands here:
-set -e
-module load miniconda
-source activate /project/fsepru/conda_envs/gifrop2
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=panpipe                            # name of the job submitted
+  #SBATCH -p short                                    # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --mem=32G   # memory
+  #SBATCH --mail-user=kathy.mou@usda.gov
+  #Enter commands here:
+  set -e
+  module load miniconda
+  source activate /project/fsepru/conda_envs/gifrop2
 
-pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
-```
+  pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+  ```
 ```
 Submitted batch job 5576687
 ```
@@ -1787,9 +1787,12 @@ Submitted batch job 5576687
 * Github: https://github.com/jotech/gapseq
 * Began on: 15Mar2021
 * Completed on:
-* Platform: personal MacOS via HomeBrew installation
+* Platform: personal MacOS via HomeBrew installation, then on Ceres
 * gapseq publication DOI: https://doi.org/10.1186/s13059-021-02295-1
 * https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02295-1
+* Initially didn't think to try gapseq on Ceres, so I tried it on my local computer. Ran into many issues with gapseq readLink and exonerate
+
+<details><summary>gapseq on local computer</summary>
 
 1. (15Mar2021) Followed installation instructions: https://gapseq.readthedocs.io/en/latest/install.html. Hit a couple snags and fixed with these commands:
 ```
@@ -1821,9 +1824,9 @@ Tar file size is 156M.
 
 4. (15Mar2021) Download tar file to local Mac, untar via `tar -xvf fs19cpolishedgenomes.tar.gz`.
 
-5. Run gapseq with parallel, search for metabolic pathways:
+5. (17Mar2021) Run gapseq with parallel, search for metabolic pathways:
 ```
-parallel ./gapseq find -p all {} ::: ./gapseq/polishedgenomes/*.fna.gz
+parallel ./gapseq find -p all {} ::: ./gapseq/polishedgenomes/*.fna
 ```
 Gapseq options:
 * test = testing dependencies and basic functionality of gapseq
@@ -1835,6 +1838,90 @@ gapseq test
 gapseq find (-p pathway | -e enzymes [-b bitscore] (genome)
 gapseq find -p all toy/myb71.fna.gz
 ```
+
+6. Encountered an error:
+```
+Invalid file: <path to file/*.fna>
+readlink: illegal option --f
+usage: readlink [-n] [file ...]
+```
+Looked up Issues page: https://github.com/jotech/gapseq/issues/28
+Tried the following:
+```
+ln -s /usr/local/bin/greadlink /usr/local/bin/readlink
+ln -s /usr/local/bin/gstat /usr/local/bin/stat
+ln -s /usr/local/bin/ggrep /usr/local/bin/grep
+```
+7. Tried running gapseq on one file
+```
+gapseq find -p all <path to file/91-438FEC_pol.fna>
+```
+Encountered another error that gapseq could not find fastafetch or fastaindex. Found out I need to install exonerate: https://www.ebi.ac.uk/about/vertebrate-genomics/software/exonerate. I didn't think that I could do this on gapseq, but after speaking with some colleagues, I learned it is ok to try on Ceres as long as I don't need administrative permissions.
+</details>
+
+### On Ceres
+1. (17Mar2021) Go to fsepru project directory, make installation directory (`programs/`), cd to `programs`, then `git clone https://github.com/jotech/gapseq` in `programs`.
+
+2. (17Mar2021) Edit bashrc profile to include this line (install Exonerate and gapseq to specific path instead of to usr/local/bin):
+```
+export PATH="/project/fsepru/kmou/programs/bin/:/project/fsepru/kmou/programs/gapseq:$PATH"
+source ~/.bashrc
+```
+
+3. (17Mar2021) Install Exonerate in `programs` and run the following commands to compile C code:
+```
+wget http://ftp.ebi.ac.uk/pub/software/vertebrategenomics/exonerate/exonerate-2.2.0.tar.gz
+tar -xvf exonerate-2.2.0.tar.gz
+./configure --prefix=<installationpath>
+make
+make check
+make install
+make clean    # <= removes temp files during install
+```
+You can also check out the `INSTALL` file for directions
+
+4. (17Mar2021) Tested that gapseq and exonerate programs work (got an intro page).
+
+5. (17Mar2021) Go to `project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes` and made `template.sh` template slurm script and `gapseq.sh` for loop with `gapseq` and `sbatch` commands to generate a slurm script with `gapseq` and `sbatch` commands for each of the 95 isolates + 6 reference genomes.
+
+<details><summary>template.slurm and gapseq.sh scripts</summary>
+template.slurm
+```
+#!/bin/bash
+#SBATCH --job-name=gapseq                            # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 2                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --account fsepru
+#SBATCH --mail-user=kathy.mou@usda.gov
+#Enter commands here:
+```
+
+gapseq.sh
+```
+#!/bin/bash
+
+for file in ./*.fna
+  do
+    #cp template.sh $file.gapseq.sh
+    #echo "gapseq find -p all $file" >> $file.gapseq.sh
+    #echo "#End of file" >> $file.gapseq.sh
+     sbatch "$file.gapseq.sh"
+  done
+```
+</details>
+
+6. (17Mar2021) Ran gapseq.sh, comment out `sbatch "$file.gapseq.sh"`. Then run gapseq.sh again, commenting out the following lines and only run `sbatch "$file.gapseq.sh"`
+```
+#cp template.sh $file.gapseq.sh
+#echo "gapseq find -p all $file" >> $file.gapseq.sh
+#echo "#End of file" >> $file.gapseq.sh
+```
+
+7. (17Mar2021) Submitted all 101 jobs on slurm at once (jobs 5616514-5616614).
 
 
 ## Screen for AMR or virulence genes with abricate

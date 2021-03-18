@@ -14,6 +14,11 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
 |_project/
     |_fsepru/
         |_kmou/
+            |_programs/
+              |_bin  
+              |_exonerate  
+              |_gapseq
+              |_share
             |_dot_files/
                 |_.conda
                 |_software/
