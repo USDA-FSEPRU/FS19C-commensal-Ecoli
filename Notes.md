@@ -15,17 +15,16 @@
   * *.fastq.gz sequence data for samples 1-96
   * tar these files once finish running assembly slurm scripts and get covstats.txt
   * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
-  * remove intermediate files 
+  * remove intermediate files
   * make sure raw data somehwere!
 
 ## FS19C
 * highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
-* read up on gapseq: https://doi.org/10.1101/2020.03.20.000737
-  * https://github.com/jotech/gapseq
-* update 03_Results.md (roary, ppanggolin, raxml)
-* stx1, stx2 genes: what are the gene names?
-* list of operons to focus on
+* check out gapseq results
+* go through gifrop files to find isolates that are stx-, hemolysin-, LEE operon negative
+* read papers from Vijay
+* update 03_Results.md (gifrop), 02c_MethodsSummary.md (gapseq)
 * Run isolates through Daniel's github tools
   * https://github.com/nielsend/O157LineageAssignment
     `./LSPA6Long.sh [output CSV File Name] [Fasta File(s)]`

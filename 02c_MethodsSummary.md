@@ -601,7 +601,7 @@ ls *.gbk > Ecoligbklist.txt     #<= lists the filenames (without path)
 
 2. Opened `Ecoligbklist.txt` and `Ecoligbkpath.txt`. Opened up Excel and copied names of files from `Ecoligbklist.txt` in 1st column (containing unique organism name) and copied full directory name of files from `Ecoligbkpath.txt` to second column (as path to location of gbk file). Save as `Ecoligbk.txt`. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. Uploaded to ceres.
 
-17. Ran `ppanggolin.slurm` with this slurm script:
+3. Ran `ppanggolin.slurm` with this slurm script:
 ```
 set -e
 set -u
@@ -670,3 +670,7 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_bipartitions.core_genome_tree_1
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
+
+## Identify Metabolic Pathways with gapseq
+
+#### Files generated:
