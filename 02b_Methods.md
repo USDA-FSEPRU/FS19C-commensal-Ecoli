@@ -1774,16 +1774,44 @@ Submitted batch job 5576687
 
 6. (24Feb2021) Downloaded `gifrop_out/` and roary output. Gifrop worked (yay!), `clustered_island_info.csv` showed virulence genes, etc. Will need to go through `clustered_island_info.csv` to search for specific gene groups (sugar utilization, virulence genes, etc)
 
-7. Screen for LEE operon genes, hemolysin genes (hyl_), stx genes
-* look at gifrop output (gifrop runs abricate through Megares2.0, plasmid finder, vfdb, ProphET), look only the ones without stx genes (were the 14 you found confirmed to be stx- in the gifrop output?)
-* What are the LEE operon genes, hemolysin genes -- see Vijay's email
+## (14) Analyze gifrop output to narrow down list of commensal E. coli isolates that don't possess any virulence factors (LEE, stx, hemolysin).
 
-8. Screen for bacteriocins, microcins
+1. (19Mar2021) Went through gifrop csv files:
+* Clustered_island_info.csv: virulence and ARG genes, clusters of genes wrapped together (no annotation) - potential metabolic pathways?
+* Pan_with_island_info.csv: annotation of genes identified in each isolate (wide-format), similar info as Islands_pangenome_gff.csv but in different orientation. Missing some columns like source, type, start, end, score, strand, phase, attributes, ID, product, num_locus_tag, loc_tag_order, only_island, seqid_len, flanking_genes
+* Islands_pangenome_gff.csv: annotation of genes identified in each isolate (long-format), similar info as pan_with_island_info.csv but in different orientation. Missing some columns like Pcluster, all_Sclusters, all_Tclusters, all_Qclusters
+* Other less important files:
+  * Pan_only_islands.csv: same as pan_with_island_info.csv (16345 rows), but missing pan info (11781 rows)
+  * Island_info.csv: only info about islands (no annotation, 12361 rows)
+* Jules mentioned in lab meeting on 19Mar2021 that gifrop is not designed to find all the metabolic pathways. It looks for genomic islands (not including core genome that all strains share) using the following databases:
+  * Megares (v2.0, 2021-Jan-20) (contains ~8000 AMR genes and annotation): [annotations with notes](https://megares.meglab.org/download/megares_v2.00/megares_full_annotations_with_notes_v2.00.csv)
+  * PlasmidFinder (v2.1?? 2020-Apr-19): plasmid typing -- identifies plasmids in total or partial sequences isolates of bacteria
+    ```
+    PlasmidFinder and pMLST: in silico detection and typing of plasmids.
+    Carattoli A, Zankari E, Garcia-Fernandez A, Voldby Larsen M, Lund O, Villa L, Aarestrup FM, Hasman H.
+    Antimicrob. Agents Chemother. 2014. April 28th.
+    ```
+  * vfdb (2020-Apr-19): virulence factors of pathogenic bacteria
+  * ProphET aka viroseqs (2021-Jan-20): prophage sequence prediction tool that Jules customized to convert nucleotide tmp files into abricate formatted database. He uses viroseqs to detect phage genes in bacterial assemblies using abricate
+  * NCBI (2020-Apr-19)
+* So I will need to use other tools to find the relevant metabolic genes.
+
+### Plan: narrow down list of organisms, then run the narrowed-down list of organisms through gapseq and/or DRAM
+2. (19Mar2021) Screen for stx genes
+* Which isolates are stx-negative?
+  * When I presented to CRIS group, I mentioned I finding 14 stx- isolates. Now the list has grown bigger.
+  * Found 36 isolates that were stx-negative
+
+3. Screen for hemolysin genes (hyl_)
+
+4. Screen for LEE operon genes
+
+5. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
 
 
-## (14) Metabolic pathways in pangenome with gapseq
+## (15) Metabolic pathways in pangenome with gapseq
 * Github: https://github.com/jotech/gapseq
 * Began on: 15Mar2021
 * Completed on:
@@ -1931,9 +1959,15 @@ gapseq.sh
 9. Try running gapseq on Streptococcus_thermophilus_strain_ATCC_19258.fna
 `$gapseq find -p all -b 200 -m Bacteria Streptococcus_thermophilus_strain_ATCC_19258.fna`
 
+## (16) DRAM
+* Summary:
+* Began on:
+* Completed on:
+* DRAM doi: https://academic.oup.com/nar/article/48/16/8883/5884738
+* https://github.com/shafferm/DRAM
+* Platform: Ceres
 
-## Screen for AMR or virulence genes with abricate
-
+1. Read DRAM publication, go through github site to see how to download
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

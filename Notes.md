@@ -8,23 +8,15 @@
 * Platform:
 
 #To do
-## Ceres
-* You can change your default Slurm account using running slurm-account-selector.sh on the login node.
-  * To see all your Slurm accounts at any time, use “sacctmgr -Pns show user format=account”
-* reduce space used on Ceres: /project/fsepru/kmou/FS19C/lane1/**
-  * *.fastq.gz sequence data for samples 1-96
-  * tar these files once finish running assembly slurm scripts and get covstats.txt
-  * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
-  * remove intermediate files
-  * make sure raw data somehwere!
 
 ## FS19C
+* Read DRAM publication, go through github site to see how to download
 * highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
-* check out gapseq results
-* go through gifrop files to find isolates that are stx-, hemolysin-, LEE operon negative
-* read papers from Vijay
-* update 03_Results.md (gifrop), 02c_MethodsSummary.md (gapseq)
+* troubleshoot gapseq results
+* go through gifrop files to find isolates that are hemolysin-, LEE operon negative
+  * read papers from Vijay
+* update 02b_Methods.md (gifrop, gapseq), 03_Results.md (gifrop, gapseq), 02c_MethodsSummary.md (gapseq)
 * Run isolates through Daniel's github tools
   * https://github.com/nielsend/O157LineageAssignment
     `./LSPA6Long.sh [output CSV File Name] [Fasta File(s)]`
@@ -41,6 +33,16 @@ In addition you can screen the sequenced genomes for:
 Genes constituting eut operon (for ethanolamine utilization)
 Genes encoding bacteriocins and microcins (especially microcins M and H47)
 ```
+
+## Ceres
+* You can change your default Slurm account using running slurm-account-selector.sh on the login node.
+  * To see all your Slurm accounts at any time, use “sacctmgr -Pns show user format=account”
+* reduce space used on Ceres: /project/fsepru/kmou/FS19C/lane1/**
+  * *.fastq.gz sequence data for samples 1-96
+  * tar these files once finish running assembly slurm scripts and get covstats.txt
+  * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
+  * remove intermediate files
+  * make sure raw data somehwere!
 
 # Journal Target
 * [Journal submission guidelines](link)

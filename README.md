@@ -17,3 +17,5 @@ This is a lab notebook for the comparative genomics project of 96 commensal E. c
 | 06_AuthorInfo.md | List of authors, contact info, contribution |
 | BashScriptLesson.md | Contains the script for `rename.contigs` and the for-loop script `rename_contigs.sh` to run `rename.contigs` on all fasta files in a directory. This page also explains each step of `rename_contigs` and `rename_contigs.sh` |
 | Notes.md | To-do list |
+| [Files](https://github.com/k39ajdM2/Notebook/tree/main/Files) | Relevant data files or files in scripts |
+| [scripts](https://github.com/k39ajdM2/Notebook/tree/main/scripts) | Scripts used in data analysis on HPC (Ceres) or locally (RStudio) |
