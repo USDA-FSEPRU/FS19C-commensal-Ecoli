@@ -252,7 +252,7 @@ _uninflated_mcl_groups
 * prokka_cmds.txt
 
 ### Pan-genome Analysis with PPanGGOLiN
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/renamed_contigs/prokka_gbk/**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/prokka_gbk/**
 ```
 |_project/
     |_fsepru/
@@ -288,6 +288,29 @@ _uninflated_mcl_groups
     exact_core.txt       S2.txt          S5.txt  soft_core.txt
     ```
   * Ushaped_plot.html
+
+
+### Pan-genome Analysis with gapseq
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/gapseq**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_polishedgenomesprokka_95isolates6refgenomes/
+                       |_gapseq/
+```
+* -all-*Pathways.tbl
+* -all-*Reactions.tbl
+* stderr.*.gapseq
+* stdout.*.gapseq
+
+
+
+
+
+
 
 ## Files in Files directory
 * FS19C_metadata.xlsx

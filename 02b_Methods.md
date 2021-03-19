@@ -1925,6 +1925,12 @@ gapseq.sh
 
 7. (17Mar2021) Submitted all 101 jobs on slurm at once (jobs 5616514-5616614).
 
+8. (18Mar2021) Jobs completed, but browsed through Ecoli_TW14588, Ecoli_K12_MG1655 Pathways.tbl files and a few of the 95 isolates and did not detect any "true" predictions, there were no pathways detected... need to do more digging. See how gapseq examples were run. What were their fasta files like? Could it be because of how my fasta file is organized? Test again with Ecoli_TW14588, use different gapseq parameters? Do I need complete assembled genomes?
+* `gapseq find-transport *.fna`
+
+9. Try running gapseq on Streptococcus_thermophilus_strain_ATCC_19258.fna
+`$gapseq find -p all -b 200 -m Bacteria Streptococcus_thermophilus_strain_ATCC_19258.fna`
+
 
 ## Screen for AMR or virulence genes with abricate
 
