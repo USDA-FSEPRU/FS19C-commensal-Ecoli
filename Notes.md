@@ -46,3 +46,8 @@ Genes encoding bacteriocins and microcins (especially microcins M and H47)
 
 # Journal Target
 * [Journal submission guidelines](link)
+
+# Random stuff
+<details><summary>ClIcK iF yOu DaRe</summary>
+Boo!! Congratulations
+</details>
