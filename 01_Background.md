@@ -165,6 +165,12 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 2. Mash-based analysis and pangenome of 10K+ E. coli genomes: https://www.nature.com/articles/s42003-020-01626-5#code-availability
 3. Genome-scale metabolic reconstructions of E. coli strains: https://doi.org/10.1073/pnas.1307797110
   * Comprehensive list of metabolic genes from 2013 (gene names may have changed since then)
+4. Main virulence factors of O157: Tir (translocated intimin receptor for bacterial enterocyte attachment), intimin (adhesin), EspA (filament of T3SS for Tir translocation into host cell)
+  * https://link.springer.com/protocol/10.1007%2F978-1-0716-1339-9_11
+5. A select list of AMR genes detected in various serotypes of E. coli (qPCR): aminoglycoside resistance (aac3-I, aadA1), beta-lactam resistance (ampC, blaSHV, blaCMY), macrolide resistance (ereA), tetracycline resistance (tetA)
+  * https://www.mdpi.com/2079-6382/10/4/344/htm
+6. Characteristics of bacteriophage isolates and expression of stx genes transferred to non-stx producing E. coli by transduction
+  * https://pubmed.ncbi.nlm.nih.gov/33782222/
 
 ## Relevant email and other communication
 List of genes from Vijay
@@ -177,6 +183,8 @@ In addition you can screen the sequenced genomes for:
 Genes constituting eut operon (for ethanolamine utilization)
 Genes encoding bacteriocins and microcins (especially microcins M and H47)
 ```
+
+
 
 ## KEGG
 | Organism | KEGG genome information| KEGG Genome| KEGG Pathway | Comments |

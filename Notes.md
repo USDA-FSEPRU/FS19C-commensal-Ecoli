@@ -10,12 +10,12 @@
 #To do
 
 ## FS19C
+* go through gifrop files to find isolates that are hemolysin-, LEE operon negative
+  * read papers from Vijay (lee paper, eut operon)
 * Read DRAM publication, go through github site to see how to download
 * highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
 * troubleshoot gapseq results
-* go through gifrop files to find isolates that are hemolysin-, LEE operon negative
-  * read papers from Vijay
 * update 02b_Methods.md (gifrop, gapseq), 03_Results.md (gifrop, gapseq), 02c_MethodsSummary.md (gapseq)
 * Run isolates through Daniel's github tools
   * https://github.com/nielsend/O157LineageAssignment
