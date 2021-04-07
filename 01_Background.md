@@ -171,6 +171,21 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   * https://www.mdpi.com/2079-6382/10/4/344/htm
 6. Characteristics of bacteriophage isolates and expression of stx genes transferred to non-stx producing E. coli by transduction
   * https://pubmed.ncbi.nlm.nih.gov/33782222/
+7. LEE operon
+  * doi: 10.1128/iai.68.11.6115-6126.2000
+  * Genes:  
+  | LEE operon | notable virulence genes in ORF |
+  | -- | -- |
+  | LEE1 | ler (LEE-encoded regulator), escRSTU, rorf3 |
+  | LEE2 | sepZ |
+  | LEE3 | NA |
+  | Tir | tir promoter controls intimin expression via polycistronic operon containing these genes: tir, eae, escD, cesT |
+  | LEE4 | espADB, espF, rOrf2|
+  | EHEC and EPEC plasmids | hly, tagA, espC, bfp |
+8. eut operon
+  * doi: 10.1128/JB.00937-13
+  * Genes:
+  
 
 ## Relevant email and other communication
 List of genes from Vijay

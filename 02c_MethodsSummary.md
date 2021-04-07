@@ -35,9 +35,11 @@ Summary of sequence analyses methods performed on FS19C samples 1-96 in this rep
     - defaults
   ```
 
-## Sequence assembly
+## 1. Sequence assembly
 * Summary: QC and assemble sequences using BBMap and spades
 * Platform: Ceres
+
+<details><summary>Assembly details</summary>
 
 1. Make text file replace.sh
 ```
@@ -152,6 +154,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 
 #rm REPLACE.SLURM
 ```
+</details>
 
 ##### Files/directories generated (for each isolate if indicated with a '*')
 * polishedfasta.txt
@@ -164,9 +167,13 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 * *.fasta
 * *_spades_out/
 
-## QC with FastQC
+## 2. QC
+
+### 2a. QC with FastQC
 * Summary: Ran fastqc on FS19C sequence data to assess sequence quality of individual reads for each sample, and to use output for multiqc
 * Platform: Ceres
+
+<details><summary>fastQC details</summary>
 
 1. Run the following fastqc.batch slurm script (aka fastqc.slurm) on Ceres:
   ```
@@ -193,15 +200,18 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 * **96** (both reads): quality scores are green through entire position, some sequence duplication levels starting at 9, peak at >10 and ends at >500; per base sequence content is iffy from positions 1-9
   * 1-H12-96-441FEC_S2_L002_R2_001_fastqc.html
   * 1-H12-96-441FEC_S2_L002_R1_001_fastqc.html
+</details>
 
 ##### Files generated (for each isolate):
   * *fastqc.zip
   * *fastqc.html
 
-## QC with MultiQC
+### 2b. QC with MultiQC
 * Tutorial: https://www.youtube.com/watch?v=qPbIlO_KWN0
 * Summary: Ran multiqc with fastqc output of FS19C sequence data to assess quality of all sequences for samples 1-94. I did not include samples 95 and 96 in the multiqc run as these samples were ran on a second sequencing run, so their coverage is different than the first sequencing run that had all samples (Samples 1-94 are from the first run). In addition, examining fastqc output for samples 95 and 96 was fine enough.
 * Platform: Ceres, `prokka_env` conda environment
+
+<details><summary>multiQC details</summary>
 
 1. Command ran on Ceres to run `prokka_env` conda environment:
   ```
@@ -214,6 +224,7 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
   ```
 
 2. Ran multiqc on isolates #1-94 to generate FS19_1-94_multiqc_report.html and FS19_1-94_data directory.
+</details>
 
 ##### Files generated:
  * FS19all_multiqc_report.html
@@ -222,10 +233,12 @@ adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
  * FS19_1-94_multiqc_data directory
 
 
-## QC with FastANI
+### 2c. QC with FastANI
 * Summary: ran fastANI on FS19C sequence data by running in conda environment to estimate Average Nucleotide Identity (ANI) using alignment-free approximate sequence mapping. It calculates distance between 2 sequences. Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * FastANI publication: DOI: 10.1038/s41467-018-07641-9
 * Platform: Ceres, `prokka_env` conda environment
+
+<details><summary>fastANI details</summary>
 
 1. Preparing `prokka_env` conda environment on Ceres
 ```
@@ -254,6 +267,7 @@ conda install -c bioconda fastani
 ls -dv "$PWD"/* > quertylist2.txt
 fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
 ```
+</details>
 
 ##### Files generated (these are missing TW14588):
   * FS19CfastANIoutput.xlsx
@@ -261,11 +275,13 @@ fastANI --ql querylist2.txt --rl querylist2.txt -o fs19cfastanioutput2.out
   * fs19cfastanioutput.out
   * fs19cfastanioutput2.out
 
-## QC with Mash
+### 2d. QC with Mash
 * Summary: ran Mash on FS19C sequence data by running in conda environment to compare results with fastANI. The *sketch* function converts a sequence or collection of sequences into a MinHash sketch. The *dist* function compares two sketches and returns an estimate of the Jaccard index, *P* value, and Mash distance (estimates rate of sequence mutation under a simple evolutionary model). Also need to include reference genomes to see how all sequences cluster relative to one another and if there are any outliers. Jules had mentioned fastANI is more accurate than Mash, but Mash is faster.
 * Mash publication: DOI: 10.1186/s13059-016-0997-x
 * Source: http://mash.readthedocs.org
 * Platform: Ceres, `prokka_env` conda environment
+
+<details><summary>mash details</summary>
 
 1. Install and load mash in mashenv conda environment
 ```
@@ -306,14 +322,17 @@ Reference genomes include:
 mash dist -p 1 .msh .msh > distances.tab
 ```
 * distances_thirdrun.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
+</details>
 
 ##### Files generated:
   * distances_thirdrun.tab
   * FS19Cmashdistances_thirdrun.xlsx
 
-## QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
+### 2e. QC: Visualize ANI pairwise genome-genome similarity calculations with MDS, heatmap
 * Summary: Made distance matrix from mash and fastani output to create heatmap and MDS to visualize clustering and identify any outliers. The MDS was a bit hard to decipher what was an outlier, so I ran a heatmap to see how fastANI and mash compared and whether the pairwise comparisons were similar between the two, including heatmap of pearson correlation coefficients.
 * Platform: R Studio
+
+<details><summary>R script</summary>
 
 1. See scripts/qc_mds.R for details
   ```
@@ -455,6 +474,7 @@ mash dist -p 1 .msh .msh > distances.tab
 
 2. I googled how to determine outliers in MDS plot and came across this paper: https://doi.org/10.1093/bioinformatics/btz964. They use heatmaps of distance matrices to type bacteria, so I decided to try generating a heatmap to see how it compares between fastANI and mash. Followed this site for generating heatmap from distance matrix and correlation: https://www.datanovia.com/en/blog/clustering-using-correlation-as-distance-measures-in-r/
 * This paper does something similar that ran mash and tested linear correlation with pearson's correlation coefficient test. Purpose was to look at whole genome similarity to identify bacterial meningitis causing species: https://doi.org/10.1186/s12879-018-3324-1
+</details>
 
 ##### Files generated:
 * fastANImashMDSheatmaps.pptx
@@ -462,10 +482,12 @@ mash dist -p 1 .msh .msh > distances.tab
 * FS19C_mashMDS.tiff
 * qc_mds.R
 
-## Genome annotation with prokka, pan-genome analysis with roary, genomic island identification with gifrop
+## 3. Genome annotation with prokka, pan-genome analysis with roary, genomic island identification with gifrop
 * Summary: The pan_pipe slurm script, provided by Jules, runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all fasta genomes (`.fna` format) with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
 * Github: https://github.com/Jtrachsel/gifrop
 * Platform: Ceres
+
+<details><summary>gifrop details</summary>
 
 1. Need to rename suffix of `.fasta` files to `.fna`. Also need to modify contig IDs in fasta files for gifrop to work properly (able to call virulence genes, etc. from various databases). Jules showed me his `rename_contigs` script:
 ```
@@ -486,26 +508,27 @@ export -f rename_contigs
 4. I copied *.fna files from `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/` to a new directory `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran `~/scripts/renamecontigs.sh` in this new directory.
 
 5. (19Feb2021) Moved `GIFROP.slurm` to `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran the following script on slurm. Used Ecoli str. K-12 substr. MG1655 as priority annotation for prokka.
-```
-#!/bin/bash
-#SBATCH --job-name=panpipe                            # name of the job submitted
-#SBATCH -p short                                    # name of the queue you are submitting to
-#SBATCH -N 1                                            # number of nodes in this job
-#SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
-#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
-#SBATCH --mem=32G   # memory
-#SBATCH --mail-user=kathy.mou@usda.gov
-#Enter commands here:
-set -e
-module load miniconda
-source activate /project/fsepru/conda_envs/gifrop2
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=panpipe                            # name of the job submitted
+  #SBATCH -p short                                    # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --mem=32G   # memory
+  #SBATCH --mail-user=kathy.mou@usda.gov
+  #Enter commands here:
+  set -e
+  module load miniconda
+  source activate /project/fsepru/conda_envs/gifrop2
 
-pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
-```
+  pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+  ```
 
 6. Download `gifrop_out/` and roary output. `clustered_island_info.csv` shows virulence genes, etc.
+</details>
 
 #### Files generated:
 * **_pol/ or Ecoli_*/
@@ -588,10 +611,12 @@ pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "
   * summary_statistics.txt
   * _uninflated_mcl_groups
 
-## Pan-genome analysis with ppanggolin
+## 4. Pan-genome analysis with ppanggolin
 * Summary: PPanGGOLiN is another pan-genome analysis tool.
 * Github: https://github.com/labgem/PPanGGOLiN
 * Platform: Ceres, conda
+
+<details><summary>ppanggolin details</summary>
 
 1. Created text files listing all filenames and their paths in `prokka_gbk` directory with the following commands. Then downloaded text files `Ecoligbklist.txt` and `Ecoligbkpath.txt`.
 ```
@@ -610,6 +635,7 @@ module load miniconda
 source activate /project/fsepru/conda_envs/ppanggolin
 ppanggolin workflow --anno Ecoligbk.txt
 ```
+</details>
 
 #### Files generated:
 * gene_presence_absence.Rtab       
@@ -625,11 +651,13 @@ ppanggolin workflow --anno Ecoligbk.txt
 * partitions/
 * Ushaped_plot.html
 
-## Phylogenetic Tree Analysis with RAxML and FigTree
+## 5. Phylogenetic Tree Analysis with RAxML and FigTree
 * Summary: The raxml.slurm script, provided by Jules, runs raxml via slurm on Ceres. It will generate tree files.
 * Github RAxML: https://github.com/stamatak/standard-RAxML/blob/master/README
 * Github FigTree: https://github.com/rambaut/figtree
 * Platform: Ceres, FigTree (standalone)
+
+<details><summary>raxml details</summary>
 
 1. Run raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`. Make sure you run this script in the same directory that has `core_gene_alignment.aln` file.
 ```
@@ -663,6 +691,7 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 3. Options on left panel:
   * Trees > Order nodes
   * Select Tip Labels, Scale Bar
+</details>
 
 #### Files generated:
 * RAxML_bestTree.core_genome_tree_1
@@ -671,6 +700,6 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-## Identify Metabolic Pathways with gapseq
+## 6. Identify Metabolic Pathways with gapseq or DRAM
 
 #### Files generated:
