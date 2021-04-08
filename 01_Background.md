@@ -184,8 +184,9 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   | EHEC and EPEC plasmids | hly, tagA, espC, bfp |
 8. eut operon
   * doi: 10.1128/JB.00937-13
-  * Genes:
-  
+  * Genes: EutR; eut: S (first gene of operon), P, Q, T, D, M, N, E, J, G, H, A, B, C, L, K (end of operon)
+  * their assays tested for eutS promoter
+
 
 ## Relevant email and other communication
 List of genes from Vijay
