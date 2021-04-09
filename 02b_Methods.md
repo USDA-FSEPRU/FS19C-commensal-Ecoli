@@ -1597,7 +1597,7 @@ Submitted batch job 5576687
 ## (14) Analyze gifrop output to narrow down list of commensal E. coli isolates that don't possess any virulence factors (LEE, stx, hemolysin).
 
 1. (19Mar2021) Went through gifrop csv files:
-* Clustered_island_info.csv: virulence and ARG genes, clusters of genes wrapped together (no annotation) - potential metabolic pathways?
+* Clustered_island_info.csv: virulence and ARG genes, clusters of genes wrapped together (no annotation)
 * Pan_with_island_info.csv: annotation of genes identified in each isolate (wide-format), similar info as Islands_pangenome_gff.csv but in different orientation. Missing some columns like source, type, start, end, score, strand, phase, attributes, ID, product, num_locus_tag, loc_tag_order, only_island, seqid_len, flanking_genes
 * Islands_pangenome_gff.csv: annotation of genes identified in each isolate (long-format), similar info as pan_with_island_info.csv but in different orientation. Missing some columns like Pcluster, all_Sclusters, all_Tclusters, all_Qclusters
 * Other less important files:
@@ -1618,13 +1618,32 @@ Submitted batch job 5576687
 
 ### Plan: narrow down list of organisms, then run the narrowed-down list of organisms through gapseq and/or DRAM
 2. (19Mar2021) Screen for stx genes
-* Which isolates are stx-negative?
+* Which isolates are stx-negative? Looked at `gene_presence_absence.csv`
   * When I presented to CRIS group, I mentioned I finding 14 stx- isolates. Now the list has grown bigger.
-  * Found 36 isolates that were stx-negative
+  * Found 36 isolates that were stx-negative: 1-15, 26, 27, 30, 31, 55-62, 69, 72, 73, 79, 84, 86, 87, 95, 96
 
-3. Screen for hemolysin genes (hyl_)
+3. Screen for hemolysin and LEE operon genes. Looked at `gene_presence_absence.csv`
+| Operon | virulence genes in ORF | Present in which of the 95 isolates? |
+| -- | -- | -- |
+| LEE1 | ler (LEE-encoded regulator)| not detected in `gene_presence_absence.csv` |
+| LEE1 | escRSTU (T3SS) | not detected in `gene_presence_absence.csv` |
+| LEE2 | sepZ (T3SS)| not detected in `gene_presence_absence.csv` |
+| LEE3 | NA | NA |
+| Tir | tir promoter controls intimin expression via polycistronic operon containing these genes: tir | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
+| Tir | eae (attaching and effacing aka intimin) | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
+| Tir | escD | not detected in `gene_presence_absence.csv` |
+| Tir | cesT (Tir chaperone) | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
+| LEE4 | espADB | not detected in `gene_presence_absence.csv` |
+| LEE4 | espF | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
+| EHEC and EPEC plasmids | hlyCABD (hemolysin) | yes, 23 have it including: 18, 23, 24, 28, 29, 34, 35, 44, 45, 47, 51, 52, 74-77, 80-83, 91, 92, TW14588. None of these isolates are in the stx-negative list |
+| EHEC and EPEC plasmids | tagA | not detected in `gene_presence_absence.csv` |
+| EHEC and EPEC plasmids | espC | not detected in `gene_presence_absence.csv` |
+| EHEC and EPEC plasmids | bfp (bundle forming pili) | not detected in `gene_presence_absence.csv` |
+| NA | hlyE and hlyE_2 (hemolysin E) | yes, only these don't have hlyE: 19, 21-24, 38, 39, 42, 43, 46, 49, 50, 70, 76, 80, 81, 91, 92, Ecoli_Nissle1917. Only 79 is stx-negative|
+* **Need to ask Vijay if hlyE is an important hemolysin since Ecoli_K12_MG1655 has it.**
+* Down to one isolate that is doesn't have any of the virulence genes from above: #79.
 
-4. Screen for LEE operon genes
+4. Created script Leehly_virulence_gene_search.R to automate finding isolates that don't possess LEE and hemolysin genes. Create heatmap to quickly visualize results.
 
 5. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?

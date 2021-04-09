@@ -64,8 +64,8 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
 ### gifrop
 1. Identify E. coli isolates with no stx genes (my original list had only found 14 isolates, but after careful browsing of `gene_presence_absence.csv`, I discovered there were more than 14 that were stx-)
 * 36 stx-negative isolates: 1-15, 26, 27, 30, 31, 55-62, 69, 72, 73, 79, 84, 86, 87, 95, 96
-2. LEE genes
-3. hemolysin genes
+2. Further narrow down the list of isolates that are negative for LEE and hemolysin genes: only found isolate 79 and Ecoli_Nissle1917 (control).
+3. Next step?
 
 ##### Files generated:
 * **_pol/ or Ecoli_*/
