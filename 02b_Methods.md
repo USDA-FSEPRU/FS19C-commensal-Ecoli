@@ -1622,7 +1622,8 @@ Submitted batch job 5576687
   * When I presented to CRIS group, I mentioned I finding 14 stx- isolates. Now the list has grown bigger.
   * Found 36 isolates that were stx-negative: 1-15, 26, 27, 30, 31, 55-62, 69, 72, 73, 79, 84, 86, 87, 95, 96
 
-3. Screen for hemolysin and LEE operon genes. Looked at `gene_presence_absence.csv`
+3. (8Apr2021) Screen for hemolysin and LEE operon genes. Looked at `gene_presence_absence.csv`
+
 | Operon | virulence genes in ORF | Present in which of the 95 isolates? |
 | -- | -- | -- |
 | LEE1 | ler (LEE-encoded regulator)| not detected in `gene_presence_absence.csv` |
@@ -1632,7 +1633,7 @@ Submitted batch job 5576687
 | Tir | tir promoter controls intimin expression via polycistronic operon containing these genes: tir | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
 | Tir | eae (attaching and effacing aka intimin) | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
 | Tir | escD | not detected in `gene_presence_absence.csv` |
-| Tir | cesT (Tir chaperone) | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
+| Tir | cesT ((T3SS LEE chaperone)) | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
 | LEE4 | espADB | not detected in `gene_presence_absence.csv` |
 | LEE4 | espF | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
 | EHEC and EPEC plasmids | hlyCABD (hemolysin) | yes, 23 have it including: 18, 23, 24, 28, 29, 34, 35, 44, 45, 47, 51, 52, 74-77, 80-83, 91, 92, TW14588. None of these isolates are in the stx-negative list |
@@ -1640,10 +1641,13 @@ Submitted batch job 5576687
 | EHEC and EPEC plasmids | espC | not detected in `gene_presence_absence.csv` |
 | EHEC and EPEC plasmids | bfp (bundle forming pili) | not detected in `gene_presence_absence.csv` |
 | NA | hlyE and hlyE_2 (hemolysin E) | yes, only these don't have hlyE: 19, 21-24, 38, 39, 42, 43, 46, 49, 50, 70, 76, 80, 81, 91, 92, Ecoli_Nissle1917. Only 79 is stx-negative|
+
 * **Need to ask Vijay if hlyE is an important hemolysin since Ecoli_K12_MG1655 has it.**
 * Down to one isolate that is doesn't have any of the virulence genes from above: #79.
 
-4. Created script Leehly_virulence_gene_search.R to automate finding isolates that don't possess LEE and hemolysin genes. Create heatmap to quickly visualize results.
+4. (8Apr2021) Created script `Leehly_virulence_gene_search.R` to automate finding isolates that don't possess LEE and hemolysin genes. Create heatmap to quickly visualize results.
+
+5. (8Apr2021) Why was ler not detected in roary? Not present in `gene_presence_absence.csv`. Which ler gene sequence to be reference? Do a parallel blast search? Need to ask SciNet crew how to do this on Ceres.
 
 5. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?

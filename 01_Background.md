@@ -174,14 +174,16 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
 7. LEE operon
   * doi: 10.1128/iai.68.11.6115-6126.2000
   * Genes:  
+
   | LEE operon | notable virulence genes in ORF |
   | -- | -- |
   | LEE1 | ler (LEE-encoded regulator), escRSTU, rorf3 |
   | LEE2 | sepZ |
   | LEE3 | NA |
-  | Tir | tir promoter controls intimin expression via polycistronic operon containing these genes: tir, eae, escD, cesT |
+  | Tir | tir promoter controls intimin expression via polycistronic operon containing these genes: tir, eae, escD, cesT (T3SS LEE chaperone) |
   | LEE4 | espADB, espF, rOrf2|
   | EHEC and EPEC plasmids | hly, tagA, espC, bfp |
+  
 8. eut operon
   * doi: 10.1128/JB.00937-13
   * Genes: EutR; eut: S (first gene of operon), P, Q, T, D, M, N, E, J, G, H, A, B, C, L, K (end of operon)
