@@ -14,8 +14,8 @@ module load miniconda
 
 
 
-source activate /project/fsepru/conda_envs/gifrop2
-
+#source activate /project/fsepru/conda_envs/gifrop2
+source activate /project/fsepru/conda_envs/gifrop
 
 # you should run this from a folder containing all your assemblies in fasta format with the suffix ".fna"
 
@@ -25,4 +25,11 @@ source activate /project/fsepru/conda_envs/gifrop2
 # run roary and generate a core genome alignment
 # run gifrop and extract classify and cluster genomic islands
 
-pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+# Ecoli K-12 gbk for prokka
+#pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+
+# specifying EDL933 gbk for prokka
+pan_pipe --prokka_args "--proteins *.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+
+# without specifying any Ecoli gbk for prokka
+pan_pipe --prokka_args "--proteins *.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"

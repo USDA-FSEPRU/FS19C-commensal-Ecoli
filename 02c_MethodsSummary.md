@@ -611,46 +611,6 @@ export -f rename_contigs
   * summary_statistics.txt
   * _uninflated_mcl_groups
 
-## 4. Pan-genome analysis with ppanggolin
-* Summary: PPanGGOLiN is another pan-genome analysis tool.
-* Github: https://github.com/labgem/PPanGGOLiN
-* Platform: Ceres, conda
-
-<details><summary>ppanggolin details</summary>
-
-1. Created text files listing all filenames and their paths in `prokka_gbk` directory with the following commands. Then downloaded text files `Ecoligbklist.txt` and `Ecoligbkpath.txt`.
-```
-ls -d -1 "$PWD/"*.gbk > Ecoligbkpath.txt      #<= lists the files' full name (includes path)
-ls *.gbk > Ecoligbklist.txt     #<= lists the filenames (without path)
-```
-
-2. Opened `Ecoligbklist.txt` and `Ecoligbkpath.txt`. Opened up Excel and copied names of files from `Ecoligbklist.txt` in 1st column (containing unique organism name) and copied full directory name of files from `Ecoligbkpath.txt` to second column (as path to location of gbk file). Save as `Ecoligbk.txt`. See this [page](https://github.com/labgem/PPanGGOLiN/blob/master/testingDataset/organisms.gbff.list) for details. Uploaded to ceres.
-
-3. Ran `ppanggolin.slurm` with this slurm script:
-```
-set -e
-set -u
-set +eu
-module load miniconda
-source activate /project/fsepru/conda_envs/ppanggolin
-ppanggolin workflow --anno Ecoligbk.txt
-```
-</details>
-
-#### Files generated:
-* gene_presence_absence.Rtab       
-* organisms_statistics.tsv  
-* pangenomeGraph_light.gexf  
-* projection/
-* matrix.csv                       
-* pangenomeGraph.gexf       
-* pangenome.h5               
-* tile_plot.html
-* mean_persistent_duplication.tsv  
-* pangenomeGraph.json       
-* partitions/
-* Ushaped_plot.html
-
 ## 5. Phylogenetic Tree Analysis with RAxML and FigTree
 * Summary: The raxml.slurm script, provided by Jules, runs raxml via slurm on Ceres. It will generate tree files.
 * Github RAxML: https://github.com/stamatak/standard-RAxML/blob/master/README
@@ -700,9 +660,9 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-## 6. Eliminating any potentially pathogenic commensal *E. coli* isolates from list using gifrop results
-* Summary: As described in title - taking out isolates that possess virulence genes
-* Platform:
+## 6. Excluding potentially pathogenic commensal *E. coli* isolates from list using blast in parallel
+* Summary: As described in title - tossing out isolates that possess virulence genes
+* Platform: Ceres using parallel
 
 <details><summary>List of unwanted genes details</summary>
 ```
