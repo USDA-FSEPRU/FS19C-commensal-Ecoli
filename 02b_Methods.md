@@ -1622,11 +1622,11 @@ Submitted batch job 5576687
   * When I presented to CRIS group, I mentioned I finding 14 stx- isolates. Now the list has grown bigger.
   * Found 36 isolates that were stx-negative: 1-15, 26, 27, 30, 31, 55-62, 69, 72, 73, 79, 84, 86, 87, 95, 96
 
-3. (8Apr2021) Screen for hemolysin and LEE operon genes. Looked at `gene_presence_absence.csv`
+3. (8Apr2021 and 12Apr2021) Screen for hemolysin and LEE operon genes. Looked at `gene_presence_absence.csv` and `clustered_island_info.csv`
 
 | Operon | virulence genes in ORF | Present in which of the 95 isolates? |
 | -- | -- | -- |
-| LEE1 | ler (LEE-encoded regulator)| not detected in `gene_presence_absence.csv` |
+| LEE1 | ler (LEE-encoded regulator)| not detected in `gene_presence_absence.csv` or `clustered_island_info.csv` |
 | LEE1 | escRSTU (T3SS) | not detected in `gene_presence_absence.csv` |
 | LEE2 | sepZ (T3SS)| not detected in `gene_presence_absence.csv` |
 | LEE3 | NA | NA |
@@ -1636,20 +1636,118 @@ Submitted batch job 5576687
 | Tir | cesT ((T3SS LEE chaperone)) | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
 | LEE4 | espADB | not detected in `gene_presence_absence.csv` |
 | LEE4 | espF | yes (only the Ecoli reference strains NADC6564, O157:H7, TW14588) |
-| EHEC and EPEC plasmids | hlyCABD (hemolysin) | yes, 23 have it including: 18, 23, 24, 28, 29, 34, 35, 44, 45, 47, 51, 52, 74-77, 80-83, 91, 92, TW14588. None of these isolates are in the stx-negative list |
-| EHEC and EPEC plasmids | tagA | not detected in `gene_presence_absence.csv` |
-| EHEC and EPEC plasmids | espC | not detected in `gene_presence_absence.csv` |
-| EHEC and EPEC plasmids | bfp (bundle forming pili) | not detected in `gene_presence_absence.csv` |
-| NA | hlyE and hlyE_2 (hemolysin E) | yes, only these don't have hlyE: 19, 21-24, 38, 39, 42, 43, 46, 49, 50, 70, 76, 80, 81, 91, 92, Ecoli_Nissle1917. Only 79 is stx-negative|
+| EHEC and EPEC plasmids | hlyCABD (hemolysin) | yes, 23 have it including: 18, 23, 24, 28, 29, 34, 35, 44, 45, 47, 51, 52, 74-77, 79, 80-83, 91, 92, TW14588. None of these isolates are in the stx-negative list |
+| EHEC and EPEC plasmids | tagA | not detected in `gene_presence_absence.csv` or `clustered_island_info.csv` |
+| EHEC and EPEC plasmids | espC | not detected in `gene_presence_absence.csv` or `clustered_island_info.csv`|
+| EHEC and EPEC plasmids | bfp (bundle forming pili) | not detected in `gene_presence_absence.csv` or `clustered_island_info.csv` |
+| NA | hlyE and hlyE_2 (hemolysin E) | yes, only these don't have hlyE: 19, 21-24, 38, 39, 42, 43, 46, 49, 50, 70, 76, 80, 81, 91, 92, Ecoli_Nissle1917. Only 79 is stx-negative; not detected in `clustered_island_info.csv`|
 
-* **Need to ask Vijay if hlyE is an important hemolysin since Ecoli_K12_MG1655 has it.**
-* Down to one isolate that is doesn't have any of the virulence genes from above: #79.
+* No isolates have none of these virulence genes.
 
 4. (8Apr2021) Created script `Leehly_virulence_gene_search.R` to automate finding isolates that don't possess LEE and hemolysin genes. Create heatmap to quickly visualize results.
 
-5. (8Apr2021) Why was ler not detected in roary? Not present in `gene_presence_absence.csv`. Which ler gene sequence to be reference? Do a parallel blast search? Need to ask SciNet crew how to do this on Ceres.
+5. (8Apr2021) Why was ler not detected in roary? Not present in `gene_presence_absence.csv`. Vijay says I can use EDL933 `ler` gene for blast search. How to do a parallel blast search? Ask Jules.
 
-5. Screen for bacteriocins, microcins
+6. (12Apr2021) Search through vfdb for complete list of virulence genes in E. coli. Downloaded `Escherichia_VFs_comparison.xls`.
+
+7. (12Apr2021) Sent an email to Vijay with this list of genes, asking which of these to focus on to narrow search. The list he sent me are the following (see [01_Background](https://github.com/k39ajdM2/Notebook/blob/main/01_Background.md) for complete email correspondence):
+```
+The modified list would be: ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, espF, stcE, espC, hlyCABD, hlyE, pchABC, espP, efa1/lifA, toxB, stx1, and stx2 for you to use in Blast search...
+
+Yes, EDL933 will be a good reference strain to use in your Blast search.
+```
+
+8. (12Apr2021) Created a bash script `search.sh` to look up and see if the genes are found in Ecoli_O157H7_EDL933 using results from `clustered_island_info.csv`.
+```
+#!/bin/bash
+echo "Beginning of file" > isolates.txt
+for line in `cat Ecolivirulencegene.txt`;
+do
+	echo $line >> output.txt
+	grep -n "$line" O157h7.txt >> isolates.txt
+	echo "END_OF_GENE" >> isolates.txt
+
+done
+echo "End of file" >> isolates.txt
+```
+
+9. (12Apr2021) Opened `output.txt` in BBEdit and did the following:
+  * Find `\n` and replace all with ` , `. This causes everything to be on one line separated by ` , `
+  * Find `, END_OF_GENE ,` with `\n`. This removes all instances of `, END_OF_GENE ,` and makes a new line. This way it is a lot easier to read the output.
+  * Examined output and saw the following genes were not identified in Ecoli_O157H7_EDL933 based on `clustered_island_info.csv`:
+  ```
+  stcE
+ espC
+ hlyC
+ hlyA
+ hlyB
+ hlyD
+ hlyE
+ pchA
+ pchB
+ pchC
+ espP
+ efa1
+ lifA
+ toxB
+  ```
+
+10. (12Apr2021) Looked for these genes in Ecoli_O157H7_EDL93 `gene_presence_absence.csv`:
+
+| Question | Genes |
+| -- | -- |
+| Did not find these listed in `Gene` column| ler, espC, pchA, pchB, pchC, efa1, lifA, toxB |
+| Not present in Ecoli_O157H7_EDL93 | stcE, hlyC, hlyA, hlyB, hlyD,  espP |
+| Present in Ecoli_O157H7_EDL93 | hlyE |
+
+11. (12Apr2021) Looked through Escherichia_VFs_comparison.xls and saw that EDL933 in their database:
+* Should not have: espC, pchA, pchB, pchC
+  * **Need to ask Vijay about this**
+  * Perhaps espC, pchABC found in other E. coli O157:H7 strains but not in the ones I looked at?
+* Should have: ler, efa1, lifA, toxB (plasmid only)
+  * Why does my Ecoli_O157H7_EDL933 not have these genes?
+
+12. (12Apr2021) Changed approach to search all the virulence genes Vijay requested with `search.sh` in all isolates in  `clustered_island_info.csv` file. The genes I did not find were:
+```
+ler
+espC
+hlyE
+pchA
+pchB
+pchC
+efa1
+lifA
+```
+
+The genes I did not find in `gene_presence_absence.csv` for all isolates were:
+```
+ler
+escR
+escS
+escT
+escU
+sepZ
+escD
+espA
+espD
+espB
+espC
+pchA
+pchB
+pchC
+efa1
+lifA
+toxB
+```
+
+13. (12Apr2021) Saw on uniprot that `ler` can also be `hns` (https://www.uniprot.org/uniprot/Q7DB51). Found hns gene in csv but Ecoli_Nissle1917 has it listed along with other genes under the "genes" column.
+```
+hns_2|group_2882|group_2879|group_3880|group_3881|group_3882|group_5366|group_3953|group_3954|group_3955|group_5559|group_5558|group_9873|group_9874|group_5725|group_13768|group_13769|group_13770|group_13771|group_13772|group_13773|group_13774|group_13775|group_13776|group_13777|group_2880
+```
+
+14. Share issues with E. coli CRIS group for ideas.
+
+99. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
 

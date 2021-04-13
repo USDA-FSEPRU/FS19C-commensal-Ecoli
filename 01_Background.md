@@ -183,7 +183,7 @@ Conduct comparative genomics to identify unique characteristics of commensal *E.
   | Tir | tir promoter controls intimin expression via polycistronic operon containing these genes: tir, eae, escD, cesT (T3SS LEE chaperone) |
   | LEE4 | espADB, espF, rOrf2|
   | EHEC and EPEC plasmids | hly, tagA, espC, bfp |
-  
+
 8. eut operon
   * doi: 10.1128/JB.00937-13
   * Genes: EutR; eut: S (first gene of operon), P, Q, T, D, M, N, E, J, G, H, A, B, C, L, K (end of operon)
@@ -202,6 +202,25 @@ Genes constituting eut operon (for ethanolamine utilization)
 Genes encoding bacteriocins and microcins (especially microcins M and H47)
 ```
 
+12Apr2021 Email correspondence with Vijay
+```
+Hi Kathy,
+There are two genes in your list (ler, escRSTU, sepZ, escD, espADB, tagA, espC, bpf) I have changed to red font text. These two genes are tagA and bfp (corrected from bpf to bfp). I have added a few additional genes to your above list and deleted tagA and bfp as these are not found in enterohemorrhagic E. coli such as E. coli O157:H7. The modified list would be: ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, espF, stcE, espC, hlyCABD, hlyE, pchABC, espP, efa1/lifA, toxB, stx1, and stx2 for you to use in Blast search. The reason for making this change to gene list is follows:
+
+tagA is a gene found in Vibrio species and it is a homologue of stcE gene (mucinase gene) of enterohemorrhagic E. coli (like E. coli O157:H7)
+bfp is found on a plasmid in EPEC but this gene is not present in enterohemorrhagic E. coli such as  E. coli O157:H7
+The pchABC genes are found in enterohemorrhagic E. coli (like E. coli O157:H7) and these are homologues of perC gene of enteropathogenic E. coli (EPEC). Both pchABC and perC genes activate LEE expression via activating ler
+espP encodes an autotransported serine protease involved in the cleavage of human coagulation factor V
+efa1/lifA encodes a lymphocyte inhibitory factor A
+toxB encodes ToxB, a 362-kDa protein sharing amino acid sequence similarity with the large Clostridium toxin family, which is involved in adherence to epithelial cells in culture
+stx1 and stx2 genes encode Shiga toxin 1 and Shiga toxin 2 (you may find these genes in some strains as standalone without other virulence genes)
+
+Yes, EDL933 will be a good reference strain to use in your Blast search.
+
+Hope this will be of help.
+Thanks,
+Vijay
+```
 
 
 ## KEGG

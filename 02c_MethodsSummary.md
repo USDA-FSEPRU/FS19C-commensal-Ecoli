@@ -700,6 +700,19 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-## 6. Identify Metabolic Pathways with gapseq or DRAM
+## 6. Eliminating any potentially pathogenic commensal *E. coli* isolates from list using gifrop results
+* Summary: As described in title - taking out isolates that possess virulence genes
+* Platform:
+
+<details><summary>List of unwanted genes details</summary>
+```
+ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, espF, stcE, espC, hlyCABD, hlyE, pchABC, espP, efa1/lifA, toxB, stx1, and stx2
+```
+
+
+</details>
+
+
+## 7. Identify Metabolic Pathways with gapseq or DRAM
 
 #### Files generated:
