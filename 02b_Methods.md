@@ -1933,6 +1933,7 @@ find . -name "*virulence" | xargs rm
 ```
 
 5. Make custom blast database for practice (virulence genes)
+
 | Gene | E. coli strain | NCBI fasta sequence link |
 | -- | -- | -- |
 | ler | | |
