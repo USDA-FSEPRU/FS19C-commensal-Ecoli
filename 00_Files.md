@@ -32,7 +32,7 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
             |_FS19C/
                 |_lane1/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates6refgenomes/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
 
 ```
 
@@ -124,7 +124,7 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
                 |_polished_genomes_100X/
                     |_fs19cfastanioutput.out2
                     |_referencegenomes/
-                    |_polishedgenomesprokka_95isolates6refgenomes/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
                     |_querylist2.txt
                     |_mash_all/
 ```
@@ -148,14 +148,14 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
   * distances_thirdrun.tab
 
 ### Genome Annotation, Pan-genome Analysis, Phylogenetic Tree, Genomic Island ID (prokka, roary, raxml, gifrop)
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/**
 ```
 |_project/
     |_fsepru/
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates6refgenomes/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
                         |_*.fna
                         |_renamed_contigs/
 ```
@@ -252,14 +252,14 @@ _uninflated_mcl_groups
 * prokka_cmds.txt
 
 ### Pan-genome Analysis with PPanGGOLiN
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/prokka_gbk/**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/prokka_gbk/**
 ```
 |_project/
     |_fsepru/
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates6refgenomes/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
                         |_renamed_contigs/
                             |_prokka_gbk/
                                 |_*_pol.gbk
@@ -291,14 +291,14 @@ _uninflated_mcl_groups
 
 
 ### Pan-genome Analysis with gapseq
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/gapseq**
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/gapseq**
 ```
 |_project/
     |_fsepru/
         |_kmou/
             |_FS19C/
                 |_polished_genomes_100X/
-                    |_polishedgenomesprokka_95isolates6refgenomes/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
                        |_gapseq/
 ```
 * -all-*Pathways.tbl

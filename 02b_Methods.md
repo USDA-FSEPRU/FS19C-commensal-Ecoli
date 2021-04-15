@@ -1522,7 +1522,7 @@ I have made a SLURM script for you with an example of how I would do things and 
   * _pol.fasta%.fasta.fna
 
 
-## (13) Run pan_pipe from gifrop to run prokka, roary, and gifrop altogether.
+## (13a) Run pan_pipe from gifrop to run prokka, roary, and gifrop altogether with Ecoli_K12_MG1655 for prokka annotation argument.
   * Summary: Re-run prokka because I forgot to set E. coli MG1655 genbank file as priority annotation when I first ran prokka. This slurm script was provided by Jules, which runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
   * Github: https://github.com/Jtrachsel/gifrop
   * Began on: 17Feb2021
@@ -1595,7 +1595,7 @@ Submitted batch job 5576687
 
 6. (24Feb2021) Downloaded `gifrop_out/` and roary output. Gifrop worked (yay!), `clustered_island_info.csv` showed virulence genes, etc. Will need to go through `clustered_island_info.csv` to search for specific gene groups (sugar utilization, virulence genes, etc)
 
-## (14) Analyze gifrop output to narrow down list of commensal E. coli isolates that don't possess any virulence factors (LEE, stx, hemolysin).
+## (13b) Analyze gifrop output to narrow down list of commensal E. coli isolates that don't possess any virulence factors (LEE, stx, hemolysin).
 
 1. (19Mar2021) Went through gifrop csv files:
 * Clustered_island_info.csv: virulence and ARG genes, clusters of genes wrapped together (no annotation)
@@ -1656,6 +1656,7 @@ The modified list would be: ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, es
 
 Yes, EDL933 will be a good reference strain to use in your Blast search.
 ```
+  * 29 genes total
 
 8. (12Apr2021) Created a bash script `search.sh` to look up and see if the genes are found in Ecoli_O157H7_EDL933 using results from `clustered_island_info.csv`.
 ```
@@ -1751,6 +1752,7 @@ hns_2|group_2882|group_2879|group_3880|group_3881|group_3882|group_5366|group_39
   * explained column names of `clustered_island_info.csv`: percent_island, only_island, genes, res_type, megares_type, vir_type, viro_type
   * why vfdb didn't call some of the expected virulence genes in EDL933: again, the sequences may not match close enough to call it that gene name. May call it group_xxxx.
   * Try running blast using custom blast database of virulence genes to your isolates to make sure they are or aren't there.
+  * **File that has pan-genome fasta core and accessory genes of all isolates: pan_genome_reference.fa**
 
 15. (13Apr2021) E. coli CRIS meeting had some suggestions:
   * Does prokka annotation file have gene names? Check out EDL933 for ler
@@ -1766,27 +1768,203 @@ hns_2|group_2882|group_2879|group_3880|group_3881|group_3882|group_5366|group_39
   * It has the genes `ler, toxB`
   * It does not have the genes: `pchABC, espC, efa1, lifA`
 
-18. (13Apr2021) Checked a new gbff copy from here and did not find the `pchABC, espC, efa1, lifaA` genes: https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
+18. (13Apr2021) Checked a new gbff copy from here and did not find the `pchABC, espC, efa1, lifA` genes. ASM73296v1 (UC San Diego): https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
+  * It does have:
+    ```
+    Ler
+    escD
+    escRSTU
+    espF
+    espADB
+    Tir
+    Eae
+    cesT
+    hlyD
+    hlyE
+    toxB
+    stxA1
+    stcE
+    espP
+    ```
+  * It doesn't have:
+    ```
+    hlyA
+    hlyB
+    pchABC
+    Efa1/lifA
+    stxA2, stxB1, stxB2
+    sepZ
+    espC
+    ```
 
-19. **Look for other versions of EDL933 genome assembly:**
-  * https://www.ncbi.nlm.nih.gov/assembly/GCF_000006665.1
-  * https://www.ncbi.nlm.nih.gov/assembly/GCF_003028715.1
-  * https://www.ncbi.nlm.nih.gov/assembly/GCF_009766185.1
-  * https://www.ncbi.nlm.nih.gov/assembly/GCF_000948445.1
+19. (14Apr2021) Look for other versions of EDL933 genome assembly:
+  * ASM666v1 (Wisconsin): https://www.ncbi.nlm.nih.gov/assembly/GCF_000006665.1
+    * no `pchABC, espC, efa1, lifA`
+  * ASM302871v1 (Rehman Medical Institute): https://www.ncbi.nlm.nih.gov/assembly/GCF_003028715.1
+    * no `ler, pchABC, espC, efa1, lifA`
+  * ASM976618v1 (Ohio State): https://www.ncbi.nlm.nih.gov/assembly/GCF_009766185.1
+    * no `pchABC, espC, efa1, lifA`
+  * ASM94844v1 (Canadian Food Inspection Agency): https://www.ncbi.nlm.nih.gov/assembly/GCF_000948445.1
+    * no `pchABC, espC, efa1, lifA`
   * If none of these have the virulence genes, maybe we can create a custom blast database with genes from EDL933 that it does have, and the other genes from other E. coli strains. Or look through vfdb `Escherichia_VFs_comparison.xls` for potential strains that could have all the genes.
 
 20. (13Apr2021) Looked up E. coli O157:H7 str. Sakai https://www.ncbi.nlm.nih.gov/assembly/GCF_000008865.2#/def:
-  * Found: `pchABC, ler, efa1/lifA`
-  * Did not find: `espC`
+  * It does have:
+  ```
+  Ler
+  escRSTU
+  escD
+  espADB
+  Tir
+  Eae
+  cesT
+  espF
+  hlyCABD
+  hlyE
+  pchABC
+  Efa1/lifA
+  toxB
+  stx1
+  stx2
+  ```
+  * It doesn't have:
+  ```
+  sepZ
+  stcE
+  espC
+  espP
+  ```
 
 21. (13Apr2021) Looked up espC in https://www.ncbi.nlm.nih.gov/gene/?term=espC+AND+escherichia+coli and search results are all discontinued except for this: https://www.ncbi.nlm.nih.gov/gene/12682595
   * **Ask Vijay for help**
 
+22. Try running prokka without setting priority strain (just specify Escherichia coli) and see what that does for results? Caveat naming scheme may not be the same (https://github.com/tseemann/prokka)
+```
+Option: --proteins
 
+The --proteins option is recommended when you have good quality reference genomes and want to ensure gene naming is consistent. Some species use specific terminology which will be often lost if you rely on the default Swiss-Prot database included with Prokka.
 
+If you have Genbank or Protein FASTA file(s) that you want to annotate genes from as the first priority, use the --proteins myfile.gbk. Please make sure it has a recognisable file extension like .gb or .gbk or auto-detect will fail. The use of Genbank is recommended over FASTA, because it will provide /gene and /EC_number annotations that a typical .faa file will not provide, unless you have specially formatted it for Prokka.
+```
+Also run search.sh on all EDL933 to see which ones have more than the other.
+23. (14Apr2021) Also check out `Escherichia_VFs_comparison.xls` to find strain
+  * Found 25 genes except for `pchABC, stcE`
 
+24. (14Apr2021) Met with Bradd Haley, Jo Ann Kessel, Chris, and Crystal. I discussed the issue of selectively choosing a strain to prioritize annotation (Ecoli_K12_MG1655), but that causes some genes to be missed (virulence genes) and not called by the common gene name. Another issue is even if I choose EDL933, I still have the same issue that some genes are missing or they're not called the same among other EDL933 strains. Do I make my own custom annotation database or ...? Bradd suggested running prokka against standard database, or I can specify Escherichia coli, and then compare the two pan-genomes (STEC vs non-STEC) and run fisher exact test to see which genes are enriched in one group or another (less biased approach).
+  * new approach:
+      * run roary of commensals and STEC separate but make sure they have the same annotation approach?
+      * How to do Fisher exact test?
+      * DRAM
+  * current approach:
+      * run prokka with Escherichia coli of commensals + STECs via gifrop
+      * parallel blast to make sure virulence genes exist in the strains
+        * custom database of virulence genes: track which source (EDL933, Sakai, etc.)
+        * some genes...
 
-pan_genome_reference.fa
+## (14a) Run pan_pipe from gifrop to run prokka, roary, and gifrop altogether using Escherichia coli prokka argument.
+  * Summary: Re-run prokka setting Escherichia coli as priority annotation. This slurm script was provided by Jules, which runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
+  * Github: https://github.com/Jtrachsel/gifrop
+  * Began on: 14Apr2021
+  * Completed on:
+  * Platform: Ceres
+  * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/
+
+1. (14Apr2021) Renamed `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/` to `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/` to make it clear that the `*.fna` files in this directory have not been annotated by prokka. They use to be `*.fasta` but were changed to `*.fna` to match with prokka commands from github page (see Section 8, #6 (21Jan2021) entry for details).
+
+2. (14Apr2021) Make a new directory called `gifropWithEcoliAnnotation` and link `*.fna` files from `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs` to `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/`
+```
+ ln -s /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna .
+```
+
+3. (14Apr2021) Run gifrop with Escherichia coli specification for prokka argument. See `gifrop.slurm` for script details. Job # 5751498.
+```
+#!/bin/bash
+#SBATCH --job-name=Ecolipanpipe                           # name of the job submitted
+#SBATCH -p short                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=32G   # memory
+#SBATCH --mail-user=kathy.mou@usda.gov
+#Enter commands here:
+set -e
+module load miniconda
+
+source activate /project/fsepru/conda_envs/gifrop
+
+pan_pipe --prokka_args "--genus Escherichia --species coli --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+```
+
+4. (14Apr2021) Make `blastparallel.slurm` and modify script. Need to determine how to make database.
+```
+#!/bin/bash
+
+#SBATCH --job-name=virgene_BLAST                          # name of the job submitted
+#SBATCH -p short                                        # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 72                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH -t 48:00:00                                     # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name, %x adds job name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --mem=64G   #
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
+# ENTER COMMANDS HERE:
+
+module load blast+
+module load parallel
+
+mkdir virulencegenes
+
+find /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/ -name "*.fna" | parallel 'blastn -db ~/blastdb/METAL_ISLAND.fasta -query {} -out ./virulencegenes/{/.}.virulence -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send slen evalue bitscore"'
+
+cd virulencegenes
+
+# collects and combines all blast results into one file
+find . -name "*virulence" | xargs -n 100 cat >> ALL_virulence.results
+
+# removes all files ending with 'metal'
+find . -name "*virulence" | xargs rm
+
+#End of file
+```
+
+5. Make custom blast database for practice (virulence genes)
+| Gene | E. coli strain | NCBI fasta sequence link |
+| -- | -- | -- |
+| ler | | |
+| escR | | |
+| escS | | |
+| escT | | |
+| escU | | |
+| sepZ | | |
+| escD | | |
+| espA | | |
+| espD | | |
+| espB | | |
+| tir | | |
+| eae | | |
+| cesT | | |
+| espF | | |
+| stcE | | |
+| espC | | |
+| hlyC | | |
+| hlyA | | |
+| hlyB | | |
+| hlyD | | |
+| hlyE | | |
+| pchA | | |
+| pchB | | |
+| pchC | | |
+| espP | | |
+| efa1 | | |
+| lifA | | |
+| toxB | | |
+| stx1 | | |
+| stx2 | | |
 
 99. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?

@@ -10,8 +10,17 @@
 #To do
 
 ## FS19C
-* go through gifrop files to find isolates that are hemolysin-, LEE operon negative
-  * read papers from Vijay (lee paper, eut operon)
+* new approach:
+    * run roary of commensals and STEC separate but make sure they have the same annotation approach?
+    * How to do Fisher exact test?
+    * DRAM
+* current approach:
+    * run prokka with Escherichia coli of commensals + STECs via gifrop
+    * parallel blast to make sure virulence genes exist in the strains
+      * custom database of virulence genes: track which source (EDL933, Sakai, etc.)
+
+
+* read papers from Vijay (eut operon)
 * Read DRAM publication, go through github site to see how to download
 * highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
@@ -23,16 +32,7 @@
   * https://github.com/nielsend/ABRicateSequenceExtraction
     * Not as sure how applicable the output from this will be... pull out specific genes of interest and search for polymorphisms, etc...
 * lit review: read https://mbio.asm.org/content/3/3/e00050-12.long
-* List from Vijay
-```
-You can search sequenced genomes of E. coli isolates for the genes/operons involved in assimilation of following carbon/sugar substrates :
-glucose, sucrose, galactose, arabinose, lactose, fucose, maltose, hexuornate, mannose, ribose, N-acetylglucosamine, N-acetylgalactosamine N-acetylneuraminate, sialic acid and D-gluconate.  E. coli strains use these sugar substrates in various combinations/hierarchy for growth in the animal intestine:
-E. coli O157, unlike most human commensal E. coli, can use galactose, hexuronate, mannose and ribose for in vivo growth.
 
-In addition you can screen the sequenced genomes for:
-Genes constituting eut operon (for ethanolamine utilization)
-Genes encoding bacteriocins and microcins (especially microcins M and H47)
-```
 
 ## Ceres
 * You can change your default Slurm account using running slurm-account-selector.sh on the login node.

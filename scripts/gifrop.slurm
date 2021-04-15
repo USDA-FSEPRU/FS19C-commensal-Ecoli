@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=prokka                            # name of the job submitted
+#SBATCH --job-name=panpipe                           # name of the job submitted
 #SBATCH -p short                                    # name of the queue you are submitting to
 #SBATCH -N 1                                            # number of nodes in this job
 #SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
@@ -31,5 +31,5 @@ source activate /project/fsepru/conda_envs/gifrop
 # specifying EDL933 gbk for prokka
 pan_pipe --prokka_args "--proteins *.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
 
-# without specifying any Ecoli gbk for prokka
-pan_pipe --prokka_args "--proteins *.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+# without specifying any Ecoli gbk for prokka. See gifropEcoli.slurm on Ceres for this specific command
+pan_pipe --prokka_args "--genus Escherichia --species coli --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"

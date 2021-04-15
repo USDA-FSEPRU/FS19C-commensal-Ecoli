@@ -1,6 +1,7 @@
 # **FS19C project**
 
-This is a lab notebook for the comparative genomics project of 96 commensal E. coli isolates (sorbitol-positive and sorbitol-negative) collected from FS19 STEC colonization study in dairy calves (Fecal and RAMS samples).
+This is a lab notebook describing the comparative genomics project of commensal E. coli isolates and development of a pipeline to identify potential probiotic isolates that could be tested for competitive exclusion against STEC. \n
+96 isolates (sorbitol-positive and sorbitol-negative) collected from FS19 STEC colonization study in dairy calves (Fecal and RAMS samples) were tested in this pipeline.
 
 ## **Table of contents**
 | File Name  | Description |
@@ -20,3 +21,11 @@ This is a lab notebook for the comparative genomics project of 96 commensal E. c
 | Notes.md | To-do list |
 | [Files](https://github.com/k39ajdM2/Notebook/tree/main/Files) | Relevant data files or files in scripts |
 | [scripts](https://github.com/k39ajdM2/Notebook/tree/main/scripts) | Scripts used in data analysis on HPC (Ceres) or locally (RStudio) |
+
+## **General Pipeline**
+1. Assemble short read sequences (Illumina) with BBMap and spades
+2. Determine how closely related isolates are using mash and MDS (in R)
+3. Run gifrop to annotate with prokka, pan-genome with roary, and run through several databases to identify genomic islands (virulence gene focus)
+4. Identify metabolic pathways with DRAM
+5. Compare pangenomes of STEC and non-STEC isolates and run Fisher's exact test with FDR correction to identify non-STEC isolates enriched with metabolic genes, bacteriocins compared to STEC.
+6. Of those isolates, exclude those that have virulence genes.
