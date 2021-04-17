@@ -26,6 +26,8 @@ This is a lab notebook describing the comparative genomics project of commensal 
 1. Assemble short read sequences (Illumina) with BBMap and spades
 2. Determine how closely related isolates are using mash and MDS (in R)
 3. Run gifrop to annotate with prokka, pan-genome with roary, and run through several databases to identify genomic islands (virulence gene focus)
-4. Identify metabolic pathways with DRAM
-5. Compare pangenomes of STEC and non-STEC isolates and run Fisher's exact test with FDR correction to identify non-STEC isolates enriched with metabolic genes, bacteriocins compared to STEC.
-6. Of those isolates, exclude those that have virulence genes.
+4. Use the pangenome matrix file produced by roary (`gene_presence_absence.Rtab`)
+5. Group genomes to whatever groups you are interested in comparing.
+6. Run Fisher's exact test with FDR correction to see which genes are more significantly enriched in each group.
+7. Identify isolates with interested metabolic pathways (DRAM, BioCyc, blast).
+8. Of those isolates, exclude those that have virulence genes (blast).

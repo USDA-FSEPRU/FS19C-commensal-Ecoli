@@ -18,10 +18,17 @@ Mou KT<sup>1,2</sup>, Trachsel J<sup>2</sup>, Sharma VK<sup>2</sup>, Kudva IT<su
 | -- | -- |
 | Mou, KT | Data Curation, Formal Analysis, Investigation, Software, Validation, Visualization |
 | Trachsel, J | Data Curation, Software, Resources |
-| Sharma, VK | Conceptualization, Funding Acquisition |
-| Kudva, IT | Conceptualization, Funding Acquisition |
+| Sharma, VK | Conceptualization, Funding Acquisition, Investigation |
+| Kudva, IT | Conceptualization, Funding Acquisition, Investigation |
 | Alt, D | Resources |
 | Loving, CL | Conceptualization, Funding Acquisition, Investigation, Supervision |
+
+
+## Acknowledgements
+Bradd Haley and Jo Ann Van Kessel for pipeline ideas
+
+## Journal target
+
 
 
 ## PLOS genetics uses the standard CRediT Taxonomy listed below

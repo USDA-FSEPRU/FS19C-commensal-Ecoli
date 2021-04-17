@@ -9,6 +9,8 @@
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints out standard error
 #SBATCH --mem=64G   #
 #SBATCH --mail-type=ALL
+#SBATCH --mail=type=begin   # email when job begins
+#SBATCH --mail=type=end     # email when job ends
 #SBATCH --mail-user=kathy.mou@usda.gov
 
 # ENTER COMMANDS HERE:

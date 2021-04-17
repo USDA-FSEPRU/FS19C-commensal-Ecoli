@@ -1932,7 +1932,9 @@ find . -name "*virulence" | xargs rm
 #End of file
 ```
 
-5. Make custom blast database for practice (virulence genes)
+5. Looked at `gene_presence_absence.csv` and `clustered_island_info.csv` for the respective missing virulence genes from the first run. Didn't find the virulence genes. Will need to run blast.
+
+6. Make custom blast database for practice (virulence genes)
 
 | Gene | E. coli strain | NCBI fasta sequence link |
 | -- | -- | -- |
