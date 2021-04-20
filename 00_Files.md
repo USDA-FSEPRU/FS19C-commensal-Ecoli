@@ -15,17 +15,22 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
     |_fsepru/
         |_kmou/
             |_programs/
-              |_bin  
-              |_exonerate  
-              |_gapseq
-              |_share
-            |_dot_files/
-                |_.conda
-                |_software/
-                  |_adapt_polish.sh
-                  |_bbmap/
-                  |_good_contig_names.R
-                  |_SPAdes-3.14.1-Linux/
+                |_adapt_polish.sh
+                |_bbmap/
+                |_good_contig_names.R
+                |_SPAdes-3.14.1-Linux/
+                |_bin/  
+                |_exonerate/
+                |_gapseq/
+                |_share/
+            |_conda_envs
+                |_prokka_env/
+                |_environment.yaml
+            |_my_pkg_cache/
+            |_template_batch.sh
+            |_10EcoliIsolates/
+            |_EcoliGenomesPractice/
+            |_from_jules/
             |_for_hannah_fs9/
             |_FS9/
             |_FS9_R/
@@ -63,6 +68,8 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
                     |_badsequencedata/
                     |_fastqc/
                     |_linked/
+                    |_renamefiles.batch
+                    |_touchfilenames.batch
 ```
 * *.fastq.gz sequence data for samples 1-96
 * badsequencedata/
@@ -96,6 +103,7 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
   * *.slurm
   * stderr.*
   * stdout.*
+  * *_spades_out/
 
 ### FastQC-related files of importance
 * *fastqc.zip
@@ -106,13 +114,6 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
 * FS19all_multiqc_data/
 * FS19_1-94_multiqc_report.html
 * FS19_1-94_multiqc_data/
-
-### Mash-related files of importance
-* distances_thirdrun.tab
-
-### FastANI-related files of importance
-* fs19cfastanioutput2.out.tab
-* FS19CfastANIoutput2.xlsx
 
 ### Genome Assembly (BBMap, spades, mash, fastani)
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/**
@@ -126,6 +127,8 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
                     |_referencegenomes/
                     |_polishedgenomesforprokka_95isolates6refgenomes/
                     |_querylist2.txt
+                    |_prokka.slurm
+                    |_renamefiles.batch
                     |_mash_all/
 ```
 * fs19cfastanioutput.out2
@@ -147,6 +150,13 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
   * distances_secondrun.tab
   * distances_thirdrun.tab
 
+### Mash-related files of importance
+* distances_thirdrun.tab
+
+### FastANI-related files of importance
+* fs19cfastanioutput2.out.tab
+* FS19CfastANIoutput2.xlsx
+
 ### Genome Annotation, Pan-genome Analysis, Phylogenetic Tree, Genomic Island ID (prokka, roary, raxml, gifrop)
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/**
 ```
@@ -157,10 +167,13 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
                 |_polished_genomes_100X/
                     |_polishedgenomesforprokka_95isolates6refgenomes/
                         |_*.fna
+                        |_gapseq/
+                        |_fs19cpolishedgenomes.tar.gz
                         |_renamed_contigs/
 ```
-* *.fna
-* */
+Within `renamed_contigs`:
+* *_pol/
+  * *_pol.fna
   * *_pol.err
   * *_pol.faa
   * *_pol.ffn
@@ -179,10 +192,12 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
     * .pot
     * .ptf
     * .pto
+* gifropWithEcoliAnnotation/
+* GIFROP.slurm
 * pan/
-  * *.gff
-  ```
-  accessory_binary_genes.fa
+```
+*_pol.gff
+accessory_binary_genes.fa
 accessory_binary_genes.fa.newick
 _accessory_clusters
 _accessory_clusters.clstr
@@ -218,7 +233,7 @@ RAxML_bootstrap.core_genome_tree_1
 RAxML_info.core_genome_tree_1
 summary_statistics.txt
 _uninflated_mcl_groups
-  ```
+```
   * pan_genome_sequences/
     * *.aln
   * gifrop_out/
@@ -250,6 +265,7 @@ _uninflated_mcl_groups
   * prokka_logs.txt  
   * roary.log
 * prokka_cmds.txt
+* prokka_gbk/
 
 ### Pan-genome Analysis with PPanGGOLiN
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/prokka_gbk/**
@@ -263,6 +279,10 @@ _uninflated_mcl_groups
                         |_renamed_contigs/
                             |_prokka_gbk/
                                 |_*_pol.gbk
+                                |_Ecoligbklist.txt
+                                |_Ecoligbkpath.txt
+                                |_Ecoligbk.txt
+                                |_ppanggolin.slurm
                                 |_ppanggolin_output_DATE2021-02-24_HOUR09.59.47_PID10989/
 ```
 * *.gbk
@@ -290,7 +310,7 @@ _uninflated_mcl_groups
   * Ushaped_plot.html
 
 
-### Pan-genome Analysis with gapseq
+### Pan-genome Metabolic analysis with gapseq
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/gapseq**
 ```
 |_project/
@@ -301,13 +321,13 @@ _uninflated_mcl_groups
                     |_polishedgenomesforprokka_95isolates6refgenomes/
                        |_gapseq/
 ```
-* -all-*Pathways.tbl
-* -all-*Reactions.tbl
+* *_pol-all-Pathways.tbl
+* *_pol-all-Reactions.tbl
+* *_pol.fna.gapseq.sh
 * stderr.*.gapseq
 * stdout.*.gapseq
 
-
-
+### DRAM
 
 
 

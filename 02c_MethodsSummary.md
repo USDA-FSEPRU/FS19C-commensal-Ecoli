@@ -482,8 +482,8 @@ mash dist -p 1 .msh .msh > distances.tab
 * FS19C_mashMDS.tiff
 * qc_mds.R
 
-## 3. Genome annotation with prokka, pan-genome analysis with roary, genomic island identification with gifrop
-* Summary: The pan_pipe slurm script, provided by Jules, runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all fasta genomes (`.fna` format) with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
+## 3. Genome annotation with prokka, pan-genome analysis with roary
+* Summary: The pan_pipe slurm script from gifrop, provided by Jules, can run prokka and roary automatically (I will ignore gifrop command) via slurm on Ceres. It will annotate all fasta genomes (`.fna` format) with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment.
 * Github: https://github.com/Jtrachsel/gifrop
 * Platform: Ceres
 
@@ -524,14 +524,14 @@ export -f rename_contigs
   module load miniconda
   source activate /project/fsepru/conda_envs/gifrop2
 
-  pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+  pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v"
   ```
 
-6. Download `gifrop_out/` and roary output. `clustered_island_info.csv` shows virulence genes, etc.
+6. Download roary output.
 </details>
 
 #### Files generated:
-* **_pol/ or Ecoli_*/
+* *_pol/ or Ecoli_*/
   * *_pol.err
   * *_pol.faa
   * *_pol.ffn
@@ -612,14 +612,14 @@ export -f rename_contigs
   * _uninflated_mcl_groups
 
 ## 5. Phylogenetic Tree Analysis with RAxML and FigTree
-* Summary: The raxml.slurm script, provided by Jules, runs raxml via slurm on Ceres. It will generate tree files.
+* Summary: The raxml.slurm script, provided by Jules, runs raxml via slurm on Ceres. It will generate tree files using input file from roary.
 * Github RAxML: https://github.com/stamatak/standard-RAxML/blob/master/README
 * Github FigTree: https://github.com/rambaut/figtree
 * Platform: Ceres, FigTree (standalone)
 
 <details><summary>raxml details</summary>
 
-1. Run raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`. Make sure you run this script in the same directory that has `core_gene_alignment.aln` file.
+1. Run raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`. Make sure you run this script in the same directory that has `core_gene_alignment.aln` file from roary.
 ```
 #!/bin/bash
 #SBATCH --job-name=RAXML                              # name of the job submitted
@@ -660,19 +660,29 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-## 6. Excluding potentially pathogenic commensal *E. coli* isolates from list using blast in parallel
+## 7. Identify Metabolic Pathways with gapseq or DRAM
+
+#### Files generated:
+
+
+
+
+
+
+
+
+
+
+
+## 99. List of virulence genes Vijay created to exclude potentially pathogenic commensal *E. coli* isolates from list
 * Summary: As described in title - tossing out isolates that possess virulence genes
-* Platform: Ceres using parallel
+* Platform: ...
 
 <details><summary>List of unwanted genes details</summary>
+
 ```
 ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, espF, stcE, espC, hlyCABD, hlyE, pchABC, espP, efa1/lifA, toxB, stx1, and stx2
 ```
 
 
 </details>
-
-
-## 7. Identify Metabolic Pathways with gapseq or DRAM
-
-#### Files generated:

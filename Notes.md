@@ -11,10 +11,11 @@
 
 ## FS19C
 * new approach:
-    * run roary of commensals and STEC separate but make sure they have the same annotation approach?
+    * grab all STEC genomes from NCBI?
+    * run prokka and roary of STEC genomes and commensal genomes together
     * How to do Fisher exact test?
     * DRAM
-* current approach:
+* old approach:
     * run prokka with Escherichia coli of commensals + STECs via gifrop
     * parallel blast to make sure virulence genes exist in the strains
       * custom database of virulence genes: track which source (EDL933, Sakai, etc.)
