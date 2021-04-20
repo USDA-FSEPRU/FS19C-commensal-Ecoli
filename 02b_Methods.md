@@ -5,7 +5,7 @@ Details of sequence analyses methods performed on FS19C samples 1-96 in this rep
 GFF file description: http://gmod.org/wiki/GFF3
 
 ## Conda environment (updated on 11Feb2021 - condensed to one conda environment)
-* **Make sure when calling environments, to use this path: /project/fsepru/kmou/dot_files/.conda/envs/**
+* **Make sure when calling environments, to use this path: /project/fsepru/kmou/conda_envs/**
 See: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda
 * Also can use conda environments loaded on `/project/fsepru/conda_envs/`
 
@@ -21,6 +21,11 @@ channels:
   - bioconda
   - defaults
 ```
+
+### Ceres
+* Learned that the more resource parameters you specify on Ceres, it will try to make those work rather than doing what works best. So limit your parameters to let Ceres decide how to allocate resources to run job.
+* Logical core (https://scinet.usda.gov/guide/ceres/#partitions-or-queues) includes hyperthreading
+* Make sure when you run a job from a project directory, the owner of the directory is `proj-fsepru` and not your user name (will exceed home directory disk quota)!
 
 ## shortcuts in .bashrc
 alias debug='salloc -N 1 -p debug -t 01:00:00'
@@ -2078,6 +2083,9 @@ module load prokka
 prokka --genus Escherichia --species coli --cpus 1 --centre X --compliant --outdir prokka_out EDL933.fasta
 ```
 
+7. (20Apr2021) The job failed at
+`Could not run command: tbl2asn -V b -a r10k -l paired-ends -M n -N 1 -y 'Annotated using prokka 1.14.5 from https://github.com/tseemann/prokka' -Z prokka_out\/PROKKA_04192021\.err -i prokka_out\/PROKKA_04192021\.fsa 2> /dev/null`. I looked through github issue page: https://github.com/tseemann/prokka/issues/139 and saw it was the version of tbl2asn used. In my stderr file, I saw a couple lines saying the version I had was outdated and needed current version. I emailed VSRC for help on how to proceed.
+
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
@@ -2274,17 +2282,89 @@ dependencies:
 environment.yaml
 ```
 
-4. Create DRAM conda environment and activate to test.
+4. (19Apr2021) Create DRAM conda environment and activate to test.
 ```
 conda env create -f environment.yaml --prefix /project/fsepru/kmou/conda_envs/DRAM # <= -f creates an environment from environment.yaml
 conda activate /project/fsepru/kmou/conda_envs/DRAM
 ```
 
-5. Make slurm script to set up databases
+5. (19Apr2021 and 20Apr2021) Made `dram.slurm` script to set up databases. Asked Chris for input and ran job (5758517).
 ```
+#!/bin/bash
+#SBATCH --job-name=dram                            # name of the job submitted
+#SBATCH -p mem                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH --mem=550gb
+#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --account fsepru
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
+#Enter commands here:
+set -e
+set -u
+set +eu
+module load miniconda
+source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data
 ```
 
+<details><summary>Advice from Chris and Jules about DRAM and running slurm jobs</summary>
+
+### Chris:
+```
+DRAM will make the output directory wherever you run the script from (don’t run it in your HOME directory though as there wont be enough storage). When you submit a job, you probably want to tell it how much total memory to allocate to the job with the –mem parameter. It says to setup DRAM you need at least ~512GB of RAM. The short partition doesn’t allow that much RAM it looks like, so you need to use the mem partition of the server (-p parameter). Usually when I request threads, I use --ntasks-per-core. I think you will typically want to request a number of threads instead of a number of cores (which is -n). Most bioinformatics software can only be run on a single core is my understanding but can use multiple threads on that core. If you want to change the default number of threads that DRAM uses, you need to add the --threads 16 to the command.
+```
+```
+I would recommend setting up with the uniref database, as their paper shows that gave them the best results. It will take awhile to download though and needs a lot of RAM when you start the job – “Setting up DRAM can take a long time (up to 5 hours) and uses a large about of memory (512 gb) by default.”
+
+To install uniref:
+DRAM-setup.py prepare_databases --output_dir DRAM_data
+
+When we ran DRAM, we just wanted something quicker, so we skipped uniref and setup the databases using this command:
+DRAM-setup.py prepare_databases --output_dir DRAM_data --skip_uniref
+```
+
+### Jules:
+```
+I don’t often use the “--ntasks-per-core” flag, I don’t really understand what it does.  If I want 16 processors on a single node I will use `-N 1` and `-n 16`
+If you think others in the unit would like to use this software (I know I would) you should consider installing the conda environment in the /project/fsepru/conda_envs/ directory, that way everyone will know it’s available there.
+If you are having trouble getting your job to start because the ‘mem’ partition is busy, I recommend trying the “scavenger” partition, it allows you to use the nodes that others have paid for priority access to but aren’t using.
+```
+
+### Lit reading:
+* Learned that the more resource parameters you specify on Ceres, it will try to make those work rather than doing what works best. So limit your parameters to let Ceres decide how to allocate resources to run job.
+* logical core includes hyperthreading
+</details>
+
+6. (20Apr2021) slurm job failed twice, with same error message:
+```
+Traceback (most recent call last):
+  File "/project/fsepru/kmou/conda_envs/DRAM/bin/DRAM-setup.py", line 146, in <module>
+    args.func(**args_dict)
+  File "/project/fsepru/kmou/conda_envs/DRAM/lib/python3.9/site-packages/mag_annotator/database_processing.py", line 457, in prepare_databases
+    output_dbs['uniref_db_loc'] = download_and_process_uniref(uniref_loc, temporary, uniref_version=uniref_version,
+  File "/project/fsepru/kmou/conda_envs/DRAM/lib/python3.9/site-packages/mag_annotator/database_processing.py", line 110, in download_and_process_uniref
+    download_file(uniref_url, uniref_fasta_zipped, verbose=verbose)
+  File "/project/fsepru/kmou/conda_envs/DRAM/lib/python3.9/site-packages/mag_annotator/utils.py", line 27, in download_file
+    run_process(['wget', '-O', output_file, url], verbose=verbose)
+  File "/project/fsepru/kmou/conda_envs/DRAM/lib/python3.9/site-packages/mag_annotator/utils.py", line 38, in run_process
+    return subprocess.run(command, check=check, shell=shell, stdout=subprocess.PIPE,
+  File "/project/fsepru/kmou/conda_envs/DRAM/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['wget', '-O', 'DRAM_data/database_files/uniref90.fasta.gz', 'ftp://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz']' returned non-zero exit status 3.
+```
+* Potential fix: https://github.com/shafferm/DRAM/issues/22
+* Try running command separately ...? issue with mmseqs2? I already restarted database processing step. Is UniRef temporarily offline?  Download uniref and give that to `DRAM-setup.py`
+
+7. (20Apr2021) Worked with Chris and found out it was a disk quota exceeded issue. Jules pointed out that the folder I was working out of `/project/fsepru/kmou/conda_envs` was under the ownership of my username instead of `proj-fsepru` and I was hitting my disk quota instead of project quota. Changed ownership of `/project/fsepru/kmou/conda_envs` via: `chown -R --reference=FS9/ conda_envs/`.
+
+8. (20Apr2021) Installed conda environment `DRAM` to `/project/fsepru/conda_envs` with
+`conda env create -f environment.yaml --prefix /project/fsepru/conda_envs/DRAM` from my `/project/fsepru/kmou/conda_envs` directory because I already have the `environment.yaml` file there (don't need to do `wget https://raw.githubusercontent.com/shafferm/DRAM/master/environment.yaml`).
+
+9. (20Apr2021) Ran `DRAM.slurm` again, job 5758613. Seems to work.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

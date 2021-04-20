@@ -29,7 +29,6 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
             |_my_pkg_cache/
             |_template_batch.sh
             |_10EcoliIsolates/
-            |_EcoliGenomesPractice/
             |_from_jules/
             |_for_hannah_fs9/
             |_FS9/
@@ -39,6 +38,14 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
                 |_polished_genomes_100X/
                     |_polishedgenomesforprokka_95isolates6refgenomes/
 
+```
+
+## Ceres /KEEP/fsepru/kathy.mou/ directory setup
+```
+|_KEEP/
+    |_fsepru/
+        |_kmou/
+            |_10EcoliIsolates/
 ```
 
 ## Data generated from sequence analysis
