@@ -2086,7 +2086,7 @@ prokka --genus Escherichia --species coli --cpus 1 --centre X --compliant --outd
 7. (20Apr2021) The job failed at
 `Could not run command: tbl2asn -V b -a r10k -l paired-ends -M n -N 1 -y 'Annotated using prokka 1.14.5 from https://github.com/tseemann/prokka' -Z prokka_out\/PROKKA_04192021\.err -i prokka_out\/PROKKA_04192021\.fsa 2> /dev/null`. I looked through github issue page: https://github.com/tseemann/prokka/issues/139 and saw it was the version of tbl2asn used. In my stderr file, I saw a couple lines saying the version I had was outdated and needed current version. I emailed VSRC for help on how to proceed.
 
-8. (21Apr2021) Yasasvy fixed the issue. I'm re-running `prokka.slurm` job 5759514.
+8. (21Apr2021) Yasasvy fixed the issue. I'm re-running `prokka.slurm` job 5759514. Looked through `PROKKA_04212021.gbk` and could not find ler, espC, pch, sepZ, etc. So this did not work... will have to result to blast.
 
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
