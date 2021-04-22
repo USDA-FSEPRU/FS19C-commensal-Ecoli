@@ -2086,6 +2086,8 @@ prokka --genus Escherichia --species coli --cpus 1 --centre X --compliant --outd
 7. (20Apr2021) The job failed at
 `Could not run command: tbl2asn -V b -a r10k -l paired-ends -M n -N 1 -y 'Annotated using prokka 1.14.5 from https://github.com/tseemann/prokka' -Z prokka_out\/PROKKA_04192021\.err -i prokka_out\/PROKKA_04192021\.fsa 2> /dev/null`. I looked through github issue page: https://github.com/tseemann/prokka/issues/139 and saw it was the version of tbl2asn used. In my stderr file, I saw a couple lines saying the version I had was outdated and needed current version. I emailed VSRC for help on how to proceed.
 
+8. (21Apr2021) Yasasvy fixed the issue. I'm re-running `prokka.slurm` job 5759514.
+
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
@@ -2364,7 +2366,55 @@ subprocess.CalledProcessError: Command '['wget', '-O', 'DRAM_data/database_files
 8. (20Apr2021) Installed conda environment `DRAM` to `/project/fsepru/conda_envs` with
 `conda env create -f environment.yaml --prefix /project/fsepru/conda_envs/DRAM` from my `/project/fsepru/kmou/conda_envs` directory because I already have the `environment.yaml` file there (don't need to do `wget https://raw.githubusercontent.com/shafferm/DRAM/master/environment.yaml`).
 
-9. (20Apr2021) Ran `DRAM.slurm` again, job 5758613. Seems to work.
+9. (20Apr2021) Ran `DRAM.slurm` again, job 5758613. Seems to work. How to know when it stops?
+
+10. (21Apr2021) Database setup still going after 19 hrs. Ran `DRAM-setup.py print_config` and got the following:
+```
+KEGG db: None
+KOfam db: None
+KOfam KO list: None
+UniRef db: None
+Pfam db: None
+Pfam hmm dat: None
+dbCAN db: None
+dbCAN family activities: None
+RefSeq Viral db: None
+MEROPS peptidase db: None
+VOGDB db: None
+VOG annotations: None
+Description db: None
+Genome summary form: /Users/shafferm/lab/DRAM/data/genome_summary_form.tsv
+Module step form: /Users/shafferm/lab/DRAM/data/module_step_form.tsv
+ETC module database: /Users/shafferm/lab/DRAM/data/etc_module_database.tsv
+Function heatmap form: /Users/shafferm/lab/DRAM/data/function_heatmap_form.tsv
+AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
+```
+
+11. (21Apr2021) I reached out to SCINet staff Jennifer if the reason my job is taking so long is because I didn't specify number of threads. My logic was that I thought if I didn't limit what resources slurm should use, it would be smart to know it has freedom to choose whatever resources are available to run the job faster. Turns out not true. She recommended I make a new folder and submit a new slurm with a larger number of threads. So this was what I did: made `/project/fsepru/kmou/conda_envs/dram2/` and copied over `/project/fsepru/kmou/conda_envs/DRAM.slurm`. Renamed slurm script to `dram2.slurm`. Added 16 threads to the script:
+```
+#!/bin/bash
+#SBATCH --job-name=dram2                            # name of the job submitted
+#SBATCH -p mem                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 16
+#SBATCH --mem=550gb
+#SBATCH -t 24:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --account fsepru
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
+#Enter commands here:
+set -e
+set -u
+set +eu
+
+module load miniconda
+source activate /project/fsepru/kmou/conda_envs/DRAM
+DRAM-setup.py prepare_databases --output_dir DRAM_data2
+```
+Ran job 5759510.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
