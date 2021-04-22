@@ -2416,6 +2416,29 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data2
 ```
 Ran job 5759510.
 
+12. (22APr2021) Checked progress of job 5759510 and at 22 hours and still not done. Did `salloc` and activated dram conda environment and ran `DRAM-setup.py print_config`. Got the following for dram2 and DRAM_data:
+```
+KEGG db: None
+KOfam db: None
+KOfam KO list: None
+UniRef db: None
+Pfam db: None
+Pfam hmm dat: None
+dbCAN db: None
+dbCAN family activities: None
+RefSeq Viral db: None
+MEROPS peptidase db: None
+VOGDB db: None
+VOG annotations: None
+Description db: None
+Genome summary form: /Users/shafferm/lab/DRAM/data/genome_summary_form.tsv
+Module step form: /Users/shafferm/lab/DRAM/data/module_step_form.tsv
+ETC module database: /Users/shafferm/lab/DRAM/data/etc_module_database.tsv
+Function heatmap form: /Users/shafferm/lab/DRAM/data/function_heatmap_form.tsv
+AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
+```
+Let the jobs continue running ... Ask Chris what else to try?
+
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
 * [SRA Quick Start Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submit/) and a more detailed [SRA Submission Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submitbio/)
