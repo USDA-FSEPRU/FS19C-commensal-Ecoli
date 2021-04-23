@@ -1,13 +1,17 @@
-polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project and their location
+# Files generated for FS19C project and their location
 
 ## Raw data location
-### Illumina NovaSeq Reads
+### Commensal E. coli Illumina NovaSeq Reads
 **Q:/_TempTransfer/DBayles/mou**
-**I:/Mou**
-* 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
+**I:/Mou/CommensalEcoliIsolates1-96NovaSeq**
+* `1_33298_01_1-A01-1-428RN3A_HTFVy_1801-CommensalEcoliIsolates1-96.tar`
   * Samples 1-96 from Sept. 15, 2020
-* 1_33298_01_1-A01-1-428RN3A_HVHJT_1839.tar
+* `1_33298_01_1-A01-1-428RN3A_HVHJT_1839-CommensalEcoliIsolates95_96_resequence.tar`
   * Re-sequenced samples 95 and 96 from 16Dec2020 because there were no sequences in the first NovaSeq run
+
+### Daniel's O157 challenge strain sequence data
+**Q:\FSEP_DataTransfer\Trachsel\O157_challenge_strains**
+* Includes TW14588, EDL933, FRIK1989, RM6067
 
 ## Ceres /project/fsepru/kmou/ directory setup
 ```
@@ -32,7 +36,6 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
             |_from_jules/
             |_for_hannah_fs9/
             |_FS9/
-            |_FS9_R/
             |_FS19C/
                 |_lane1/
                 |_polished_genomes_100X/
@@ -44,26 +47,11 @@ polishedgenomesprokka_95isolates6refgenomes/# Files generated for FS19C project 
 ```
 |_KEEP/
     |_fsepru/
-        |_kmou/
+        |_kathy.mou/
             |_10EcoliIsolates/
 ```
 
 ## Data generated from sequence analysis
-**(Ceres) /project/fsepru/kmou/FS19C/**
-```
-|_project/
-    |_fsepru/
-        |_kmou/
-            |_FS19C/
-                |_FS19C_4Samples100X/
-                |_FS19C_4Samples250X/
-```
-* FS19C_4Samples100X/
-  * Files for isolates 1, 20, 94, and 96
-* FS19C_4Samples250X
-  * Files for isolates 1, 20, 94, and 96
-* 1_33298_01_1-A01-1-428RN3A_HTFVy_1801.tar
-
 **(Ceres) /project/fsepru/kmou/FS19C/lane1/**
 ```
 |_project/
@@ -335,8 +323,14 @@ _uninflated_mcl_groups
 * stdout.*.gapseq
 
 ### DRAM
-
-
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_conda_envs/
+                |_DRAM/
+                |_dram2/
+```
 
 
 ## Files in Files directory

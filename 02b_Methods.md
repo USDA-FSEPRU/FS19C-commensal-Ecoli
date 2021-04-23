@@ -2416,7 +2416,7 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data2
 ```
 Ran job 5759510.
 
-12. (22APr2021) Checked progress of job 5759510 and at 22 hours and still not done. Did `salloc` and activated dram conda environment and ran `DRAM-setup.py print_config`. Got the following for dram2 and DRAM_data:
+12. (22Apr2021) Checked progress of job 5759510 and at 22 hours and still not done. Did `salloc` and activated dram conda environment and ran `DRAM-setup.py print_config`. Got the following for dram2 and DRAM_data:
 ```
 KEGG db: None
 KOfam db: None
@@ -2437,7 +2437,32 @@ ETC module database: /Users/shafferm/lab/DRAM/data/etc_module_database.tsv
 Function heatmap form: /Users/shafferm/lab/DRAM/data/function_heatmap_form.tsv
 AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
 ```
-Let the jobs continue running ... Ask Chris what else to try?
+
+13. (22Apr2021) Let the jobs continue running. dram and dram2 job failed because reached time limit. Re-run `dram2.slurm` with the following modified slurm script:
+```
+#!/bin/bash
+#SBATCH --job-name=dram2                            # name of the job submitted
+#SBATCH -p mem                                    # name of the queue you are submitting to
+#SBATCH -N 1
+#SBATCH -n 32
+#SBATCH --mem=550gb
+#SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --account fsepru
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+
+#Enter commands here:
+set -e
+set -u
+set +eu
+
+module load miniconda
+source activate /project/fsepru/kmou/conda_envs/DRAM
+DRAM-setup.py prepare_databases --output_dir DRAM_data2
+```
+I increased the number of cores to 32 (32 cores * 16GB mem per core = 512 GB memory total... should be ok?). Job 5765159.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
