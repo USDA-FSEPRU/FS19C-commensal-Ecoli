@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 
 #####################################################################################################
-#FS19C Roary
+#FS19C Roary code
 #Kathy Mou
 
-#Purpose: Analyze pan-genome results from roary. 
+#Purpose: Analyze pan-genome results from roary.
 
 #Load library packages
 library(ggplot2)
@@ -18,7 +18,7 @@ sessionInfo()
 #####################################################################################################
 
 #Code taken from: https://github.com/sanger-pathogens/Roary/blob/master/bin/create_pan_genome_plots.R
-#It takes in the *.Rtab files and produces graphs on 
+#It takes in the *.Rtab files and produces graphs on
 #how the pan genome varies as genomes are added (in random orders).
 
 #Number of new genes
@@ -85,15 +85,15 @@ ylab("No. of genes")+ theme_bw(base_size = 16) +  theme(legend.justification=c(1
 
 #read_tsv
 PA <- read_tsv('./Files/gene_presence_absence.Rtab') %>%
-        column_to_rownames(var = 'Gene') %>% 
+        column_to_rownames(var = 'Gene') %>%
         as.matrix()
 colnames(PA)
 rownames(PA)
-pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol", 
-        "12-435FEN3_pol", "13-435FEN3_pol", "14-437FEN5_pol", 
-        "15-437FEN5_pol", "57-436REC_pol",  "58-436RED_pol",  
+pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol",
+        "12-435FEN3_pol", "13-435FEN3_pol", "14-437FEN5_pol",
+        "15-437FEN5_pol", "57-436REC_pol",  "58-436RED_pol",
         "59-437REC_pol",  "6-437REN3B_pol", "60-437RED_pol",
-        "61-438REC_pol",  "62-438RED_pol", "Ecoli_HS", "Ecoli_K-12_MG1655", 
+        "61-438REC_pol",  "62-438RED_pol", "Ecoli_HS", "Ecoli_K-12_MG1655",
         "Ecoli_NADC6564", "Ecoli_Nissle1917", "Ecoli_O157H7_EDL933", "Ecoli_TW14588")
 keep_rows <- rownames(PA) %>% grep("^ara|^ed|^eut|^fuc|^gal|^man|^nag|^nan|^rbs|^suc|^uxa", .) #narrow down gene list to sugar catabolism genes
 PA2 <- PA[keep_rows,pa]
@@ -105,15 +105,15 @@ pheatmap(PA2, cellheight = 6) #increased cell height so easier to read gene name
 pheatmap(PA2)
 
 #Test with read.csv and get same results as read_tsv
-PA <-read.csv("./Files/gene_presence_absence.Rtab",  sep = "\t", quote = "") %>% 
-        column_to_rownames(var="Gene") %>% 
+PA <-read.csv("./Files/gene_presence_absence.Rtab",  sep = "\t", quote = "") %>%
+        column_to_rownames(var="Gene") %>%
         as.matrix()
 class(PA)
-pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol", 
-            "12-435FEN3_pol", "13-435FEN3_pol", "14-437FEN5_pol", 
-            "15-437FEN5_pol", "57-436REC_pol",  "58-436RED_pol",  
+pa <- c("1-428RN3A_pol", "10-434FEN3_pol", "11-434FEN3_pol",
+            "12-435FEN3_pol", "13-435FEN3_pol", "14-437FEN5_pol",
+            "15-437FEN5_pol", "57-436REC_pol",  "58-436RED_pol",
             "59-437REC_pol",  "6-437REN3B_pol", "60-437RED_pol",
-            "61-438REC_pol",  "62-438RED_pol", "EDL933", 
+            "61-438REC_pol",  "62-438RED_pol", "EDL933",
             "MG1655", "NADC6564", "Nissle1917", "TW14588")
 
 #sugar genes
@@ -132,7 +132,7 @@ pheatmap(PA3, cellheight = 6)
 library(tidyverse)
 
 PA <- read_tsv('./Files/gene_presence_absence.Rtab') %>%
-        column_to_rownames(var = 'Gene') %>% 
+        column_to_rownames(var = 'Gene') %>%
         as.matrix()
 
 

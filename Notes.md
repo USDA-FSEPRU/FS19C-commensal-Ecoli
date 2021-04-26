@@ -21,8 +21,8 @@
       * custom database of virulence genes: track which source (EDL933, Sakai, etc.)
 
 
-* read papers from Vijay (Nissle, K-12, comparative genomics)
-* Read DRAM publication, go through github site to see how to download
+* check out dram2, dram3, run annotation
+* fisher exact test - prep csv file, use old roary pangenome data?
 * highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
 * check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
 * troubleshoot gapseq results

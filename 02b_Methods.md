@@ -56,6 +56,8 @@ alias myjobs='squeue | grep kathy.mo'
   * /project/fsepru/kmou/FS19C/**
 
 1. Make text file replace.sh
+
+<details><summary>`replace.sh` script</summary>
 ```
 #usr/bin/bash
 while read line
@@ -63,6 +65,7 @@ do
 cat SRAassemblyPipeline.SLURM_TEMPLATE | sed "s/REPLACE/$line/g" > "$line".slurm
 done < samples.txt
 ```
+</details>
 
 2. Run replace.sh
 ```
@@ -79,95 +82,95 @@ for myfile in ./*.fastq.gz; do
 done
 ```
 
-4. Run the follow slurm script (SRAassemblyPipeline.FS19C.SLURM_TEMPLATE)
-```
-#!/bin/bash
-#SBATCH --job-name=REPLACE                              # name of the job submitted
-#SBATCH -p short                                    # name of the queue you are submitting to
-#SBATCH -N 1                                            # number of nodes in this job
-#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 12:00:00                                      # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N"                               # standard out %j adds job number to outputfile name and %N adds the node name
-#SBATCH -e "stderr.%j.%N"                               # optional but it prints our standard error
-#SBATCH --mem=32G   # memory
-```
+4. Run SRAassemblyPipeline.FS19C.SLURM_TEMPLATE script.
 
-```
-set -e
-module load java
-module load pilon
-module load samtools
-module load r
+<details><summary>SRAassemblyPipeline.FS19C.SLURM_TEMPLATE script</summary>
 
-#source ~/templates/adapt_polish.sh
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=REPLACE                              # name of the job submitted
+  #SBATCH -p short                                    # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 12:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N"                               # optional but it prints our standard error
+  #SBATCH --mem=32G   # memory
+  set -e
+  module load java
+  module load pilon
+  module load samtools
+  module load r
+  #source ~/templates/adapt_polish.sh
 
-#convert to interleaved
-reformat.sh in1=REPLACE_1.fastq.gz in2=REPLACE_2.fastq.gz out=REPLACE.fq.gz
-ln -s REPLACE.fq.gz REPLACE_temp.fq.gz
+  #convert to interleaved
+  reformat.sh in1=REPLACE_1.fastq.gz in2=REPLACE_2.fastq.gz out=REPLACE.fq.gz
+  ln -s REPLACE.fq.gz REPLACE_temp.fq.gz
 
-#diagnose interleaving
-#bbsplitpairs.sh in=20-427FEC.fq.gz out=fixed.20-427FEC.fq.gz outs=singletons.20-427FEC.fq.gz minlen=70 fint
-#bbsplitpairs.sh didn't produce any output
-100X: repair.sh in=old_20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair
-250X: repair.sh in=20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair
+  #diagnose interleaving
+  #bbsplitpairs.sh in=20-427FEC.fq.gz out=fixed.20-427FEC.fq.gz outs=singletons.20-427FEC.fq.gz minlen=70 fint
+  #bbsplitpairs.sh didn't produce any output
+  100X: repair.sh in=old_20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair
+  250X: repair.sh in=20-427FEC.fq.gz out=20-427FEC_temp.fq.gz outs=nonint_singletons.20-427FEC.fq.gz repair
 
-#Trim adapters.  Optionally, reads with Ns can be discarded by adding "maxns=0" and reads with really low average quality can be discarded with "maq=8".
-bbduk.sh in=REPLACE_temp.fq.gz out=REPLACE_trimmed.fq.gz ktrim=r k=23 mink=11 hdist=1 tbo tpe minlen=70 ref=/home/kathy.mou/software/bbmap/resources/adapters.fa ftm=5 ordered interleaved=t
-rm REPLACE_temp.fq.gz; ln -s REPLACE_trimmed.fq.gz REPLACE_temp.fq.gz
+  #Trim adapters.  Optionally, reads with Ns can be discarded by adding "maxns=0" and reads with really low average quality can be discarded with "maq=8".
+  bbduk.sh in=REPLACE_temp.fq.gz out=REPLACE_trimmed.fq.gz ktrim=r k=23 mink=11 hdist=1 tbo tpe minlen=70 ref=/home/kathy.mou/software/bbmap/resources/adapters.fa ftm=5 ordered interleaved=t
+  rm REPLACE_temp.fq.gz; ln -s REPLACE_trimmed.fq.gz REPLACE_temp.fq.gz
 
-#Remove synthetic artifacts and spike-ins by kmer-matching.
-bbduk.sh in=REPLACE_temp.fq.gz out=REPLACE_filtered.fq.gz k=31 ref=/home/kathy.mou/software/bbmap/resources/sequencing_artifacts.fa.gz,/home/kathy.mou/software/bbmap/resources/phix174_ill.ref.fa.gz ordered cardinality interleaved=t
-rm REPLACE_temp.fq.gz; ln -s REPLACE_filtered.fq.gz REPLACE_temp.fq.gz
+  #Remove synthetic artifacts and spike-ins by kmer-matching.
+  bbduk.sh in=REPLACE_temp.fq.gz out=REPLACE_filtered.fq.gz k=31 ref=/home/kathy.mou/software/bbmap/resources/sequencing_artifacts.fa.gz,/home/kathy.mou/software/bbmap/resources/phix174_ill.ref.fa.gz ordered cardinality interleaved=t
+  rm REPLACE_temp.fq.gz; ln -s REPLACE_filtered.fq.gz REPLACE_temp.fq.gz
 
-#subsample to approx 100x
-reformat.sh in=REPLACE_temp.fq.gz sbt=600000000 (100X) /  1500000000 (250X) out=REPLACE_subsamp.fq.gz interleaved=t
-rm REPLACE_temp.fq.gz; ln -s REPLACE_subsamp.fq.gz REPLACE_temp.fq.gz
+  #subsample to approx 100x
+  reformat.sh in=REPLACE_temp.fq.gz sbt=600000000 (100X) /  1500000000 (250X) out=REPLACE_subsamp.fq.gz interleaved=t
+  rm REPLACE_temp.fq.gz; ln -s REPLACE_subsamp.fq.gz REPLACE_temp.fq.gz
 
-#change sbt=600000000 (page 19 of https://www.fsis.usda.gov/wps/wcm/connect/e0b56754-662e-4043-91ab-f4e84aff169f/mlg-42.pdf?MOD=AJPERES)
+  #change sbt=600000000 (page 19 of https://www.fsis.usda.gov/wps/wcm/connect/e0b56754-662e-4043-91ab-f4e84aff169f/mlg-42.pdf?MOD=AJPERES)
 
-#Error-correct phase 1
-bbmerge.sh in=REPLACE_temp.fq.gz out=REPLACE_ecco.fq.gz ecco mix vstrict ordered interleaved=t
-rm REPLACE_temp.fq.gz; ln -s REPLACE_ecco.fq.gz REPLACE_temp.fq.gz
+  #Error-correct phase 1
+  bbmerge.sh in=REPLACE_temp.fq.gz out=REPLACE_ecco.fq.gz ecco mix vstrict ordered interleaved=t
+  rm REPLACE_temp.fq.gz; ln -s REPLACE_ecco.fq.gz REPLACE_temp.fq.gz
 
-#Error-correct phase 2
-clumpify.sh in=REPLACE_temp.fq.gz out=REPLACE_eccc.fq.gz ecc passes=4 reorder interleaved=t
-rm REPLACE_temp.fq.gz; ln -s REPLACE_eccc.fq.gz REPLACE_temp.fq.gz
+  #Error-correct phase 2
+  clumpify.sh in=REPLACE_temp.fq.gz out=REPLACE_eccc.fq.gz ecc passes=4 reorder interleaved=t
+  rm REPLACE_temp.fq.gz; ln -s REPLACE_eccc.fq.gz REPLACE_temp.fq.gz
 
-#Error-correct phase 3
-#Low-depth reads can be discarded here with the "tossjunk", "tossdepth", or "tossuncorrectable" flags.
-#For very large datasets, "prefilter=1" or "prefilter=2" can be added to conserve memory.
-tadpole.sh in=REPLACE_temp.fq.gz out=REPLACE_ecct.fq.gz ecc k=62 ordered tossjunk=t interleaved=t
-rm REPLACE_temp.fq.gz; ln -s REPLACE_ecct.fq.gz REPLACE_temp.fq.gz
+  #Error-correct phase 3
+  #Low-depth reads can be discarded here with the "tossjunk", "tossdepth", or "tossuncorrectable" flags.
+  #For very large datasets, "prefilter=1" or "prefilter=2" can be added to conserve memory.
+  tadpole.sh in=REPLACE_temp.fq.gz out=REPLACE_ecct.fq.gz ecc k=62 ordered tossjunk=t interleaved=t
+  rm REPLACE_temp.fq.gz; ln -s REPLACE_ecct.fq.gz REPLACE_temp.fq.gz
 
-#Assemble with Spades
-spades.py --12 REPLACE_ecct.fq.gz -o REPLACE_spades_out --only-assembler -t 16 -m 32 -k 25,55,95,125
+  #Assemble with Spades
+  spades.py --12 REPLACE_ecct.fq.gz -o REPLACE_spades_out --only-assembler -t 16 -m 32 -k 25,55,95,125
 
-# --- Evaluation ---
+  # --- Evaluation ---
 
-#Calculate the coverage distribution, and capture reads that did not make it into the assembly
-bbmap.sh in=REPLACE_subsamp.fq.gz ref=REPLACE_spades_out/scaffolds.fasta nodisk covstats=REPLACE_covstats.txt maxindel=200 minid=90 qtrim=10 untrim ambig=all interleaved=t
+  #Calculate the coverage distribution, and capture reads that did not make it into the assembly
+  bbmap.sh in=REPLACE_subsamp.fq.gz ref=REPLACE_spades_out/scaffolds.fasta nodisk covstats=REPLACE_covstats.txt maxindel=200 minid=90 qtrim=10 untrim ambig=all interleaved=t
 
-#Calculate assembly stats
-stats.sh in=REPLACE_spades_out/scaffolds.fasta
+  #Calculate assembly stats
+  stats.sh in=REPLACE_spades_out/scaffolds.fasta
 
-#Remove bad contigs and generate list of good contigs
-Rscript ~/software/good_contig_names.R REPLACE_covstats.txt
-#rm REPLACE_covstats.txt
+  #Remove bad contigs and generate list of good contigs
+  Rscript ~/software/good_contig_names.R REPLACE_covstats.txt
+  #rm REPLACE_covstats.txt
 
-filterbyname.sh names=REPLACE.names in=REPLACE_spades_out/scaffolds.fasta out=REPLACE.fasta include=t
-#rm REPLACE.names
+  filterbyname.sh names=REPLACE.names in=REPLACE_spades_out/scaffolds.fasta out=REPLACE.fasta include=t
+  #rm REPLACE.names
 
-# if this all finishes correcly then remove all the intermediates #
-#rm -r REPLACE_spades_out/
-#rm REPLACE_eccc.fq.gz REPLACE_ecco.fq.gz REPLACE_filtered.fq.gz #REPLACE_trimmed.fq.gz REPLACE_1.fastq.gz REPLACE_2.fastq.gz #REPLACE.fq.gz REPLACE_ecct.fq.gz REPLACE_temp.fq.gz
+  # if this all finishes correcly then remove all the intermediates #
+  #rm -r REPLACE_spades_out/
+  #rm REPLACE_eccc.fq.gz REPLACE_ecco.fq.gz REPLACE_filtered.fq.gz #REPLACE_trimmed.fq.gz REPLACE_1.fastq.gz REPLACE_2.fastq.gz #REPLACE.fq.gz REPLACE_ecct.fq.gz REPLACE_temp.fq.gz
 
-# run polishing script #
-source ~/software/adapt_polish.sh
+  # run polishing script #
+  source ~/software/adapt_polish.sh
 
-adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
+  adapt_polish REPLACE.fasta REPLACE_subsamp.fq.gz 4
 
-#rm REPLACE.SLURM
-```
+  #rm REPLACE.SLURM
+  ```
+</details>
 
 ### Ran BBmap + spades assembly slurm script with the following genomes:
 **2Nov2020**
@@ -372,7 +375,9 @@ ls -v *pol.fasta > polishedfasta.txt
 * Platform: Ceres, slurm
   * /project/fsepru/kmou/FS19C/**
 
-1. fastqc.batch slurm script (aka fastqc.slurm):
+1. Run `fastqc.slurm` script
+
+<details><summary>fastqc.slurm script</summary>
 
   ```
   #!/bin/bash
@@ -390,6 +395,7 @@ ls -v *pol.fasta > polishedfasta.txt
   mv *fastqc* ./fastqc/
   #End of file
   ```
+</details>
 
 ##### Files generated (for each isolate):
   * *fastqc.zip
@@ -541,8 +547,7 @@ Reference genomes include:
 * E. coli O157:H7 EDL933 aka https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1
   * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6408774/
   * Saved as Ecoli_O157H7_EDL933.fasta
-
-Output generated: .msh
+* Output generated: .msh
 
 3. Run distance estimates comparing sketch genomes with itself. This runs really fast (less than a second)
 ```
@@ -551,27 +556,31 @@ mash dist -p 1 .msh .msh > distances.tab
 
 4. distances.tab columns: reference_id, query_id, mash_distance, pvalue, matching_hashes
 
-5. (10Feb2021) Run Mash with all 95 isolates, and 5 reference genomes including TW14588 on slurm with `mash.slurm` script
-```
-#!/bin/bash
-#SBATCH --job-name=mash                           # name of the job submitted
-#SBATCH -p short                                    # name of the queue you are submitting to
-#SBATCH -N 1                                            # number of nodes in this job
-#SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
-#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
-#SBATCH --mem=32G   # memory
-#Enter commands here:
-set -e
-module load miniconda
-source activate /project/fsepru/kmou/dot_files/.conda/envs/mashenv
-mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
-mash dist -p 1 .msh .msh > distances_secondrun.tab
-```
-```
-Submitted batch job 5533997
-```
+5. (10Feb2021) Run Mash with all 95 isolates, and 5 reference genomes including TW14588 on slurm with `mash.slurm` script.
+
+<details><summary>mash.slurm script</summary>
+
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=mash                           # name of the job submitted
+  #SBATCH -p short                                    # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 16                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --mem=32G   # memory
+  #Enter commands here:
+  set -e
+  module load miniconda
+  source activate /project/fsepru/kmou/dot_files/.conda/envs/mashenv
+  mash sketch -p 1 -o /project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all/ *.fasta
+  mash dist -p 1 .msh .msh > distances_secondrun.tab
+  ```
+  ```
+  Submitted batch job 5533997
+  ```
+</details>
 
 6. Downloaded `distances_secondrun.tab` to local computer, moved file to `Files/` and import to `mash_mds.R` script and created MDS. The plot is pretty much the same as previous mash results with TW14588 buried within the large cluster. Not sure why roary is giving so many errors.
 
@@ -584,6 +593,9 @@ Submitted batch job 5533997
   * Saved as Clostridium_N1-4.fna.gz
 
 8. (17Feb2021) Ran `rename .fna .fasta *.fna` to change *.fna extension to *.fasta. Created softlink of the three genomes from `/project/fsepru/kmou/FS19C/polished_genomes_100X/referencegenomes/` to `/project/fsepru/kmou/FS19C/polished_genomes_100X/mash_all`. Run `mash.slurm`
+
+<details><summary>mash.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=mash                           # name of the job submitted
@@ -605,6 +617,7 @@ mash dist -p 1 .msh .msh > distances_thirdrun.tab
 ```
 Submitted batch job 5572662
 ```
+</details>
 
 ##### Files generated:
   * distances.tab
@@ -771,6 +784,9 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 16. (28Jan2021) It is working! Started around 10:30AM, finished at 11pm. All samples have a new directory with .err, .faa, .fnn, .fna, .fsa, .gbk, .gff, .log, .sqn, .tbl, .tsv, .txt files
 
 17. (8Feb2021) Need to re-run prokka to get same annotation for 6 E. coli reference fasta files and 95 isolates. Results from this prokka run will be used for ppangolin (use gbk files). Waiting to hear back from Jules on how to run prokka to get correct annotation and output for roary. Ran prokka.slurm (ask slurm to load miniconda and prokka_env).
+
+<details><summary>prokka.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=prokka                            # name of the job submitted
@@ -790,6 +806,7 @@ for file in *.fasta; do tag=$file%.fasta; prokka -prefix "$tag" -locustag "$tag"
 ```
 Submitted batch job 5531180
 ```
+</details>
 
 18. (9Feb2021) Prokka didn't like how long contig IDs were (over 37) for reference genome MG1655 and didn't continue on to do Ecoli_NADC6564, Ecoli_Nissle1917, Ecoli_O157H7_EDL933, and Ecoli_TW14588. So I'm shortening both file names and the header line in fasta files to see if that makes a difference. Will run `debug` to test if prokka will accept those files before running with all other 95 isolates.
 ```
@@ -856,6 +873,9 @@ md5sum -c cksum96.txt
 ```
 
 4. (29Jan2021) The find command worked, so I will generate slurm script (roary.slurm) to run roary on the 95 isolates.
+
+<details><summary>roary.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -871,6 +891,7 @@ module load roary
 roary -f ./roary_output -e -n -v *.gff
 #End of file
 ```
+</details>
 
 5. (29Jan2021) Submitted job on SLURM
 ```
@@ -885,7 +906,10 @@ Submitted batch job 5495686
 roary -f ./roary_output -e -n -v -p 16 *.gff
 ```
 
-8. (1Feb2021) Modified roary.slurm script to the following:
+8. (1Feb2021) Modified roary.slurm script.
+
+<details><summary>roary.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -901,6 +925,7 @@ module load roary
 roary -f ./roary_output -e -n -v -p 16 *.gff
 #End of file
 ```
+</details>
 
 9. (1Feb2021) Submitted job on SLURM
 ```
@@ -914,6 +939,9 @@ scp -r ceres:~/fsepru_kmou/FS19C/polished_genomes_100X/polishedgenomesprokka/pro
 ```
 
 11. (2Feb2021) See gene differences between groups of isolates using `query_pan_genome` command. Copy all files from `roary_output` directory to same directory as gff files because `query_pan_genome` uses some of those output files (as I found out the first time I ran the slurm script below. The job cancelled because it couldn't find `clustered_proteins` file).
+
+<details><summary>roary.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -935,6 +963,7 @@ query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
 ```
 Submitted batch job 5511086
 ```
+</details>
 
 12. (2Feb2021) Job completed, downloaded `pan_genome_results_core`, `pan_genome_results_accessory`, and `pan_genome_results_union` to local `roary_output/querypangenome_output` directory.
 
@@ -987,6 +1016,9 @@ Submitted batch job 5518586
 ```
 
 18. (4Feb2021) Copy files from `roary_95isolates_6referencestrains_output` to `prokka_gff` and run `query_pan_genome` with `roary.slurm` script.
+
+<details><summary>roary.slurm script</summary>
+
 ```
 module load roary
 #roary -f ./roary_95isolates_6referencestrains_output -e -n -v -p 16 *.gff
@@ -1016,6 +1048,7 @@ Submitted batch job 5521850
 2021/02/04 12:40:17 Could not extract any protein sequences from Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff. Does the file contain the assembly as well as the annotation?
 2021/02/04 12:40:19 Could not extract any protein sequences from Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff. Does the file contain the assembly as well as the annotation?
 ```
+</details>
 
 19. (4Feb2021) Looked up error message and found this issue post: https://github.com/sanger-pathogens/Roary/issues/417. Tested with the gff and fna files of Mycoplasma pneumoniae FH that was mentioned in post: https://www.ncbi.nlm.nih.gov/assembly/GCF_001272835.1 (see script below). Seemed to work? I will download the fna files and cat the gff and fna files together to make gff3 and run them with roary.
 ```
@@ -1028,7 +1061,7 @@ cat GCF_001272835.1_ASM127283v1_genomic.gff GCF_001272835.1_ASM127283v1_genomic.
 I mentioned using genbank files during the prokka annotation step.  This is optional and only necessary if you want the genes to be annotated in a similar way to an established reference genome.
 For example, when I annotate Salmonella genomes I will often call prokka using something like “--proteins LT2.gbk”.  This will make prokka try and annotate the experimental genomes using the annotations from the LT2 genome as a first priority.  I don’t believe this will change what genes are identified, just what they are called.  Again, this is totally optional.
 ```
-* **I will ask E. coli group if they want me to annotate with a specific reference genome. For now, I will keep going and analyze results as is.**
+* **I will ask E. coli group if they want me to annotate with a specific reference genome. For now, I will keep going and analyze results as is.** Found out it was K-12, then EDL933.
 
 21. (5Feb2021) Moved dot files from home directory on ceres to /project/fsepru/kmou/dot_files and made symbolic link to home
 ```
@@ -1061,7 +1094,10 @@ md5sum -c cksum96.txt
 find ../polishedgenomesprokka_95isolates5refgenomes/ -name *.gff -exec cp '{}' "./" ";"
 ```
 
-24. (9Feb2021) Ran roary.slurm script to the following:
+24. (9Feb2021) Ran roary.slurm script
+
+<details><summary>roary.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -1080,6 +1116,7 @@ roary -f ./roary_95isolates_5referencestrains_output -e -n -v -p 16 *.gff
 ```
 Submitted batch job 5533863
 ```
+</details>
 
 25. (10Feb2021) Job 5533863 had more errors! I forgot to put `set -e` in slurm script, so it kept going. Some example error messages listed below. I looked at a few gff files and they have the annotation and the sequence data. I looked up the first error message (sequence without letters) and found this forum post: https://www.biostars.org/p/365927/. Also this issue page on roary: https://github.com/sanger-pathogens/Roary/issues/229. Could be that I have some reference genomes that are unrelated to my 95 isolates. Maybe it's TW14588? I'll try running mash to see what the distances are when I add TW14588 to the mix. In the meantime, I will also run `roary.slurm` without TW14588 (deleted `TW14588.fasta%.fasta.gff` from directory) and see how that goes.
 
@@ -1111,6 +1148,9 @@ Submitted batch job 5534101
 27. (10Feb2021) Job 5534101 did not complete. Same error messages popped up. Something related to disk quota exceeding? I tried to find `/usr/share/perl5/Bio/Roary/BedFromGFFRole.pm` but could not find it on my end. Emailed vsrc support for help.
 
 28. (11Feb2021) Re-installed conda environment `prokka_env` in correct directory (`/project/fsepru/kmou/`) following SciNet best practices: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda. This may help with disk quota in home directory? Will try running `roary.slurm` again and see if that changes.
+
+<details><summary>roary.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=roary                             # name of the job submitted
@@ -1131,6 +1171,8 @@ roary -f ./roary_95isolates5genomes_testrun_output -e -n -v -p 16 *.gff
 ```
 Submitted batch job 5545690
 ```
+</details>
+
 Looked at stderr and stdout and no error messages were found. It is strange that stdout is so short, but the output files are all there. `summary_statistics.txt` looks good too:
 ```
 Core genes	(99% <= strains <= 100%)	3135
@@ -1143,6 +1185,9 @@ Total genes	(0% <= strains <= 100%)	16260
 29. Renamed `roary_95isolates5genomes_testrun_output` to `roary_95isolates5refgenomes_final`. I also deleted output directories from previous failed roary runs (`roary_95isolates_5referencestrains_output/`, `roary_95isolates_5referencestrains_output_BAD/`)
 
 30. Run the the `query_pan_genome` commands on slurm. Made sure to make soft link for `clustered_proteins` in same location as *.gff files.
+
+<details><summary>roary.slurm script</summary>
+
 ```
 module load roary
 query_pan_genome  -o pan_genome_results_union -v -a union *.gff
@@ -1152,6 +1197,7 @@ query_pan_genome  -o pan_genome_results_accessory -v -a complement *.gff
 ```
 Submitted batch job 5550887
 ```
+</details>
 
 31. Download `roary_95isolates5refgenomes_final/` files and analyze.
 Looked at the following roary output files:
@@ -1257,7 +1303,10 @@ conda install -c bioconda ppanggolin
 ppanggolin workflow --anno ORGANISMS_ANNOTATION_LIST
 ```
 
-7. (4Feb2021) Ran ppanggolin.slurm on Ceres as a slurm job.
+7. (4Feb2021) Ran `ppanggolin.slurm` on Ceres as a slurm job.
+
+<details><summary>ppanggolin.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=ppanggolin                             # name of the job submitted
@@ -1276,6 +1325,7 @@ ppanggolin workflow --anno Ecoligbkpath.txt
 ```
 Submitted batch job 5524245
 ```
+</details>
 
 8. (5Feb2021) Will need to re-run ppanggolin by re-running prokka on 95 isolates with E. coli reference genomes to get same annotation. Then can take the gbk files and run through ppanggolin.
 
@@ -1295,7 +1345,10 @@ write_tsv(tsv, "Ecoligbkpath.txt")
 ```
 In Excel, deleted the path name `/lustre/project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gbk/` in first column, and deleted `/lustre/` in second column. Saved tsv. Uploaded to Ceres. Ran `ppanggolin.slurm` and found out it was looking for `prokka_env` in home, which didn't exist. I accidentally deleted `.conda` from project directory so I had to reinstall prokka, PPanGGOLiN in `prokka_env` in project directory following the correct guidelines on SciNet: https://scinet.usda.gov/guide/conda/#user-installed-software-on-ceres-with-conda
 
-12. (11Feb2021) Ran ppanggolin.slurm on Ceres as a slurm job.
+12. (11Feb2021) Ran `ppanggolin.slurm` on Ceres as a slurm job.
+
+<details><summary>ppanggolin.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=ppanggolin                             # name of the job submitted
@@ -1317,7 +1370,9 @@ ppanggolin workflow --anno Ecoligbkpath.txt
 ```
 Submitted batch job 5545691
 ```
-Job cancelled. Looked at stderr file and saw the only line:
+</details>
+
+* Job cancelled. Looked at stderr file and saw the only line:
 `/project/fsepru/kmou/prokka_env/etc/conda/activate.d/java_home.sh: line 1: JAVA_HOME: unbound variable`
 How to address this??
 
@@ -1388,7 +1443,10 @@ Submitted batch job 5589844
 * Platform: Ceres
   * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
-1. (12Feb2021) Ran raxml on Ceres with this slurm script from Jules, available here: `/project/fsepru/shared_resources/SLURMS`.
+1. (12Feb2021) Ran raxml on Ceres with `raxml.slurm` script adapted from Jules, available here: `/project/fsepru/shared_resources/SLURMS`. Job completed successfully.
+
+<details><summary>raxml.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=RAXML                              # name of the job submitted
@@ -1417,7 +1475,7 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 ```
 Submitted batch job 5566413
 ```
-Job ran successfully.
+</details>
 
 2. (18Feb2021) Re-run RAxML on Ceres with slurm script `raxml.slurm` in `project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates5refgenomes/pan` where the latest `core_gene_alignment.aln` file is located
 ```
@@ -2088,6 +2146,13 @@ prokka --genus Escherichia --species coli --cpus 1 --centre X --compliant --outd
 
 8. (21Apr2021) Yasasvy fixed the issue. I'm re-running `prokka.slurm` job 5759514. Looked through `PROKKA_04212021.gbk` and could not find ler, espC, pch, sepZ, etc. So this did not work... will have to result to blast.
 
+9. (26Apr2021) Save Bradd Haley's R script as `BraddHaleyOriginalScript.R` and `FisherExactTest.R` in `scripts` folder.
+
+10. (26Apr2021) Created `EcoliAnnotation_gene_presence_absence.Rtab.csv` from `gene_presence_absence.Rtab` generated in `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/pan`. Added a row called `type` that designates each sample as `commensal` or `STEC`. Column name for genes is labeled as `ID`.
+
+11. (26Apr2021) Run `EcoliAnnotation_gene_presence_absence.Rtab.csv` through `FisherExactTest.R`
+
+
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
@@ -2303,7 +2368,6 @@ conda activate /project/fsepru/kmou/conda_envs/DRAM
 #SBATCH --account fsepru
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
-
 #Enter commands here:
 set -e
 set -u
@@ -2331,6 +2395,7 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data --skip_uniref
 
 ### Jules:
 ```
+If you are unsure you have specified your SLURM resource requests correctly, you can always check the number of processors available with `nproc` and the amount of memory available with `free -h`
 I don’t often use the “--ntasks-per-core” flag, I don’t really understand what it does.  If I want 16 processors on a single node I will use `-N 1` and `-n 16`
 If you think others in the unit would like to use this software (I know I would) you should consider installing the conda environment in the /project/fsepru/conda_envs/ directory, that way everyone will know it’s available there.
 If you are having trouble getting your job to start because the ‘mem’ partition is busy, I recommend trying the “scavenger” partition, it allows you to use the nodes that others have paid for priority access to but aren’t using.
@@ -2404,12 +2469,10 @@ AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
 #SBATCH --account fsepru
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
-
 #Enter commands here:
 set -e
 set -u
 set +eu
-
 module load miniconda
 source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data2
@@ -2452,12 +2515,10 @@ AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
 #SBATCH --account fsepru
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
-
 #Enter commands here:
 set -e
 set -u
 set +eu
-
 module load miniconda
 source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data2
@@ -2465,6 +2526,9 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data2
 I increased the number of cores to 32 (32 cores * 16GB mem per core = 512 GB memory total... should be ok?). Job 5765159.
 
 14. (23Apr2021) Ran `DRAM-setup.py print_config` in `/project/fsepru/kmou/conda_envs/dram2/` and got same message as yesterday. I asked Chris and showed him my slurm script of the latest job. It turns out I didn't request threads in `DRAM-setup.py` and need to request threads for slurm itself. Chris gave me the corrected slurm script (called it `dram3.slurm`. Ran job 5770291.
+
+<details><summary>dram3.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=dram3                            # name of the job submitted
@@ -2479,16 +2543,152 @@ I increased the number of cores to 32 (32 cores * 16GB mem per core = 512 GB mem
 #SBATCH --account fsepru
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
-
 #Enter commands here:
 set -e
 set -u
 set +eu
-
 module load miniconda
 source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
 ```
+</details>
+
+15. (26Apr2021) Both dram2 and dram3 jobs finished. Ran `DRAM-setup.py print_config` in `/project/fsepru/kmou/conda_envs/dram2/DRAM_data2` and `/project/fsepru/kmou/conda_envs/DRAM_data3`
+* DRAM_data2: Weird that it only lists dram3 files...
+
+```
+KEGG db: None
+KOfam db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/kofam_profiles.hmm
+KOfam KO list: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/kofam_ko_list.tsv
+UniRef db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/uniref90.20210423.mmsdb
+Pfam db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/pfam.mmspro
+Pfam hmm dat: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/Pfam-A.hmm.dat.gz
+dbCAN db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/dbCAN-HMMdb-V9.txt
+dbCAN family activities: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/CAZyDB.07302020.fam-activities.txt
+RefSeq Viral db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/refseq_viral.20210423.mmsdb
+MEROPS peptidase db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/peptidases.20210423.mmsdb
+VOGDB db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/vog_latest_hmms.txt
+VOG annotations: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/vog_annotations_latest.tsv.gz
+Description db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/description_db.sqlite
+Genome summary form: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/genome_summary_form.20210423.tsv
+Module step form: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/module_step_form.20210423.tsv
+ETC module database: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/etc_mdoule_database.20210423.tsv
+```
+  * DRAM_data2 `stdout.5765159.ceres19-mem-4.dram2 `:
+  ```
+  2021-04-22 15:12:52.471425: Database preparation started
+  3:24:12.036707: UniRef database processed
+  4:21:15.971722: PFAM database processed
+  4:21:20.145036: dbCAN database processed
+  4:21:34.134308: RefSeq viral database processed
+  4:22:16.861004: MEROPS database processed
+  4:25:10.715304: VOGdb database processed
+  4:30:19.642823: KOfam database processed
+  4:30:23.212796: KOfam ko list processed
+  4:30:26.074825: PFAM hmm dat processed
+  4:30:26.332474: dbCAN fam activities processed
+  4:30:27.158386: VOGdb annotations processed
+  4:30:29.653302: DRAM databases and forms downloaded
+  4:30:29.715845: Files moved to final destination
+  4:30:29.716273: Setting database paths
+  4:30:29.719822: Database locations added to CONFIG
+  4:30:31.164532: Database connection established
+  4:30:31.164567: KEGG descriptions added to description database
+  2 days, 9:43:30.210830: UniRef descriptions added to description database
+  2 days, 9:43:31.869414: PFAM descriptions added to description database
+  2 days, 9:43:32.021867: dbCAN descriptions added to description database
+  2 days, 9:43:38.696772: RefSeq viral descriptions added to description database
+  2 days, 9:44:01.249890: MEROPS descriptions added to description database
+  2 days, 9:44:04.666929: VOGdb descriptions added to description database
+  2 days, 9:44:04.666987: Description database populated
+  2 days, 9:44:04.669741: Database descriptions updated
+  2 days, 9:44:04.729725: Database locations set
+  2 days, 9:44:27.444800: Database preparation completed
+  ```
+
+* DRAM_data3
+
+```
+KEGG db: None
+KOfam db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/kofam_profiles.hmm
+KOfam KO list: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/kofam_ko_list.tsv
+UniRef db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/uniref90.20210423.mmsdb
+Pfam db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/pfam.mmspro
+Pfam hmm dat: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/Pfam-A.hmm.dat.gz
+dbCAN db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/dbCAN-HMMdb-V9.txt
+dbCAN family activities: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/CAZyDB.07302020.fam-activities.txt
+RefSeq Viral db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/refseq_viral.20210423.mmsdb
+MEROPS peptidase db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/peptidases.20210423.mmsdb
+VOGDB db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/vog_latest_hmms.txt
+VOG annotations: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/vog_annotations_latest.tsv.gz
+Description db: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/description_db.sqlite
+Genome summary form: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/genome_summary_form.20210423.tsv
+Module step form: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/module_step_form.20210423.tsv
+ETC module database: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/etc_mdoule_database.20210423.tsv
+Function heatmap form: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/function_heatmap_form.20210423.tsv
+AMG database: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/amg_database.20210423.tsv
+```
+  * DRAM_data3 `stdout.5770291.ceres19-mem-4.dram3` :
+  ```
+  2021-04-23 13:21:45.932741: Database preparation started
+  6:20:31.395180: UniRef database processed
+  9:10:33.936828: PFAM database processed
+  9:10:38.359894: dbCAN database processed
+  9:11:13.738898: RefSeq viral database processed
+  9:13:06.458784: MEROPS database processed
+  9:16:46.102607: VOGdb database processed
+  9:22:20.828967: KOfam database processed
+  9:22:24.315550: KOfam ko list processed
+  9:22:26.972572: PFAM hmm dat processed
+  9:22:27.242745: dbCAN fam activities processed
+  9:22:28.067740: VOGdb annotations processed
+  9:22:30.818197: DRAM databases and forms downloaded
+  9:22:30.885684: Files moved to final destination
+  9:22:30.886492: Setting database paths
+  9:22:30.890521: Database locations added to CONFIG
+  9:22:31.551252: Database connection established
+  9:22:31.551289: KEGG descriptions added to description database
+  2 days, 10:32:38.774039: UniRef descriptions added to description database
+  2 days, 10:32:40.127383: PFAM descriptions added to description database
+  2 days, 10:32:40.245665: dbCAN descriptions added to description database
+  2 days, 10:32:46.807567: RefSeq viral descriptions added to description database
+  2 days, 10:33:08.729547: MEROPS descriptions added to description database
+  2 days, 10:33:12.582132: VOGdb descriptions added to description database
+  2 days, 10:33:12.582173: Description database populated
+  2 days, 10:33:12.584098: Database descriptions updated
+  2 days, 10:33:12.651200: Database locations set
+  2 days, 10:33:27.046711: Database preparation completed
+  ```
+
+I'll stick with DRAM_data3 to run annotation.
+
+16. (26Apr2021) Ran annotation in `/project/fsepru/kmou/conda_envs/dram3.slurm`, job 5772721.
+
+<details><summary>dram3.slurm script</summary>
+
+```
+#!/bin/bash
+#SBATCH --job-name=dram3                            # name of the job submitted
+#SBATCH -p mem                                    # name of the queue you are submitting to
+#SBATCH -N 1                                            # number of nodes in this job
+#SBATCH -n 1                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+#SBATCH --ntasks-per-core=20
+#SBATCH --mem=550gb
+#SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
+#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+#SBATCH --account fsepru
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=kathy.mou@usda.gov
+#Enter commands here:
+set -e
+set -u
+set +eu
+module load miniconda
+source activate /project/fsepru/kmou/conda_envs/DRAM
+DRAM.py annotate -i '/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna' -o annotation --threads 20
+```
+</details>
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

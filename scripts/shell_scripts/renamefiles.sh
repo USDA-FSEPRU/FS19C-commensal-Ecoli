@@ -1,5 +1,7 @@
 #usr/bin/bash
 
+## This code shortens name of fastq files
+
 mkdir linked
 for myfile in ./*.fastq.gz; do
         target=$(echo $myfile|sed -r 's/1\-[A-H][0-9]+\-([0-9]+\-[0-9]+[A-Z]+[0-9]?[A-Z]?\_)[A-Z]+[0-9]+\_[A-Z]+[0-9]+\_R([0-9])\_[0-9]+/\1\2/g')

@@ -1,12 +1,15 @@
 #!/bin/bash
+
+## This code helps to find E. coli virulence genes that are listed in Ecolivirulencegene.txt and search through gene_presence_absence_2.txt and generate pa.isolates.txt output showing search results
+
 echo "Beginning of file" > pa.isolates.txt
-for line in `cat Ecolivirulencegene.txt`; 
+for line in `cat Ecolivirulencegene.txt`;
 do
 	echo $line >> pa.isolates.txt
 	grep -n "$line" gene_presence_absence_2.txt >> pa.isolates.txt
 	echo "END_OF_GENE" >> pa.isolates.txt
 
-done	
+done
 echo "End of file" >> pa.isolates.txt
 
 

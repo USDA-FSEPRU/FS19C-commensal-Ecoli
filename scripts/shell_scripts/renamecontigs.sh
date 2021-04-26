@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## This code adds _pol to *.fna fasta file name
+
 #66-440RED_pol.fna
 
 for file in ./*.fna

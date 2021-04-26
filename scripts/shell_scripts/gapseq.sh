@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## This code generates a gapseq.sh script for each *.fna file
+
 for file in ./*.fna
   do
     #cp template.sh $file.gapseq.sh
