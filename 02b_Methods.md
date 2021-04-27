@@ -304,6 +304,7 @@ done
 4. Finished assembling! Will need to transfer polished fasta sequences (#11-93) to `polished_genomes_100X directory`. Is it possible to move files from (11-93)_pol.fasta to directory? Learned to use grep.
 
 **18Nov2020** Received email from Darrell of re-sequenced isolates 95-96 fasta files.
+
 1. Darrell email:
 ```
 Your NovaSeq data has been downloaded from the ISU Sequencing Center and has been archived here at the Center.  According to David, there were a couple of the original samples, 95 and 96 (H11 and H12) in the original plate, which did not provide data when completed.  This new data is the result after Dr. Baker has repeated the library preparation and rerun those samples.  
@@ -1517,6 +1518,9 @@ I notice the `RAxML_bestTree.core_genome_tree_1` and `RAxML_bipartitions.core_ge
   * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
 1. (12Feb2021) Made `gifrop2.slurm` script and ran in `/project/fsepru/kmou/FS19C/polished_genomes_100X/prokka_gff` where `*.gff` files and soft link for `gene_presence_absence.csv` is.
+
+<details><summary>gifrop2.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=gifrop2                             # name of the job submitted
@@ -1541,6 +1545,8 @@ gifrop --get_islands
 ```
 Submitted batch job 5566653
 ```
+</details>
+
 Job ran successfully. Downloaded `gifrop_out/` to local computer. I looked at `clustered_island_info.csv` and noticed all entries under columns `island_type,	RESISTANCE,	res_type,	vir_type,	plasmid_type,	viro_type,	megares_type` were `NA`. Jules said he'll check it out.
 
 2. (17Feb2021) Jules found my error, woo hoo!
@@ -1593,7 +1599,10 @@ I have made a SLURM script for you with an example of how I would do things and 
   * Platform: Ceres
   * /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/**
 
-1. (17Feb2021) Ran the following on slurm:
+1. (17Feb2021) Ran `gifrop.slurm`
+
+<details><summary>gifrop.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=prokka                            # name of the job submitted
@@ -1618,6 +1627,8 @@ pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "
 ```
 Submitted batch job 5570779
 ```
+</details>
+
 Job failed because had message `Please rename your contigs OR try '--centre X --compliant' to generate clean contig names.` Need to add that argument to `pan_pipe.slurm`
 
 2. (18Feb2021) Revised `GIFROP.slurm` with the following, removed all previous prokka output files including `panpipe_logs` and ran slurm job:
@@ -1634,6 +1645,9 @@ Job completed successfully! Downloaded `gifrop_out/` and roary output.
 4. (19Feb2021) See `BashScriptLesson.md` for details about `rename_contigs` and for-loop bash script `~/scripts/renamecontigs.sh` to run `rename_contigs` in desired fasta file directory. I saved `rename_contigs` in `~/.bashrc`, copied *.fna files from `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/` to a new directory `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/` and ran `~/scripts/renamecontigs.sh` in this new directory.
 
 5. (19Feb2021) Moved `GIFROP.slurm` to new directory and modified script via removing `--centre X --compliant`. Run job on slurm.
+
+<details><summary>gifrop.slurm script</summary>
+
   ```
   #!/bin/bash
   #SBATCH --job-name=panpipe                            # name of the job submitted
@@ -1655,6 +1669,7 @@ Job completed successfully! Downloaded `gifrop_out/` and roary output.
 ```
 Submitted batch job 5576687
 ```
+</details>
 
 6. (24Feb2021) Downloaded `gifrop_out/` and roary output. Gifrop worked (yay!), `clustered_island_info.csv` showed virulence genes, etc. Will need to go through `clustered_island_info.csv` to search for specific gene groups (sugar utilization, virulence genes, etc)
 
@@ -1679,6 +1694,7 @@ export -f rename_contigs
 4. I copied *.fna files from `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/` to a new directory `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/` and ran `~/scripts/renamecontigs.sh` in this new directory.
 
 5. (19Feb2021) Moved `GIFROP.slurm` to `/project/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/` and ran the following script on slurm. Used Ecoli str. K-12 substr. MG1655 as priority annotation for prokka.
+
   ```
   #!/bin/bash
   #SBATCH --job-name=panpipe                            # name of the job submitted
@@ -1698,7 +1714,9 @@ export -f rename_contigs
   pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
   ```
 
+
 6. Download `gifrop_out/` and roary output. `clustered_island_info.csv` shows virulence genes, etc.
+</details>
 
 #### Files generated:
 * **_pol/ or Ecoli_*/
@@ -1781,10 +1799,9 @@ export -f rename_contigs
   * summary_statistics.txt
   * _uninflated_mcl_groups
 
-</details>
-
-
 ## (13b) Analyze gifrop output to narrow down list of commensal E. coli isolates that don't possess any virulence factors (LEE, stx, hemolysin).
+
+<details><summary>Details of attempts to exclude commensal E. coli isolates with virulence genes</summary>
 
 1. (19Mar2021) Went through gifrop csv files:
 * Clustered_island_info.csv: virulence and ARG genes, clusters of genes wrapped together (no annotation)
@@ -1840,14 +1857,15 @@ export -f rename_contigs
 6. (12Apr2021) Search through vfdb for complete list of virulence genes in E. coli. Downloaded `Escherichia_VFs_comparison.xls`.
 
 7. (12Apr2021) Sent an email to Vijay with this list of genes, asking which of these to focus on to narrow search. The list he sent me are the following (see [01_Background](https://github.com/k39ajdM2/Notebook/blob/main/01_Background.md) for complete email correspondence):
-```
-The modified list would be: ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, espF, stcE, espC, hlyCABD, hlyE, pchABC, espP, efa1/lifA, toxB, stx1, and stx2 for you to use in Blast search...
+  ```
+  The modified list would be: ler, escRSTU, sepZ, escD, espADB, tir, eae, cesT, espF, stcE, espC, hlyCABD, hlyE, pchABC, espP, efa1/lifA, toxB, stx1, and stx2 for you to use in Blast search...
 
-Yes, EDL933 will be a good reference strain to use in your Blast search.
-```
+  Yes, EDL933 will be a good reference strain to use in your Blast search.
+  ```
   * 29 genes total
 
 8. (12Apr2021) Created a bash script `search.sh` to look up and see if the genes are found in Ecoli_O157H7_EDL933 using results from `clustered_island_info.csv`.
+
 ```
 #!/bin/bash
 echo "Beginning of file" > isolates.txt
@@ -1856,7 +1874,6 @@ do
 	echo $line >> output.txt
 	grep -n "$line" O157h7.txt >> isolates.txt
 	echo "END_OF_GENE" >> isolates.txt
-
 done
 echo "End of file" >> isolates.txt
 ```
@@ -2028,13 +2045,13 @@ hns_2|group_2882|group_2879|group_3880|group_3881|group_3882|group_5366|group_39
   * **Ask Vijay for help**
 
 22. Try running prokka without setting priority strain (just specify Escherichia coli) and see what that does for results? Caveat naming scheme may not be the same (https://github.com/tseemann/prokka)
-```
-Option: --proteins
+  ```
+  Option: --proteins
 
-The --proteins option is recommended when you have good quality reference genomes and want to ensure gene naming is consistent. Some species use specific terminology which will be often lost if you rely on the default Swiss-Prot database included with Prokka.
+  The --proteins option is recommended when you have good quality reference genomes and want to ensure gene naming is consistent. Some species use specific terminology which will be often lost if you rely on the default Swiss-Prot database included with Prokka.
 
-If you have Genbank or Protein FASTA file(s) that you want to annotate genes from as the first priority, use the --proteins myfile.gbk. Please make sure it has a recognisable file extension like .gb or .gbk or auto-detect will fail. The use of Genbank is recommended over FASTA, because it will provide /gene and /EC_number annotations that a typical .faa file will not provide, unless you have specially formatted it for Prokka.
-```
+  If you have Genbank or Protein FASTA file(s) that you want to annotate genes from as the first priority, use the --proteins myfile.gbk. Please make sure it has a recognisable file extension like .gb or .gbk or auto-detect will fail. The use of Genbank is recommended over FASTA, because it will provide /gene and /EC_number annotations that a typical .faa file will not provide, unless you have specially formatted it for Prokka.
+  ```
 Also run search.sh on all EDL933 to see which ones have more than the other.
 23. (14Apr2021) Also check out `Escherichia_VFs_comparison.xls` to find strain
   * Found 25 genes except for `pchABC, stcE`
@@ -2049,6 +2066,7 @@ Also run search.sh on all EDL933 to see which ones have more than the other.
       * parallel blast to make sure virulence genes exist in the strains
         * custom database of virulence genes: track which source (EDL933, Sakai, etc.)
         * some genes...
+</details>
 
 ## (13c) Run pan_pipe from gifrop to run prokka, roary, and gifrop altogether using Escherichia coli prokka argument.
   * Summary: Re-run prokka setting Escherichia coli as priority annotation. This slurm script was provided by Jules, which runs prokka, roary, and gifrop (developed by Julian Trachsel. Gifrop2 = gifrop version 2) via slurm on Ceres. It will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread), run roary and generate a core genome alignment, and with gifrop, it will extract, classify, and cluster genomic islands
@@ -2066,6 +2084,9 @@ Also run search.sh on all EDL933 to see which ones have more than the other.
 ```
 
 3. (14Apr2021) Run gifrop with Escherichia coli specification for prokka argument. See `gifrop.slurm` for script details. Job # 5751498.
+
+<details><summary>gifrop.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=Ecolipanpipe                           # name of the job submitted
@@ -2085,45 +2106,53 @@ source activate /project/fsepru/conda_envs/gifrop
 
 pan_pipe --prokka_args "--genus Escherichia --species coli --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
 ```
+</details>
 
 4. (14Apr2021) Make `blastparallel.slurm` and modify script. Need to determine how to make database.
-```
-#!/bin/bash
 
-#SBATCH --job-name=virgene_BLAST                          # name of the job submitted
-#SBATCH -p short                                        # name of the queue you are submitting to
-#SBATCH -N 1                                            # number of nodes in this job
-#SBATCH -n 72                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH -t 48:00:00                                     # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name, %x adds job name
-#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
-#SBATCH --mem=64G   #
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=kathy.mou@usda.gov
+<details><summary>blastparallel.slurm script</summary>
 
-# ENTER COMMANDS HERE:
+  ```
+  #!/bin/bash
 
-module load blast+
-module load parallel
+  #SBATCH --job-name=virgene_BLAST                          # name of the job submitted
+  #SBATCH -p short                                        # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 72                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 48:00:00                                     # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name, %x adds job name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --mem=64G   #
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
 
-mkdir virulencegenes
+  # ENTER COMMANDS HERE:
 
-find /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/ -name "*.fna" | parallel 'blastn -db ~/blastdb/METAL_ISLAND.fasta -query {} -out ./virulencegenes/{/.}.virulence -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send slen evalue bitscore"'
+  module load blast+
+  module load parallel
 
-cd virulencegenes
+  mkdir virulencegenes
 
-# collects and combines all blast results into one file
-find . -name "*virulence" | xargs -n 100 cat >> ALL_virulence.results
+  find /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/ -name "*.fna" | parallel 'blastn -db ~/blastdb/METAL_ISLAND.fasta -query {} -out ./virulencegenes/{/.}.virulence -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send slen evalue bitscore"'
 
-# removes all files ending with 'metal'
-find . -name "*virulence" | xargs rm
+  cd virulencegenes
 
-#End of file
-```
+  # collects and combines all blast results into one file
+  find . -name "*virulence" | xargs -n 100 cat >> ALL_virulence.results
+
+  # removes all files ending with 'metal'
+  find . -name "*virulence" | xargs rm
+
+  #End of file
+  ```
+</details>
 
 5. (16Apr2021) Looked at `gene_presence_absence.csv` and `clustered_island_info.csv` for the respective missing virulence genes from the first run. Didn't find the virulence genes. Could make custom blast database of desired virulence genes, but will follow Bradd Haley's approach instead.
 
 6. (19Apr2021) Downloaded `EDL933.fasta` from `/project/fsepru/data_transfer/O157_challenge_strains/` to `/project/fsepru/kmou/FS19C/EDL933prokkatest/` to see when I run prokka on this via `prokka.slurm`, will `ler` and other virulence genes show up. Submitted job 5758134.
+
+<details><summary>prokka.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=prokka                            # name of the job submitted
@@ -2140,6 +2169,8 @@ find . -name "*virulence" | xargs rm
 module load prokka
 prokka --genus Escherichia --species coli --cpus 1 --centre X --compliant --outdir prokka_out EDL933.fasta
 ```
+</details>
+
 
 7. (20Apr2021) The job failed at
 `Could not run command: tbl2asn -V b -a r10k -l paired-ends -M n -N 1 -y 'Annotated using prokka 1.14.5 from https://github.com/tseemann/prokka' -Z prokka_out\/PROKKA_04192021\.err -i prokka_out\/PROKKA_04192021\.fsa 2> /dev/null`. I looked through github issue page: https://github.com/tseemann/prokka/issues/139 and saw it was the version of tbl2asn used. In my stderr file, I saw a couple lines saying the version I had was outdated and needed current version. I emailed VSRC for help on how to proceed.
@@ -2260,7 +2291,8 @@ You can also check out the `INSTALL` file for directions
 5. (17Mar2021) Go to `project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesprokka_95isolates6refgenomes` and made `template.sh` template slurm script and `gapseq.sh` for loop with `gapseq` and `sbatch` commands to generate a slurm script with `gapseq` and `sbatch` commands for each of the 95 isolates + 6 reference genomes.
 
 <details><summary>template.slurm and gapseq.sh scripts</summary>
-template.slurm
+
+**template.slurm**
 
   ```
   #!/bin/bash
@@ -2276,7 +2308,7 @@ template.slurm
   #Enter commands here:
   ```
 
-gapseq.sh
+**gapseq.sh**
 
   ```
   #!/bin/bash
@@ -2356,6 +2388,9 @@ conda activate /project/fsepru/kmou/conda_envs/DRAM
 ```
 
 5. (19Apr2021 and 20Apr2021) Made `dram.slurm` script to set up databases. Asked Chris for input and ran job (5758517).
+
+<details><summary>dram.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=dram                            # name of the job submitted
@@ -2376,6 +2411,7 @@ module load miniconda
 source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data
 ```
+</details>
 
 <details><summary>Advice from Chris and Jules about DRAM and running slurm jobs</summary>
 
@@ -2455,7 +2491,10 @@ Function heatmap form: /Users/shafferm/lab/DRAM/data/function_heatmap_form.tsv
 AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
 ```
 
-11. (21Apr2021) I reached out to SCINet staff Jennifer if the reason my job is taking so long is because I didn't specify number of threads. My logic was that I thought if I didn't limit what resources slurm should use, it would be smart to know it has freedom to choose whatever resources are available to run the job faster. Turns out not true. She recommended I make a new folder and submit a new slurm with a larger number of threads. So this was what I did: made `/project/fsepru/kmou/conda_envs/dram2/` and copied over `/project/fsepru/kmou/conda_envs/DRAM.slurm`. Renamed slurm script to `dram2.slurm`. Added 16 threads to the script:
+11. (21Apr2021) I reached out to SCINet staff Jennifer if the reason my job is taking so long is because I didn't specify number of threads. My logic was that I thought if I didn't limit what resources slurm should use, it would be smart to know it has freedom to choose whatever resources are available to run the job faster. Turns out not true. She recommended I make a new folder and submit a new slurm with a larger number of threads. So this was what I did: made `/project/fsepru/kmou/conda_envs/dram2/` and copied over `/project/fsepru/kmou/conda_envs/DRAM.slurm`. Renamed slurm script to `dram2.slurm`. Added 16 threads to the script/. Ran job 5759510.
+
+<details><summary>dram2.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=dram2                            # name of the job submitted
@@ -2477,7 +2516,9 @@ module load miniconda
 source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data2
 ```
-Ran job 5759510.
+</details>
+
+
 
 12. (22Apr2021) Checked progress of job 5759510 and at 22 hours and still not done. Did `salloc` and activated dram conda environment and ran `DRAM-setup.py print_config`. Got the following for dram2 and DRAM_data:
 ```
@@ -2501,7 +2542,10 @@ Function heatmap form: /Users/shafferm/lab/DRAM/data/function_heatmap_form.tsv
 AMG database: /Users/shafferm/lab/DRAM/data/amg_database.tsv
 ```
 
-13. (22Apr2021) Let the jobs continue running. dram and dram2 job failed because reached time limit. Re-run `dram2.slurm` with the following modified slurm script:
+13. (22Apr2021) Let the jobs continue running. dram and dram2 job failed because reached time limit. Re-run `dram2.slurm` with the following modified slurm script.
+
+<details><summary>dram2.slurm script</summary>
+
 ```
 #!/bin/bash
 #SBATCH --job-name=dram2                            # name of the job submitted
@@ -2524,6 +2568,7 @@ source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM-setup.py prepare_databases --output_dir DRAM_data2
 ```
 I increased the number of cores to 32 (32 cores * 16GB mem per core = 512 GB memory total... should be ok?). Job 5765159.
+</details>
 
 14. (23Apr2021) Ran `DRAM-setup.py print_config` in `/project/fsepru/kmou/conda_envs/dram2/` and got same message as yesterday. I asked Chris and showed him my slurm script of the latest job. It turns out I didn't request threads in `DRAM-setup.py` and need to request threads for slurm itself. Chris gave me the corrected slurm script (called it `dram3.slurm`. Ran job 5770291.
 
@@ -2554,6 +2599,9 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
 </details>
 
 15. (26Apr2021) Both dram2 and dram3 jobs finished. Ran `DRAM-setup.py print_config` in `/project/fsepru/kmou/conda_envs/dram2/DRAM_data2` and `/project/fsepru/kmou/conda_envs/DRAM_data3`
+
+<details><summary>dram2 and dram3 stdout details</summary>
+
 * DRAM_data2: Weird that it only lists dram3 files...
 
 ```
@@ -2659,8 +2707,8 @@ AMG database: /lustre/project/fsepru/kmou/conda_envs/DRAM_data3/amg_database.202
   2 days, 10:33:12.651200: Database locations set
   2 days, 10:33:27.046711: Database preparation completed
   ```
-
 I'll stick with DRAM_data3 to run annotation.
+</details>
 
 16. (26Apr2021) Ran annotation in `/project/fsepru/kmou/conda_envs/dram3.slurm`, job 5772721.
 
