@@ -524,7 +524,9 @@ export -f rename_contigs
   module load miniconda
   source activate /project/fsepru/conda_envs/gifrop2
 
-  pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1" --roary_args "-p 24 -e -n -z -v"
+  # without specifying any Ecoli gbk for prokka. See gifropEcoli.slurm on Ceres for this specific command
+  pan_pipe --prokka_args "--genus Escherichia --species coli --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+
   ```
 
 6. Download roary output.
@@ -611,7 +613,7 @@ export -f rename_contigs
   * summary_statistics.txt
   * _uninflated_mcl_groups
 
-## 5. Phylogenetic Tree Analysis with RAxML and FigTree
+## 4. Phylogenetic Tree Analysis with RAxML and FigTree
 * Summary: The raxml.slurm script, provided by Jules, runs raxml via slurm on Ceres. It will generate tree files using input file from roary.
 * Github RAxML: https://github.com/stamatak/standard-RAxML/blob/master/README
 * Github FigTree: https://github.com/rambaut/figtree
@@ -660,13 +662,12 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-## 7. Identify Metabolic Pathways with gapseq or DRAM
+## 5. Genome annotation with DRAM, pan-genome analysis with roary
 
 #### Files generated:
 
 
-
-
+## 6. Fisher Exact test
 
 
 

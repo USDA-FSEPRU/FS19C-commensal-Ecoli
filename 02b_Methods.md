@@ -2181,8 +2181,72 @@ prokka --genus Escherichia --species coli --cpus 1 --centre X --compliant --outd
 
 10. (26Apr2021) Created `EcoliAnnotation_gene_presence_absence.Rtab.csv` from `gene_presence_absence.Rtab` generated in `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/gifropWithEcoliAnnotation/pan`. Added a row called `type` that designates each sample as `commensal` or `STEC`. Column name for genes is labeled as `ID`.
 
-11. (26Apr2021) Run `EcoliAnnotation_gene_presence_absence.Rtab.csv` through `FisherExactTest.R`
+11. (26Apr2021) Run `EcoliAnnotation_gene_presence_absence.Rtab.csv` through `FisherExactTest.R`.
 
+12. (27Apri2021) Emailed Bradd about what the `PanGenomeEcoli.csv` file is from the line `genomes <- read.csv("PanGenomeEcoli.csv",header=FALSE,skip=2)` in `FisherExactTest.R`.
+
+13. (27Apr2021) Look for STEC genomes on NCBI (RefSeq)
+* Read https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/Escherichia_coli/README.txt and followed directions on how to grab assembled sequence data of STEC strains from NCBI.
+* Looked for latest assembly versions: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/Escherichia_coli/latest_assembly_versions/README.txt
+```
+all_assembly_versions & latest_assembly_versions are not listed for any species with more than 1,000 assemblies.
+Use the assembly_summary.txt file in the species directory to find assemblies of interest
+and then access the data using the ftp_path from column #20 of the file.
+```
+* Download `assembly_summary.txt` via `wget https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/Escherichia_coli/assembly_summary.txt`
+* Saved as `assembly_summary.xlsx`. Sheets include:
+  * `assembly_summary`: all assembly data
+  * `Complete Genome`: filtered from `assembly_summary` sheet, only includes complete genomes based on column L `assembly_level`.
+  * `O157H7`: filtered from `Complete Genome` sheet, only includes  `Escherichia coli O157:H7` based on column H `organism_name`.
+  * total of 133 STEC genomes
+
+14. (27Apr2021) Fetch 133 STEC genomes from NCBI
+* Tested wget with the first two and the files don't exist. Tried running slurm script to see what can be fetched - nothing was picked up. Asking Jules if he's encountered this or should I contact NCBI help desk.
+
+<details><summary>wget and stec.ftp.slurm script details</summary>
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/307/215/GCF_001307215.1_ASM130721v1
+--2021-04-27 15:48:41--  ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/307/215/GCF_001307215.1_ASM130721v1
+           => ‘GCF_001307215.1_ASM130721v1’
+Resolving ftp.ncbi.nlm.nih.gov (ftp.ncbi.nlm.nih.gov)... 165.112.9.229, 130.14.250.7, 2607:f220:41e:250::11, ...
+Connecting to ftp.ncbi.nlm.nih.gov (ftp.ncbi.nlm.nih.gov)|165.112.9.229|:21... connected.
+Logging in as anonymous ... Logged in!
+==> SYST ... done.    ==> PWD ... done.
+==> TYPE I ... done.  ==> CWD (1) /genomes/all/GCF/001/307/215 ... done.
+==> SIZE GCF_001307215.1_ASM130721v1 ... done.
+==> PASV ... done.    ==> RETR GCF_001307215.1_ASM130721v1 ...
+No such file ‘GCF_001307215.1_ASM130721v1’.
+```
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/558/995/GCF_001558995.2_ASM155899v2
+--2021-04-27 15:49:03--  ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/558/995/GCF_001558995.2_ASM155899v2
+           => ‘GCF_001558995.2_ASM155899v2’
+Resolving ftp.ncbi.nlm.nih.gov (ftp.ncbi.nlm.nih.gov)... 165.112.9.229, 130.14.250.7, 2607:f220:41e:250::11, ...
+Connecting to ftp.ncbi.nlm.nih.gov (ftp.ncbi.nlm.nih.gov)|165.112.9.229|:21... connected.
+Logging in as anonymous ... Logged in!
+==> SYST ... done.    ==> PWD ... done.
+==> TYPE I ... done.  ==> CWD (1) /genomes/all/GCF/001/558/995 ... done.
+==> SIZE GCF_001558995.2_ASM155899v2 ... done.
+==> PASV ... done.    ==> RETR GCF_001558995.2_ASM155899v2 ...
+No such file ‘GCF_001558995.2_ASM155899v2’.
+```
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=stec                             # name of the job submitted
+  #SBATCH -p short                                 # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 2                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --account fsepru
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
+
+  #Enter commands here:
+  wget -i stecftp.txt
+  ```
+</details>
 
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
