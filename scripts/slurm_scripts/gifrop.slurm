@@ -7,6 +7,8 @@
 #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
 #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
 #SBATCH --mem=32G   # memory
+#SBATCH --account fsepru
+#SBATCH --mail-type=ALL
 #SBATCH --mail-user=kathy.mou@usda.gov
 #Enter commands here:
 set -e
@@ -29,7 +31,7 @@ source activate /project/fsepru/conda_envs/gifrop
 #pan_pipe --prokka_args "--proteins Ecoli_K12_MG1655.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
 
 # specifying EDL933 gbk for prokka
-pan_pipe --prokka_args "--proteins *.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+# pan_pipe --prokka_args "--proteins *.gbk --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
 
 # without specifying any Ecoli gbk for prokka. See gifropEcoli.slurm on Ceres for this specific command
 pan_pipe --prokka_args "--genus Escherichia --species coli --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"

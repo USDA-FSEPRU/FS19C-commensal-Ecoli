@@ -2248,6 +2248,37 @@ No such file ‘GCF_001558995.2_ASM155899v2’.
   ```
 </details>
 
+15. (28Apr2021) Jules figured out I was fetching the directory and not any particular file. `wget` expects to fetch a file. He also pointed out that I can access the directory depending on what browser I used. He used chrome but couldn't access it. So he switched to Microsoft Edge and it worked. I used safari and got "can't open page". I assumed the link was broke, but when I tried chrome, I could access the directory. Found out I want the file that ends with `_genomic.fna.gz`. Edited `assembly_summary.xlsx` via creating columns `desired_file_from_directory` and `new_ftp_path` and combining columns to create new path. Copied new paths to `stecftp.txt` and uploaded to Ceres.
+
+16. (28Apr2021) Ran `stec.slurm` to copy `*genomic.fna.gz` from RefSeq to `/project/fsepru/kmou/FS19C/STECgenomes`. Unzip files via `gzip -d *genomic.fna.gz`.
+
+17. (28Apr2021) Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/`. I thought I wanted to sym link the `*pol.fna` files within `renamed_contigs` in `/project/fsepru/kmou/FS19C/STECgenomes` but then realized I wanted another copy of the `*pol.fna` in this directory. So I deleted the sym link with `rm -r 96commensalEcoli/`. Whoops. I should've done `rm 96commensalEcoli` or use `unlink 96commensalEcoli`. I did manage to save the `*_pol.fna` files from `rename_contigs/` (where the contig names were renamed to work with prokka in gifrop). I copied them over from `/project/fsepru/kmou/FS19C/STECgenomes` to `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/`. However, everything else is gone. The only things that I'm sad I lost were gifrop results (setting `--prokka_args "--genus Escherichia --species coli`) and the original `*_pol.fna` before I changed the contig names.
+
+18. Run `gifrop.slurm` on `*pol.fna` files in `/project/fsepru/kmou/FS19C/STECgenomes`. Job 5801953.
+
+<details><summary>gifrop.slurm script</summary>
+
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=Ecolipanpipe                           # name of the job submitted
+  #SBATCH -p short                                    # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 24                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 48:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --mem=32G   # memory
+  #SBATCH --account fsepru
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
+  #Enter commands here:
+  set -e
+  module load miniconda
+  source activate /project/fsepru/conda_envs/gifrop
+  pan_pipe --prokka_args "--genus Escherichia --species coli --cpus 1 --centre X --compliant" --roary_args "-p 24 -e -n -z -v" --gifrop_args "--threads 24"
+  ```
+</details>
+
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
@@ -2801,6 +2832,45 @@ source activate /project/fsepru/kmou/conda_envs/DRAM
 DRAM.py annotate -i '/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna' -o annotation --threads 20
 ```
 </details>
+
+17. (28Apr2021) Job cancelled (because I accidentally deleted `*pol.fna` files). Rerun `dram3.slurm` on `*pol.fna` files in `/project/fsepru/kmou/FS19C/STECgenomes`, with some changes to `dram3.slurm` script. Job 5801952.
+
+<details><summary>details of why *pol.fna files were deleted, from Section 13c, entry 28Apr2021</summary>
+
+Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/`. I thought I wanted to sym link the `*pol.fna` files within `renamed_contigs` in `/project/fsepru/kmou/FS19C/STECgenomes` but then realized I wanted another copy of the `*pol.fna` in this directory. So I deleted the sym link with `rm -r 96commensalEcoli/`. Whoops. I should've done `rm 96commensalEcoli` or use `unlink 96commensalEcoli`. I did manage to save the `*_pol.fna` files from `rename_contigs/` (where the contig names were renamed to work with prokka in gifrop). I copied them over from `/project/fsepru/kmou/FS19C/STECgenomes` to `/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/`. However, everything else is gone. The only things that I'm sad I lost were gifrop results (setting `--prokka_args "--genus Escherichia --species coli`) and the original `*_pol.fna` before I changed the contig names.
+</details>
+
+<details><summary>dram3.slurm script</summary>
+
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=dram3                            # name of the job submitted
+  #SBATCH -p mem                                    # name of the queue you are submitting to
+  #SBATCH -N 1
+  #SBATCH -n 2
+  #SBATCH --ntasks-per-core=32
+  #SBATCH --mem=550gb
+  #SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --account fsepru
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
+
+  #Enter commands here:
+  set -e
+  set -u
+  set +eu
+
+  module load miniconda
+  source activate /project/fsepru/kmou/conda_envs/DRAM
+  #DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
+  #DRAM-setup.py prepare_databases --output_dir DRAM_data --threads 16 --uniref_loc /path/to/uniref90.fasta.gz
+  DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/*.fna' -o annotation_v2 --threads 32
+  ```
+</details>
+
+
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
