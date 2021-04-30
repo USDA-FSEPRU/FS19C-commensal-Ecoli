@@ -2279,6 +2279,8 @@ No such file ‘GCF_001558995.2_ASM155899v2’.
   ```
 </details>
 
+19. (29Apr2021) Job completed. For the files I don't want transferred to local computer, I placed them in a directory `notransfer/`. For the rest of the files, I did `rsync -av --exclude notransfer -e ssh ceres:/project/fsepru/kmou/FS19C/STECgenomes/pan ./`
+
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
