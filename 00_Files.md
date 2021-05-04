@@ -152,7 +152,199 @@
 * fs19cfastanioutput2.out.tab
 * FS19CfastANIoutput2.xlsx
 
-### Genome Annotation, Pan-genome Analysis, Phylogenetic Tree, Genomic Island ID (prokka, roary, raxml, gifrop)
+### Polished fasta genomes
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
+                        |_gapseq/
+                        |_fs19cpolishedgenomes.tar.gz
+                        |_renamed_contigs/
+                          |_*pol.fna
+```
+
+### Pan-genome Metabolic analysis with gapseq
+**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/gapseq**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_polished_genomes_100X/
+                    |_polishedgenomesforprokka_95isolates6refgenomes/
+                       |_gapseq/
+```
+* *_pol-all-Pathways.tbl
+* *_pol-all-Reactions.tbl
+* *_pol.fna.gapseq.sh
+* stderr.*.gapseq
+* stdout.*.gapseq
+
+
+### Genome Annotation, Pan-genome Analysis, Genomic Island ID (prokka, roary,  gifrop)
+**(Ceres) /project/fsepru/kmou/FS19C/STECgenomes/**
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_FS19C/
+                |_STECgenomes/
+```
+* _pol/ or _genomic
+  * *_pol.fna
+  * *_pol.err
+  * *_pol.faa
+  * *_pol.ffn
+  * *_pol.fna
+  * *_pol.fsa
+  * *_pol.gbk
+  * *_pol.gff
+  * *_pol.log
+  * *_pol.sqn
+  * *_pol.tbl
+  * *_pol.tsv
+  * *_pol.txt
+  * proteins.*
+    * .faa
+    * .pdb
+    * .pot
+    * .ptf
+    * .pto
+* repeatstecgenomes/
+* gifrop.slurm
+* pan/
+```
+*_pol.gff
+accessory_binary_genes.fa
+accessory_binary_genes.fa.newick
+_accessory_clusters
+_accessory_clusters.clstr
+accessory_graph.dot
+accessory.header.embl
+accessory.tab
+blast_identity_frequency.Rtab
+_blast_results
+_clustered
+_clustered.clstr
+clustered_proteins
+_combined_files
+_combined_files.groups
+core_accessory_graph.dot
+core_accessory.header.embl
+core_accessory.tab
+core_alignment_header.embl
+core_gene_alignment.aln
+gene_presence_absence.csv
+gene_presence_absence.Rtab
+_inflated_mcl_groups
+_inflated_unsplit_mcl_groups
+_labeled_mcl_groups
+number_of_conserved_genes.Rtab
+number_of_genes_in_pan_genome.Rtab
+number_of_new_genes.Rtab
+number_of_unique_genes.Rtab
+pan_genome_reference.fa
+RAxML_bestTree.core_genome_tree_1
+RAxML_bipartitionsBranchLabels.core_genome_tree_1
+RAxML_bipartitions.core_genome_tree_1
+RAxML_bootstrap.core_genome_tree_1
+RAxML_info.core_genome_tree_1
+summary_statistics.txt
+_uninflated_mcl_groups
+```
+  * pan_genome_sequences/
+    * *.aln
+  * gifrop_out/
+    * clustered_island_info.csv
+    * figures/
+      * island_length_histogram.png
+      * islands_per_isolate_no_unknowns.png
+      * islands_per_isolate.png
+      * Number_of_occurances.png
+      * Number_of_occurances_secondary.png
+    * gifrop.log
+    * islands_pangenome_gff.csv
+    * my_islands/
+      * abricate/
+        * All_islands.megares2
+        * All_islands.ncbi
+        * All_islands.plasmidfinder
+        * All_islands.vfdb
+        * All_islands.viroseqs
+      * island_info.csv
+      * All_islands.fasta
+    * pan_only_islands.csv
+    * pan_with_island_info.csv
+    * sequence_data/
+      * *.fna
+      * *_short.gff
+* panpipe_logs/
+  * gifrop.log  
+  * prokka_logs.txt  
+  * roary.log
+* prokka_cmds.txt
+* stecftp.txt
+* stec.slurm
+
+### DRAM
+```
+|_project/
+    |_fsepru/
+        |_kmou/
+            |_conda_envs/
+                |_annotation/
+                |_annotation_v2/
+                |_DRAM/
+                |_dram2/
+                |_DRAM_data3/
+                |_DRAM_data_v1failed/
+                |_prokka_env/
+                |_dram3.slurm
+                |_DRAMv1failed.slurm
+                |_environment.yaml
+```
+
+
+## Files in Files directory
+* FS19C_metadata.xlsx
+* 1-H12-96-441FEC_S2_L002_R2_001_fastqc.html
+* 1-H12-96-441FEC_S2_L002_R1_001_fastqc.html
+* 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
+* 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
+* distances_thirdrun.tab
+* FS19_1-94_multiqc_report.html
+* FS19_outline_09.23.19.docx
+* FS19all_multiqc_report.html
+* FS19C 96 S-S+ E. coli gDNA gels.pdf
+* FS19C Samples 1-96 Final Data.xlsx
+* FS19C_metadata.xlsx
+* fs19cfastanioutput2.out.tab
+* FS19CfastANIoutput2.xlsx
+* gene_presence_absence.Rtab
+* Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
+* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
+* Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
+
+
+
+
+
+
+## Files I need to add in Files directory
+* querylist.txt (genome assembly)
+* referencelist.txt (genome assembly)
+* polished genomes as a tar file, place on Ceres fsepru directory somewhere easy to find
+* FS19C slurm progress.xlsx
+
+
+
+
+
+### OLD - Genome Annotation, Pan-genome Analysis, Phylogenetic Tree, Genomic Island ID (prokka, roary, raxml, gifrop)
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/**
 ```
 |_project/
@@ -262,7 +454,7 @@ _uninflated_mcl_groups
 * prokka_cmds.txt
 * prokka_gbk/
 
-### Pan-genome Analysis with PPanGGOLiN
+### OLD - Pan-genome Analysis with PPanGGOLiN
 **(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/prokka_gbk/**
 ```
 |_project/
@@ -303,63 +495,3 @@ _uninflated_mcl_groups
     exact_core.txt       S2.txt          S5.txt  soft_core.txt
     ```
   * Ushaped_plot.html
-
-
-### Pan-genome Metabolic analysis with gapseq
-**(Ceres) /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/gapseq**
-```
-|_project/
-    |_fsepru/
-        |_kmou/
-            |_FS19C/
-                |_polished_genomes_100X/
-                    |_polishedgenomesforprokka_95isolates6refgenomes/
-                       |_gapseq/
-```
-* *_pol-all-Pathways.tbl
-* *_pol-all-Reactions.tbl
-* *_pol.fna.gapseq.sh
-* stderr.*.gapseq
-* stdout.*.gapseq
-
-### DRAM
-```
-|_project/
-    |_fsepru/
-        |_kmou/
-            |_conda_envs/
-                |_DRAM/
-                |_dram2/
-```
-
-
-## Files in Files directory
-* FS19C_metadata.xlsx
-* 1-H12-96-441FEC_S2_L002_R2_001_fastqc.html
-* 1-H12-96-441FEC_S2_L002_R1_001_fastqc.html
-* 1-H11-95-440FED_S1_L002_R2_001_fastqc.html
-* 1-H11-95-440FED_S1_L002_R1_001_fastqc.html
-* distances_thirdrun.tab
-* FS19_1-94_multiqc_report.html
-* FS19_outline_09.23.19.docx
-* FS19all_multiqc_report.html
-* FS19C 96 S-S+ E. coli gDNA gels.pdf
-* FS19C Samples 1-96 Final Data.xlsx
-* FS19C_metadata.xlsx
-* fs19cfastanioutput2.out.tab
-* FS19CfastANIoutput2.xlsx
-* gene_presence_absence.Rtab
-* Hannah Sorbitol-positive isolates - MALDI, list for sequencing.xlsx
-* KathyMou_NovaSeq_Submission_Form_8June2020.xlsx
-* Sorbitol-negative isolates - agglutination, MALDI, list for sequencing.xlsx
-
-
-
-
-
-
-## Files I need to add in Files directory
-* querylist.txt (genome assembly)
-* referencelist.txt (genome assembly)
-* polished genomes as a tar file, place on Ceres fsepru directory somewhere easy to find
-* FS19C slurm progress.xlsx

@@ -2872,7 +2872,35 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
   ```
 </details>
 
+18. (3May2021) Job 5801952 failed because it exceeded time limit (96h). I will exclude the Ecoli STEC reference genomes from next job via move `Ecoli_TW14588.fna`, `Ecoli_NADC6564.fna`, `Ecoli_O157H7_EDL933.fna` to `project/fsepru/kmou/FS19C/STECgenomes/repeatstecgenomes/`. Submitted job 5817486.
+* I have 133 STEC genomes + 95 commensal E. coli + 3 commensal reference strains = 231 genomes
+* DRAM used 20 processors for 80 MAGS and completed in ~17h. I have 231 genomes. If I use 32 cores, with 16 GB per core = 512 GB memory. Set memory at 550GB.
 
+<details><summary>dram3.slurm script</summary>
+
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=dram3                            # name of the job submitted
+  #SBATCH -p mem                                    # name of the queue you are submitting to
+  #SBATCH -N 1
+  #SBATCH -n 32
+  #SBATCH --mem=550gb
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --account fsepru
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
+
+  #Enter commands here:
+  set -e
+  set -u
+  set +eu
+
+  module load miniconda
+  source activate /project/fsepru/kmou/conda_envs/DRAM
+  DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/*.fna' -o annotation_v3 --threads 32
+  ```
+</details>
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
