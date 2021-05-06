@@ -17,17 +17,26 @@ library(qvalue)
 # The vignette can be viewed by typing:
 # browseVignettes(package = "qvalue")
 
-
 # Read the row of MDR and SUSC labels from the CSV spreadsheet, to identify the range of columns for each label.
-lbltype <- read.csv("BraddHaley_SampleMatrix.csv",header=FALSE,skip=1,nrows=1)
-mdr <- lbltype[]=="MDR"
+lbltype <- read.csv("./Files/BraddHaley_SampleMatrix.csv",header=FALSE,skip=1,nrows=1) # header is false and becomes 1st row, skip 1st row, only print 2nd row (Rstatus)
+mdr <- lbltype[]=="MDR" #pull the MDR label
 mdr
-dim(mdr)
+dim(mdr) # 1 216
 mdr[1:101]  # Columns   2:100 (i.e.,  99) are MDR
-mdr[99:217] # Columns 101:217 (i.e., 117) are SUSC
+mdr[99:217] # Columns 101:216 (i.e., 116) are SUSC
+
+# Test [] for fun
+wholefile <- read.csv("./Files/BraddHaley_SampleMatrix.csv")
+wholefile2 <- read.csv("./Files/BraddHaley_SampleMatrix.csv", header=FALSE)
+wholefile[1,] #see Rstatus row
+suc <- lbltype[]=="Susc"  # pull the Susc label
+suc
+dim(suc) # 1 216
+suc[1:101]    # Columns 1:100 are MDR
+suc[101:217]  # Columns 101:216 are SUSC
 
 # Skip column headings and MDR/SUSC labels; read 1/0 presence/absence data values.
-genomes <- read.csv("SampleMatrix.csv",header=FALSE,skip=2)
+genomes <- read.csv("./Files/BraddHaley_SampleMatrix.csv",header=FALSE,skip=2) # header is false and becomes 1st row, skip first two rows
 
 # Assign genome names from the first column to be the rownames for the data object.
 rownames(genomes) <- genomes[,1]
@@ -36,6 +45,7 @@ rownames(genomes) <- genomes[,1]
 lst.exact2x2 <- c()
 
 # Loop over each genome to sum the present and absent counts for MDR and for SUSC
+# row = gene names
 for (i in 1:nrow(genomes))
 {
   # Count of MDR Samples
@@ -50,37 +60,50 @@ for (i in 1:nrow(genomes))
   # Count of Not SUSC Samples
   genomes[i,220] <- 116-genomes[i,219]
 
-  # Create a 2x2 matrix containing presence/absense counts to be used by exact2x2
+  # Create a 2x2 matrix containing presence/absence counts to be used by exact2x2
   xi <- matrix(c(genomes[i,217],genomes[i,218],genomes[i,219],genomes[i,220]),nrow=2,ncol=2)
 
   # Save exact test results for each genome into an element of the list.
-  lst.exact2x2[[i]] <- exact2x2(xi,tsmethod="central")
+  lst.exact2x2[[i]] <- exact2x2(xi,tsmethod="central") # Reference: https://cran.r-project.org/web/packages/exact2x2/exact2x2.pdf
+  # central includes confidence interval. Xi must be a 2x2 matrix with nonnegative integers
+  
 
   # Assign the Genome ID to an element of the list, for ID and labeling purposes.
-  lst.exact2x2[[i]]$genomeID <- as.character(genomes[i,1])
+  lst.exact2x2[[i]]$genomeID <- as.character(genomes[i,1]) # genomes[i,1] prints the first column (also rowname in this case)
+  
 }
+
+#For fun
+genomes[i,217] # 94 aka Count of MDR Samples
+sum(genomes[i,2:100]) # 94 aka Count of MDR Samples
+genomes[i,218] # 5 aka Count of Not MDR Samples
+99-genomes[i,217] # 5 aka Count of Not MDR Samples
+sum(genomes[i,101:216]) # 112 aka Count of SUSC Samples
+genomes[i,219] # 112 aka Count of SUSC Samples
+116-genomes[i,219] #4 aka Count of Not SUSC Samples
+genomes[i,220] #4 aka Count of Not SUSC Samples
 
 # Count Sums and proportions
 count.sums <- data.frame(genomes[,217],genomes[,218],genomes[,219],genomes[,220])
-colnames(count.sums) <- c("MDR.yes","MDR.no","SUSC.yes","SUSC.no")
+colnames(count.sums) <- c("MDR.yes","MDR.no","SUSC.yes","SUSC.no") # assign column names to columns 217, 218, 219, 220
 
-prop.mdr <- genomes[,217]/(genomes[,217]+genomes[,218])
-prop.susc <- genomes[,219]/(genomes[,219]+genomes[,220])
+prop.mdr <- genomes[,217]/(genomes[,217]+genomes[,218]) # proportion of MDR.yes / (MDR.yes + MDR.no)
+prop.susc <- genomes[,219]/(genomes[,219]+genomes[,220]) # proportion of SUSC.yes / (SUSC.yes + SUSC.no)
 
-count.sums <- data.frame(count.sums, prop.mdr, prop.susc)
+count.sums <- data.frame(count.sums, prop.mdr, prop.susc) # add prop.mdr and prop.susc with count.sums dataframe
 
 
 # Create a data frame from the content of the exact2x2 list.
-p.values <- sapply(lst.exact2x2, function(x){as.numeric(x[1])})
+p.values <- sapply(lst.exact2x2, function(x){as.numeric(x[1])}) # sapply applies a function over a matrix/vector
 
-orci <- sapply(lst.exact2x2, function(x){as.numeric(x[2][[1]])})
-str(orci)
-orlcl <- orci[1,]
-orucl <- orci[2,]
+orci <- sapply(lst.exact2x2, function(x){as.numeric(x[2][[1]])}) # what does this do? What is Inf?
+str(orci) # compactly display internal structure of R object
+orlcl <- orci[1,] # pull out row 1. Is this low confidence level?
+orucl <- orci[2,] # pull out row 2. Is this high confidence level?
 
-or <- sapply(lst.exact2x2, function(x){as.numeric(x[3])})
+or <- sapply(lst.exact2x2, function(x){as.numeric(x[3])}) # what does this do?
 
-gid <- sapply(lst.exact2x2, function(x){as.character(x[8])})
+gid <- sapply(lst.exact2x2, function(x){as.character(x[8])}) # what does this do?
 
 
 # "exact.results" contains all results from the exact2x2 Fisher's Exact tests, for each genome.
@@ -92,7 +115,7 @@ original.order <- seq(1:nrow(exact.results))
 
 
 # The following code conducts an FDR adjustment (i.e., calculates q-values) for each genome.
-q.obj <- qvalue(p=exact.results$p.values)
+q.obj <- qvalue(p=exact.results$p.values) # qvalue measures proportion of false positives when a test is called significant
 
 # The summary function indicates the number of genomes exhibiting significance based on each
 # of the 3 criteria:  p-value, q-value, local FDR;  where column heading indicates alpha level.
@@ -101,17 +124,17 @@ summary(q.obj)
 
 #plot(q.obj)
 
-q.obj$pi0
+q.obj$pi0 # 1
 
 qv <- q.obj$qvalues
 
 q.exact.results <- data.frame(original.order, exact.results, qv)
 
-sigq.order <- order(q.exact.results$qv)
+sigq.order <- order(q.exact.results$qv) # order returns a permutation which rearranges its first argument into ascending or descending order
 
 ord.q.exact.results <- q.exact.results[sigq.order,]
 
-ord.q.exact.results$sig.order <- seq(1:nrow(ord.q.exact.results))
+ord.q.exact.results$sig.order <- seq(1:nrow(ord.q.exact.results)) # order by qv values in ascending order
 
 # Write the results to a csv file.
 write.csv(ord.q.exact.results, "Genome 2x2 Exact Test q-values - Sorted from Most to Least Significant.csv")
