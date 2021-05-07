@@ -108,7 +108,7 @@ gid <- sapply(lst.exact2x2, function(x){as.character(x[8])}) # what does this do
 
 # "exact.results" contains all results from the exact2x2 Fisher's Exact tests, for each genome.
 # BUT, these p-values should be adjusted to protect against false significance caused by conducting
-# X individual tests, each with 5% probablity of false significance.
+# X individual tests, each with 5% probability of false significance.
 exact.results <- data.frame(gid, p.values, count.sums, or, orlcl, orucl)
 
 original.order <- seq(1:nrow(exact.results))
@@ -132,7 +132,7 @@ q.exact.results <- data.frame(original.order, exact.results, qv)
 
 sigq.order <- order(q.exact.results$qv) # order returns a permutation which rearranges its first argument into ascending or descending order
 
-ord.q.exact.results <- q.exact.results[sigq.order,]
+ord.q.exact.results <- q.exact.results[sigq.order,] # match by rows when combining sigq.order with q.exact.results. That's why pvalues don't match (not in the same order!)
 
 ord.q.exact.results$sig.order <- seq(1:nrow(ord.q.exact.results)) # order by qv values in ascending order
 
