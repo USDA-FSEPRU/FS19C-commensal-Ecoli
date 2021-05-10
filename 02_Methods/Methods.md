@@ -2902,6 +2902,8 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
   ```
 </details>
 
+19. (10May2021) Job cancelled because reached time limit. Need to create a file with all genome file names, and then search from the list which ones are present and not present in directory.
+
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
 * [SRA Quick Start Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submit/) and a more detailed [SRA Submission Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submitbio/)

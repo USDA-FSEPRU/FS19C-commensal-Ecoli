@@ -81,7 +81,7 @@ ggsave("FS19C_fastaniMDS.tiff", plot=plot_fast_mds, width = 9, height = 8, dpi =
 
 ############################################ Mash #########################################################
 ######## Import mash file, add ani_dist column, remove pvalue, matching_hashes columns ########
-mash_tab <- read_tsv('./Files/distances.tab', col_names = c("reference_id", "query_id", "ani_dist", "pvalue", "matching_hashes")) %>%
+mash_tab <- read_tsv('./Files/distances_thirdrun.tab', col_names = c("reference_id", "query_id", "ani_dist", "pvalue", "matching_hashes")) %>%
   select(-pvalue) %>%
   select(-matching_hashes)
 mash_tab2 <- mash_tab[mixedorder(as.character(mash_tab$reference_id)),] #I reordered reference_id to make samples list in numerical order versus
