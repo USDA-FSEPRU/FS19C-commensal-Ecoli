@@ -2902,7 +2902,71 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
   ```
 </details>
 
-19. (10May2021) Job cancelled because reached time limit. Need to create a file with all genome file names, and then search from the list which ones are present and not present in directory.
+19. (10May2021) Job cancelled because reached time limit. Annotated 213/231 genomes. Need to create a file with all genome file names, and then search from the list which ones are present and not present in directory (total of 18: 5 commensal E. coli and 13 STEC).
+
+20. (11May2021) Manually looked for the ones that are missing. Print lines from `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/FS19C/STEC_genomes` directories and saved as `genomes.txt` and `steccommensalgenomes.txt`, respectively. Compared and printed out missing lines using `comm -13 steccommensalgenomes.txt genomes.txt > needtorun2.txt`, but this didn't work because it also printed lines that were present in both. I did end up finding commensal E. coli files that are missing in `genomes.txt`. As for the STEC genomes, I did `sed '/.fna/d' steccommensalgenomes.txt > steccommensalgenomesnofna.txt` to remove `*.fna` from list. Then opened Excel, copied lines from `steccommensalgenomesnofna.txt` and `genomes.txt`, ran `=IF($A=$D, "Match", "")` to find which rows match and which didn't. Ended up with this list, saved as `secondlist.txt`:
+  ```
+  25-427FED_pol.fna
+  45-429RED_pol.fna
+  63-439REC_pol.fna
+  75-429FED_pol
+  77-430FED_pol
+  GCF_001651945.2_ASM165194v2_genomic
+  GCF_002208865.2_ASM220886v2_genomic
+  GCF_003722195.1_ASM372219v1_genomic
+  GCF_013167135.1_ASM1316713v1_genomic
+  GCF_013167335.1_ASM1316733v1_genomic
+  GCF_013167535.1_ASM1316753v1_genomic
+  GCF_013167615.1_ASM1316761v1_genomic
+  GCF_013167675.1_ASM1316767v1_genomic
+  GCF_017164775.1_ASM1716477v1_genomic
+  GCF_017164835.1_ASM1716483v1_genomic
+  GCF_017165135.1_ASM1716513v1_genomic
+  GCF_017165375.1_ASM1716537v1_genomic
+  GCF_017165455.1_ASM1716545v1_genomic
+  ```
+
+21. (11May2021) Upload `secondlist.txt` to Ceres. Run `rsync -a /project/fsepru/kmou/FS19C/STECgenomes --files-from=/project/fsepru/kmou/FS19C/STECgenomes/secondlist.txt /project/fsepru/kmou/FS19C/STECgenomes/seconddramannotation` to copy missing `*.fna` files to `seconddramannotation`.
+
+22. (11May2021) Run `dram3.slurm`. Job 5857976
+
+  <details><summary>dram3.slurm script</summary>
+
+    ```
+    #!/bin/bash
+    #SBATCH --job-name=dram3                            # name of the job submitted
+    #SBATCH -p mem                                    # name of the queue you are submitting to
+    #SBATCH -N 1
+    #SBATCH -n 32
+    #SBATCH --mem=550gb
+    #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+    #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+    #SBATCH --account fsepru
+    #SBATCH --mail-type=ALL
+    #SBATCH --mail-user=kathy.mou@usda.gov
+
+    #Enter commands here:
+    set -e
+    set -u
+    set +eu
+
+    module load miniconda
+    source activate /project/fsepru/kmou/conda_envs/DRAM
+    DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/seconddramannotation/*.fna' -o annotation_v4 --threads 32
+    ```
+  </details>
+
+24. (11May2021) Figured out how to rename `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir/30-440FEC_pol/genes.annotated.gff` to `<directoryName>.gff`. Source: https://unix.stackexchange.com/questions/183021/rename-file-by-its-folder-name. Practiced on example `test` directory with several subdirectories, each containing a `genes.annotated.gff` file (`touch genes.annotated.gff`).
+  ```
+  #!/bin/bash
+  for pathname in */genes.annotated.gff; do
+    cp "$pathname" "$( basename "$( dirname "$pathname" )" ).gff"
+  done
+  ```
+
+25. (11May2021) On Ceres, make `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`. Make above shell script in `gfftest` folder, save as `renamegff.sh` and test run script. It works!
+
+26. () On Ceres, copy over `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/conda_envs/annotation_v4/working_dir` to `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

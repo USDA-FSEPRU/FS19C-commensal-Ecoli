@@ -23,6 +23,8 @@ source activate /project/fsepru/conda_envs/gifrop
 
 # change "REFERENCE.GBK" to whatever the name of your desired reference genome is.
 
+# gifrop --get_islands
+
 # will annotate all with prokka in parallel (will do 24 genomes at a time, each with 1 thread)
 # run roary and generate a core genome alignment
 # run gifrop and extract classify and cluster genomic islands
