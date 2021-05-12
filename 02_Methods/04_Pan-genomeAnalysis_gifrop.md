@@ -1,11 +1,7 @@
 # 04_Pan-genome Analysis
 * Summary: Run gifrop to annotate genomes with Prokka and do pan-genome analysis with Roary.
 * Platform: Ceres
-
-## (1) Gifrop
-Summary: The `pan_pipe` script from gifrop can run prokka and roary automatically (ignore gifrop command). It will annotate all fasta genomes (`.fna` format) with prokka in parallel, run roary and generate a core genome alignment.
-* Github: https://github.com/Jtrachsel/gifrop
-* Platform: Ceres
+  * `/project/fsepru/kmou/FS19C/STECgenomes/`
 
 1. For fasta files, you'll need to rename suffix of `.fasta` files to `.fna`. Also need to modify contig IDs in fasta files for gifrop to work properly (able to call virulence genes, etc. from various databases). Jules showed me his `rename_contigs` script
 

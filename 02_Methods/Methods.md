@@ -2966,7 +2966,14 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
 
 25. (11May2021) On Ceres, make `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`. Make above shell script in `gfftest` folder, save as `renamegff.sh` and test run script. It works!
 
-26. () On Ceres, copy over `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/conda_envs/annotation_v4/working_dir` to `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`.
+26. (12May2021) Job finished. There were no `genes.annotated.gff` created in this run. Only `genes.gff`, `genes.fna`, etc.
+  * When I looked at the DRAM `genes.gff` files and compared to gff files from prokka, they were not the same. Prokka gff3 files have typical gff format and also the nucleotide sequence at the end of the file. DRAM gff files do not have the nucleotide sequence.
+  * I browsed the locus tag headers in `genes.gff` (DRAM) with `genes.fna` and they match. Maybe I can combine `genes.gff` with `genes.fna`? But first I need to break apart `genes.gff` and `genes.fna` for each strain. For some reason, this latest DRAM run combined all 18 strains into one file.
+  * I will also need to combine the `genes.annotated.gff` and `genes.annotated.fna` files for each strain. A lot of work.
+  * Apparently NCBI's gff3 files also only contain annotation and not the nucleotide sequence. There's a perl script to convert genbank file to gff3 (https://metacpan.org/pod/distribution/BioPerl/bin/bp_genbank2gff3): `bp_genbank2gff3.pl [options] filename(s)`. Do the gbk files made by DRAM look like NCBI ones??
+  * How to obtain `bp_genbank2gff3.pl` script: https://github.com/bioperl/bioperl-live/blob/master/bin/bp_genbank2gff3
+
+() On Ceres, copy over `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/conda_envs/annotation_v4/working_dir` to `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)
