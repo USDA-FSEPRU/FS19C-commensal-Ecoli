@@ -2281,6 +2281,21 @@ No such file ‘GCF_001558995.2_ASM155899v2’.
 
 19. (29Apr2021) Job completed. For the files I don't want transferred to local computer, I placed them in a directory `notransfer/`. For the rest of the files, I did `rsync -av --exclude notransfer -e ssh ceres:/project/fsepru/kmou/FS19C/STECgenomes/pan ./`
 
+20. (11May2021) Modified `gene_presence_absence.Rtab` similar to `https://github.com/k39ajdM2/Notebook/tree/main/Files/BraddHaley_SampleMatrix.csv` and save as `EcoliMatrix.csv`. Modifications include:
+  * Rename 1st column heading to `ID`.
+  * Add a second row `Rstatus` and label respective group name for each strain. Try to group strains of the same group together (helps make it easier to call specific columns for a group in R script)
+  * I realized I had two EDL933 listed in the matrix. Compared EDL933 I obtained from here (https://www.ncbi.nlm.nih.gov/nuccore/CP008957.1) vs one from RefSeq (https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1/) via compare presence absence of genes in excel, saved as `EDL933comparison.xlsx`. Of the genes that are absent, more are absent in my EDL933 than the RefSeq one, so I will remove my EDL933 from `EcoliMatrix.csv`.
+  * I have 133 STEC genomes + 95 commensal E. coli + 3 commensal reference strains + 2 STEC reference strains from my end (TW14588 and NADC6564) = 233 genomes
+    * `assembly_summary.xlsx` did have TW14588, but only the chromosome version was listed, not complete genome.
+
+2. (13May2021) Run `EcoliMatrix.csv` through `FisherExactTest-commensalSTEC.R`. You will need to modify the code to fit with number of columns and rows for each group and gene in `EcoliMatrix.csv`
+
+3. (13May2021) 5216 genes unique to commensal and not in STEC out of 12313 genes with q value < 1.0. And 8152 genes unique to commensal and not in STEC out of 23,052 total genes regardless of whether q = or < 1.0.
+
+4. (13May2021) Make a list of these genes that aren't present in STEC, pull out their fasta files from roary (`pan_genome_reference.fa` or `/project/fsepru/kmou/FS19C/STECgenomes/pan/notransfer/pan_genome_sequences`). Do a blast parallel? Wish there was a blast for GO terms
+
+5. Group by GO terms? Focus on the ones that we're interested in? http://geneontology.org/docs/faq/
+
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
 * BACTIBASE or Bagel4 for bacteriocin ID
@@ -2971,7 +2986,15 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
   * I browsed the locus tag headers in `genes.gff` (DRAM) with `genes.fna` and they match. Maybe I can combine `genes.gff` with `genes.fna`? But first I need to break apart `genes.gff` and `genes.fna` for each strain. For some reason, this latest DRAM run combined all 18 strains into one file.
   * I will also need to combine the `genes.annotated.gff` and `genes.annotated.fna` files for each strain. A lot of work.
   * Apparently NCBI's gff3 files also only contain annotation and not the nucleotide sequence. There's a perl script to convert genbank file to gff3 (https://metacpan.org/pod/distribution/BioPerl/bin/bp_genbank2gff3): `bp_genbank2gff3.pl [options] filename(s)`. Do the gbk files made by DRAM look like NCBI ones??
-  * How to obtain `bp_genbank2gff3.pl` script: https://github.com/bioperl/bioperl-live/blob/master/bin/bp_genbank2gff3
+    ```
+    perl bp_genbank2gff3.pl *gbk.gz
+    ```
+  * How to obtain `bp_genbank2gff3.pl` script: https://github.com/bioperl/bioperl-live/blob/master/bin/bp_genbank2gff3. Download function via:
+    ```
+    cpanm BioPerl           # OR
+    perl -MCPAN -e shell    # open CPAN shell
+    install BioPerl
+    ```
 
 () On Ceres, copy over `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/conda_envs/annotation_v4/working_dir` to `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`.
 

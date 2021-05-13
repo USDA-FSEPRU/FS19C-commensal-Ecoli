@@ -14,7 +14,7 @@
     * Saved as Ecoli_Nissle1917_GCF_000714595.1_ASM71459v1_genomic.gff.gz
   * E. coli O157:H7 str. NADC 6564 https://www.ncbi.nlm.nih.gov/assembly/GCF_001806285.1
     * Saved as Ecoli_O157H7_NADC_6564_GCF_001806285.1_ASM180628v1_genomic.gff.gz
-  * E. coli O157:H7 EDL933 https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
+  * (This is already available on RefSeq so will ignore this version) E. coli O157:H7 EDL933 https://www.ncbi.nlm.nih.gov/assembly/GCF_000732965.1
     * Saved as EcoliO157H7_EDL933_GCF_000732965.1_ASM73296v1_genomic.gff.gz
   * TW14588 https://www.ncbi.nlm.nih.gov/assembly/GCF_000155125.1/
     * Saved as Ecoli_TW14588_GCF_000155125.1_ASM15512v1_genomic.gff.gz
