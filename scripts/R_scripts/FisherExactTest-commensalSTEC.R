@@ -17,6 +17,9 @@ library(qvalue)
 # The vignette can be viewed by typing:
 # browseVignettes(package = "qvalue")
 
+# Read more about purrr function (much like sapply): https://jennybc.github.io/purrr-tutorial/
+
+
 # Read the row of com and stec labels from the CSV spreadsheet, to identify the range of columns for each label.
 lbltype <- read.csv("./Files/EcoliMatrix.csv",header=FALSE,skip=1,nrows=1) # header is false and becomes 1st row, skip 1st row, only print 2nd row (Rstatus)
 
@@ -88,22 +91,31 @@ count.sums <- data.frame(count.sums, prop.com, prop.stec) # add prop.com and pro
 # Create a data frame from the content of the exact2x2 list.
 p.values <- sapply(lst.exact2x2, function(x){as.numeric(x[1])}) # sapply applies a function over a matrix/vector
 
-orci <- sapply(lst.exact2x2, function(x){as.numeric(x[2][[1]])}) # what does this do? What is Inf?
-str(orci) # compactly display internal structure of R object
-orlcl <- orci[1,] # pull out row 1. Is this low confidence level?
-orucl <- orci[2,] # pull out row 2. Is this high confidence level?
+#Sapply applies a function to a list, here that function is as.numeric(x[1]) and apply it to the items in the lst.exact2x2 -  lst.exact2x2 is a list of lists I believe where each item in the list is the genome and each item is another list with the results for that genome. So sapply applies the function to each of the first elements of the sublist, which are the p-values associated with each genome. The function as.numeric(x[1]) is converting the format of the item to a number (I’m not sure what the format was originally). I believe the output is a new list of numbers
 
-or <- sapply(lst.exact2x2, function(x){as.numeric(x[3])}) # what does this do?
+
+orci <- sapply(lst.exact2x2, function(x){as.numeric(x[2][[1]])}) 
+# Similar to above, sapply is applying the function to every item in a list. Here I think it is actually three orders – a list of a list of a list. So its applying the function as.numeric on what I believe is the confidence interval. So, its converting it from another format to a number
+
+
+str(orci) # compactly display internal structure of R object
+orlcl <- orci[1,] # pull out row 1 aka lower confidence level
+orucl <- orci[2,] # pull out row 2 aka higher confidence level
+
+or <- sapply(lst.exact2x2, function(x){as.numeric(x[3])}) 
+# Converting the odds ratio (3rd item in the list) for each genome results into a number (as.numeric) and saving them in a list
+# Odds ratio: https://www.statisticshowto.com/probability-and-statistics/probability-main-index/odds-ratio/
 
 gid <- sapply(lst.exact2x2, function(x){as.character(x[8])}) # what does this do?
-
+# Similar to above but instead of applying the function as.numeric to each item, it is applying the function as.character to each item – converting from another format into a string. Here, it is applying the function the genome ID or 8th element in the list
 
 # "exact.results" contains all results from the exact2x2 Fisher's Exact tests, for each genome.
 # BUT, these p-values should be adjusted to protect against false significance caused by conducting
 # X individual tests, each with 5% probability of false significance.
 exact.results <- data.frame(gid, p.values, count.sums, or, orlcl, orucl)
 
-original.order <- seq(1:nrow(exact.results)) # what is the purpose of this?
+original.order <- seq(1:nrow(exact.results)) 
+# what is the purpose of this?  I am not too sure here, but I think it is saving the order of the exact.results dataframe and using it to reorder subsequent results in the same order
 
 
 # The following code conducts an FDR adjustment (i.e., calculates q-values) for each genome.
