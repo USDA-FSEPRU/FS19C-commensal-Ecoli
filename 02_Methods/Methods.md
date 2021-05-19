@@ -2292,7 +2292,10 @@ No such file ‘GCF_001558995.2_ASM155899v2’.
 
 3. (13May2021) 5216 genes unique to commensal and not in STEC out of 12313 genes with q value < 1.0. And 8152 genes unique to commensal and not in STEC out of 23,052 total genes regardless of whether q = or < 1.0.
 
-4. (13May2021) Make a list of these genes that aren't present in STEC, pull out their fasta files from roary (`pan_genome_reference.fa` or `/project/fsepru/kmou/FS19C/STECgenomes/pan/notransfer/pan_genome_sequences`). Do a blast parallel? Wish there was a blast for GO terms
+4. (18May2021) Make a list of these genes that have q < 0.05, pull out their fasta files from roary (`pan_genome_reference.fa` or `/project/fsepru/kmou/FS19C/STECgenomes/pan/notransfer/pan_genome_sequences`). Run GO term enrichment: Interproscan (on Ceres) and then TopGo in R.
+  * Interproscan: https://github.com/ebi-pf-team/interproscan, https://interproscan-docs.readthedocs.io
+  * TopGo: https://bioconductor.org/packages/release/bioc/html/topGO.html
+    * Alexa A., Rahnenf\"uhrer J., Lengauer T., Improved scoring of functional groups from gene expression data by decorrelating GO graph structure, Bioinformatics 22(13): 1600-1607, 2006
 
 5. Group by GO terms? Focus on the ones that we're interested in? http://geneontology.org/docs/faq/
 
@@ -2995,6 +2998,8 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
     perl -MCPAN -e shell    # open CPAN shell
     install BioPerl
     ```
+
+26. Focus on STEC and finding what metabolic pathways are present. Read more details on DRAM github.
 
 () On Ceres, copy over `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/conda_envs/annotation_v4/working_dir` to `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`.
 
