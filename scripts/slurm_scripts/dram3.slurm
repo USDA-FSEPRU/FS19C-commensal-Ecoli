@@ -26,4 +26,7 @@ source activate /project/fsepru/kmou/conda_envs/DRAM
 
 #DRAM.py annotate -i /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna -o annotation --threads 20
 #DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/*.fna' -o annotation_v2 --threads 32
-DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/seconddramannotation/*.fna' -o annotation_v4 --threads 32
+#DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/seconddramannotation/*.fna' -o annotation_v4 --threads 32
+
+## DRAM distill for annotation_v4
+DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv

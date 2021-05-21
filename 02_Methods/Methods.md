@@ -2294,10 +2294,70 @@ No such file ‘GCF_001558995.2_ASM155899v2’.
 
 4. (18May2021) Make a list of these genes that have q < 0.05, pull out their fasta files from roary (`pan_genome_reference.fa` or `/project/fsepru/kmou/FS19C/STECgenomes/pan/notransfer/pan_genome_sequences`). Run GO term enrichment: Interproscan (on Ceres) and then TopGo in R.
   * Interproscan: https://github.com/ebi-pf-team/interproscan, https://interproscan-docs.readthedocs.io
+    * `module load interproscan`
+    * `interproscan.sh`
+      ```
+      Welcome to InterProScan-5.44-79.0
+      Running InterProScan v5 in STANDALONE mode... on Linux
+      ```
   * TopGo: https://bioconductor.org/packages/release/bioc/html/topGO.html
     * Alexa A., Rahnenf\"uhrer J., Lengauer T., Improved scoring of functional groups from gene expression data by decorrelating GO graph structure, Bioinformatics 22(13): 1600-1607, 2006
+    * TopGO may not be necessary for this application
 
-5. Group by GO terms? Focus on the ones that we're interested in? http://geneontology.org/docs/faq/
+5. (19May2021) Emailed Crystal, Chris, and Jules of my approach:
+```
+I’ve narrowed the list of genes to those with q < 0.05, which is 7059.
+I’ll next pull out the names of these genes (technically clusters) and their fasta files, and run through interproscan and topGO as Jules suggested.
+Can I get away with just interproscan? Or is it recommended to run topGO too because…?
+Next, I can find which genes fall under the pathways of interest, and focus on the commensals that share those pathways with STEC.
+Optional next steps after – find other genes unique to most or all the commensals that could give a competitive advantage against STEC, help narrow group of commensals even more.
+```
+
+6. (19May2021) Jules' response:
+```
+Perhaps a better approach would be to identify core metabolic pathways/functions of just the STEC genomes (core sugar utilization abilities, etc) and then ask, which commensals also have these functions?
+
+We can get at predicted metabolic consequences of gene presence by annotating the “pan_genome_reference.fa” file produced by roary, with a tool such as interproscan, this can give you all kinds of functional annotations of your genes (GO terms, reactome pathways, etc)
+
+I don’t know if the topGO analysis will be of much use for you as it is just useful for identifying GOterms that are enriched in one group or the other. Again, there’s a little more nuance to the things we are interested in, because we want to know which commensals carry functions or have metabolisms which have good overlap with STEC genomes functional capabilities.
+```
+
+7. (20May2021) Found `interproscan.SLURM` under `/project/fsepru/shared_resources/GO_enrichment_example/`
+
+8. (20May2021) Interproscan documentation (https://interproscan-docs.readthedocs.io/en/latest/ImprovingPerformance.html) recommended considering chunking large input files. I have gene clusters, so I think I'm ok to run with `pan_genome_reference.fa` as is.
+  ```
+  If your FASTA input files contains a large number of sequences say over 160, 0000 protein sequences, then you may consider splitting your input into smaller chunks (depends on resources, but batches of 80,000 protein sequences is a suggested starting point). You can then submit the smaller input files to InterProScan and process the results afterwards.
+
+  For DNA/RNA sequences a much smaller number is suggested (e.g. 12,000 sequences). However for improved performance you could translate these using an external tool and then submit the necessary protein sequences instead, see running nucleic acid sequences for more information.
+  ```
+  * I can test run pan_genome_reference.fa as is but if it's taking too long, consider splitting file. Find where to split file into two. `23,052 / 2 = 11526` aka at the 11526th occurrence.
+  ```
+  grep -m11526 ">" pan_genome_reference.fa | tail -n1
+  >EIOHKFLG_02544 group_14374
+  ```
+
+9. (20May2021) Customized `interproscan.SLURM`. Submitted job 5866474.
+
+  <details><summary>interproscan.slurm script</summary>
+  #!/bin/bash
+
+  #SBATCH --job-name="interproscan"                    # name of the job submitted
+  #SBATCH -p short                                          # name of the queue you are submitting to
+  #SBATCH -n 32
+  #SBATCH -N 1
+  #SBATCH --mem=60G                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH -t 40:00:00                                    # time allocated for this job hours:mins:seconds
+  #SBATCH --mail-user=kathy.mou@usda.gov             # will receive an email when job starts, ends or fails
+  #SBATCH --mail-type=ALL                      # will receive an email when job starts, ends or fails
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --account fsepru
+
+  module load interproscan
+
+  interproscan.sh -b stec-interproscan -iprlookup --goterms --pathways -i pan_genome_reference.fa -cpu 32
+  </details>
+
 
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
@@ -2999,9 +3059,22 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
     install BioPerl
     ```
 
-26. Focus on STEC and finding what metabolic pathways are present. Read more details on DRAM github.
+26. (20May2021) Focus on STEC and finding what metabolic pathways are present. Run DRAM distill with this command on `annotation_v4`. Submitted job 5866514. It finished in less than 5 min.
+```
+DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv
+```
 
-() On Ceres, copy over `/project/fsepru/kmou/conda_envs/annotation_v3/working_dir` and `/project/fsepru/kmou/conda_envs/annotation_v4/working_dir` to `/project/fsepru/kmou/FS19C/STECgenomes/gfftest`.
+27. Downloaded `genome_summaries_annotation_v4`. Description of each output (https://github.com/shafferm/DRAM/wiki/4a.-Interpreting-the-Results-of-DRAM):
+  * `product.html`: neat heatmap of major metabolic functions that each genome is capable of. Also shows completion of various pathways representing common, relevant metabolism
+  * `genome_stats.tsv`: stats of # scaffolds, 5S rRNA, 16S rRNA, 23S rRNA, tRNA count
+  * `metabolism_summary.xlsx`: has various tabs. Gives count of genes with that annotation in each genome analyzed. `gene_id and gene_description columns give the finest level of detail about the function present. The next column is the module that this gene is a part of, followed by the header and optional subheader.`
+  * `product.tsv`: same information as `product.html` but in tsv format
+
+99. To do
+* () for `annotation_v3`, combine the `annotations.tsv` for STECs and one for commensals? One tsv is ~1.3Mb. If combine all STEC and commensal, 1.3 * 215 = 279.5Mb ... Might be a bit too big. `annotations.tsv` of `annotation_v4` is 27Mb and that has 18 strains.
+Something like R `rbind` function? This might require some kind of loop with a function like rbind.
+* () Ask for ideas of how to combine `annotations.tsv` from 215 separate directories? Tsv first row header (in R - don't read header?).
+The `annotations.tsv` file have about 5400 lines. 5400 * 215 = 1.2 million rows.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

@@ -663,6 +663,10 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 * RAxML_info.core_genome_tree_1
 
 ## 5. Genome annotation with DRAM, pan-genome analysis with roary
+1. Taken from: https://github.com/shafferm/DRAM/wiki/4a.-Interpreting-the-Results-of-DRAM
+  ```
+  It is critical to remember that absence of evidence is not evidence of absence. If a function is absent that may be because that gene  was not part of the assembly of the genome or it is a gene that is difficult to annotate accurately.
+  ```
 
 #### Files generated:
 
