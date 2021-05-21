@@ -2336,7 +2336,7 @@ I don’t know if the topGO analysis will be of much use for you as it is just u
   >EIOHKFLG_02544 group_14374
   ```
 
-9. (20May2021) Customized `interproscan.SLURM`. Submitted job 5866474.
+9. (20May2021) Customized `interproscan.SLURM`. Submitted job 5866474. Completed overnight for 11h43min.
 
   <details><summary>interproscan.slurm script</summary>
   #!/bin/bash
@@ -2358,6 +2358,60 @@ I don’t know if the topGO analysis will be of much use for you as it is just u
   interproscan.sh -b stec-interproscan -iprlookup --goterms --pathways -i pan_genome_reference.fa -cpu 32
   </details>
 
+  <details><summary>interproscan stdout details</summary>
+  ```
+  Running the following analyses:
+  [CDD-3.17,Coils-2.2.1,Gene3D-4.2.0,Hamap-2020_01,MobiDBLite-2.0,Pfam-32.0,PIRSF-3.10,PRINTS-42.0,ProSitePatterns-2019_11,ProSiteProfiles-2019_11,SFLD-4,SMART-7.1,SUPERFAMILY-1.75,TIGRFAM-15.0]
+  Available matches will be retrieved from the pre-calculated match lookup service.
+
+  Matches for any sequences that are not represented in the lookup service will be calculated locally.
+  20/05/2021 17:10:18:465 Uploaded 20459 unique sequences for analysis
+  WARN : uk.ac.ebi.interpro.scan.business.sequence.BerkeleyPrecalculatedProteinLookup -
+
+  The version of InterProScan you are using is 5.44-79.0
+  ```
+  </details>
+
+* Output included:
+  * stec-interproscan.gff3
+  * stec-interproscan.json
+  * stec-interproscan.tsv
+  * stec-interproscan.xml
+
+10. (21May2021) Examine `stec-interproscan.tsv`. Save as `stec-interproscan.xlsx`
+  * 1714 proteins listed
+  * copied list of interproscan annotation description column and made text file `stec-interproscanlistofannotationdescriptions.txt`
+  * `sort -u stec-interproscanlistofannotationdescriptions.txt > stec-interproscansummarylistofannotationdescriptions.txt`
+  * only found these genes (below). Something isn't right...
+  ```
+  2Fe-2S ferredoxin, iron-sulphur binding site
+  4Fe-4S ferredoxin, iron-sulphur binding, conserved site
+  4Fe-4S ferredoxin-type, iron-sulphur binding domain
+  Agouti domain
+  Alpha-defensin
+  Anaphylatoxin/fibulin
+  Antifreeze protein, type I
+  Chitin-binding, type 1
+  Conotoxin-I, conserved site
+  Cystine knot, C-terminal
+  Disintegrin domain
+  EGF-like, conserved site
+  Expansin/pollen allergen, DPBB domain
+  Hydrophobin, conserved site
+  Insulin-like growth factor binding protein, N-terminal, Cys-rich conserved site
+  Insulin-like growth factor-binding protein, IGFBP
+  Integrin beta subunit
+  Janus-atracotoxin
+  Metallothionein, family 4, echinoidea
+  Metallothionein, mollusc
+  Metallothionein, vertebrate
+  Peptidase S1A, streptogrisin
+  Post-SET domain
+  Thaumatin family
+  Thiolase, active site
+  ```
+
+11. (21May2021) Realized from this github issue post, I need to translate the fasta file to AA sequence, and then run through interproscan: https://github.com/sanger-pathogens/Roary/issues/254
 
 ## 14. Screen for bacteriocins, microcins
 * What are the genes for bacteriocins, microcins?
