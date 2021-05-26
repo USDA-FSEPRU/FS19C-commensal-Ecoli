@@ -671,8 +671,6 @@ raxmlHPC-PTHREADS-AVX -m GTRGAMMA -f a -n core_genome_tree_1 -s core_gene_alignm
 #### Files generated:
 
 
-## 6. Fisher Exact test
-
 
 
 

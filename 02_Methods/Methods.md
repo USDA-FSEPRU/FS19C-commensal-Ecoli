@@ -3113,16 +3113,28 @@ Accidentally deleted all contents of directory `/project/fsepru/kmou/FS19C/polis
     install BioPerl
     ```
 
-26. (20May2021) Focus on STEC and finding what metabolic pathways are present. Run DRAM distill with this command on `annotation_v4`. Submitted job 5866514. It finished in less than 5 min.
+26. (20May2021) Focus on STEC and finding what metabolic pathways are present. Run DRAM distill with this command on `annotation_v4` (same slurm script parameters for everything else on `dram3.slurm`). Submitted job 5866514. It finished in less than 5 min.
 ```
 DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv
 ```
 
-27. Downloaded `genome_summaries_annotation_v4`. Description of each output (https://github.com/shafferm/DRAM/wiki/4a.-Interpreting-the-Results-of-DRAM):
+27. (20May2021) Downloaded `genome_summaries_annotation_v4`. Description of each output (https://github.com/shafferm/DRAM/wiki/4a.-Interpreting-the-Results-of-DRAM):
   * `product.html`: neat heatmap of major metabolic functions that each genome is capable of. Also shows completion of various pathways representing common, relevant metabolism
   * `genome_stats.tsv`: stats of # scaffolds, 5S rRNA, 16S rRNA, 23S rRNA, tRNA count
   * `metabolism_summary.xlsx`: has various tabs. Gives count of genes with that annotation in each genome analyzed. `gene_id and gene_description columns give the finest level of detail about the function present. The next column is the module that this gene is a part of, followed by the header and optional subheader.`
   * `product.tsv`: same information as `product.html` but in tsv format
+
+28. (25May2021) Try running `DRAM.py annotate` on roary output `pan_genome_reference.fa` (same slurm script parameters for everything else on `dram3.slurm`). Submitted job 5873770. Job completed.
+```
+DRAM.py annotate -i '/project/fsepru/kmou/conda_envs/pan_genome_reference.fa' -o annotation_v5 --threads 32
+```
+
+29. (25May2021) Run `DRAM.py distill`. Did not produce `trnas.tsv` or `rrnas.tsv`. Submitted job 5874113. Job completed in less than 15 seconds.
+```
+DRAM.py distill -i annotation_v5/annotations.tsv -o genome_summaries_annotation_v5
+```
+
+30. (25May2021) Downloaded `genome_summaries_annotation_v5`. However, the output was a bit strange... very skim (`product.html` and `metabolism_summary.xlsx`). WHy?
 
 99. To do
 * () for `annotation_v3`, combine the `annotations.tsv` for STECs and one for commensals? One tsv is ~1.3Mb. If combine all STEC and commensal, 1.3 * 215 = 279.5Mb ... Might be a bit too big. `annotations.tsv` of `annotation_v4` is 27Mb and that has 18 strains.
