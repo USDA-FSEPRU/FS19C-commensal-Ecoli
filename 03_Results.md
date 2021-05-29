@@ -62,10 +62,7 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
 * qc_mds.R
 
 ### gifrop
-1. Identify E. coli isolates with no stx genes (my original list had only found 14 isolates, but after careful browsing of `gene_presence_absence.csv`, I discovered there were more than 14 that were stx-)
-* 36 stx-negative isolates: 1-15, 26, 27, 30, 31, 55-62, 69, 72, 73, 79, 84, 86, 87, 95, 96
-2. Further narrow down the list of isolates that are negative for LEE and hemolysin genes: only found isolate 79 and Ecoli_Nissle1917 (control).
-3. Next step?
+1.
 
 ##### Files generated:
 * **_pol/ or Ecoli_*/
@@ -148,22 +145,9 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
   * summary_statistics.txt
   * _uninflated_mcl_groups
 
-### PPanGGOLiN
-##### Files generated:
-* gene_presence_absence.Rtab       
-* organisms_statistics.tsv  
-* pangenomeGraph_light.gexf  
-* projection/
-* matrix.csv                       
-* pangenomeGraph.gexf       
-* pangenome.h5               
-* tile_plot.html
-* mean_persistent_duplication.tsv  
-* pangenomeGraph.json       
-* partitions/
-* Ushaped_plot.html
-
 ### RAxML
+1. Figure of tree!
+
 ##### Files generated:
 * RAxML_bestTree.core_genome_tree_1
 * RAxML_bipartitionsBranchLabels.core_genome_tree_1
@@ -171,5 +155,5 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
 * RAxML_bootstrap.core_genome_tree_1
 * RAxML_info.core_genome_tree_1
 
-### gapseq
+### DRAM
 ##### Files generated:

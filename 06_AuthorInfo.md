@@ -17,15 +17,14 @@ Mou KT<sup>1,2</sup>, Trachsel J<sup>2</sup>, Sharma VK<sup>2</sup>, Kudva IT<su
 | Author | Contributions |
 | -- | -- |
 | Mou, KT | Data Curation, Formal Analysis, Investigation, Software, Validation, Visualization |
-| Trachsel, J | Data Curation, Software, Resources |
-| Sharma, VK | Conceptualization, Funding Acquisition, Investigation |
-| Kudva, IT | Conceptualization, Funding Acquisition, Investigation |
-| Alt, D | Resources |
-| Loving, CL | Conceptualization, Funding Acquisition, Investigation, Supervision |
+| Trachsel, J | Data Curation, Formal Analysis, Software, Resources, Investigation, Methodology |
+| Sharma, VK | Conceptualization, Funding Acquisition, Investigation, Project Administration, Resources |
+| Kudva, IT | Conceptualization, Funding Acquisition, Investigation, Project Administration, Resources |
+| Loving, CL | Conceptualization, Formal Analysis, Funding Acquisition, Investigation, Project Administration, Resources, Supervision |
 
 
 ## Acknowledgements
-Bradd Haley and Jo Ann Van Kessel for pipeline ideas
+Bradd Haley and Jo Ann Van Kessel for pipeline ideas, Chris Anderson for helpful discussions, David Alt for sequencing the samples, Hannah Watkins and Daniel Nielsen for assistance in collecting commensal isolates
 
 ## Journal target
 

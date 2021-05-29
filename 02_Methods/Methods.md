@@ -3134,11 +3134,11 @@ DRAM.py annotate -i '/project/fsepru/kmou/conda_envs/pan_genome_reference.fa' -o
 DRAM.py distill -i annotation_v5/annotations.tsv -o genome_summaries_annotation_v5
 ```
 
-30. (25May2021) Downloaded `genome_summaries_annotation_v5`. However, the output was a bit strange... very skim (`product.html` and `metabolism_summary.xlsx`). WHy?
+30. (25May2021) Downloaded `genome_summaries_annotation_v5`. However, the output was a bit strange... very skim (`product.html` and `metabolism_summary.xlsx`). Why?
 
 99. To do
 * () for `annotation_v3`, combine the `annotations.tsv` for STECs and one for commensals? One tsv is ~1.3Mb. If combine all STEC and commensal, 1.3 * 215 = 279.5Mb ... Might be a bit too big. `annotations.tsv` of `annotation_v4` is 27Mb and that has 18 strains.
-Something like R `rbind` function? This might require some kind of loop with a function like rbind.
+* Run for loop: for each folder in directory, find `annotations.tsv`, rename to directory name, and pipe contents to a file. Separate STEC from commensal E. coli, run distill on STEC `annotations.tsv` , then on commensals?
 * () Ask for ideas of how to combine `annotations.tsv` from 215 separate directories? Tsv first row header (in R - don't read header?).
 The `annotations.tsv` file have about 5400 lines. 5400 * 215 = 1.2 million rows.
 
