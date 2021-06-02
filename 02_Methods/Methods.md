@@ -1420,6 +1420,41 @@ Submitted batch job 5589844
 
 17. (24Feb2021) Job ran successfully. Downloaded files and examined `tile_plot.html`. It looked slightly different from previously ran ppangolin, but not too different.
 
+18. (2Jun2021) Go to `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/`, make directory `gbkforppanggolin_prokka` Copy gbk files from prokka annotation to `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka` via:
+`cp **/*.gbk gbkforppanggolin_prokka/`
+
+19. (2Jun2021) Remove Ecoli_TW14588.gbk, Ecoli_NADC6564.gbk, Ecoli_O157H7_EDL933.gbk from directory.
+
+20. (2Jun2021) Create text file listing all filenames and their paths in `gbkforppanggolin_prokka/` directory and downloaded text file `Ecoligbkpath.txt`.
+```
+ls -d -1 "$PWD/"*.gbk > Ecoligbkpath.txt
+```
+
+11. (2Jun2021) Opened `Ecoligbkpath.txt` in Excel. Goal is to have 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Deleted the path name `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka/`, `_pol.gbk`, `.gbk` in first column. Saved txt. Uploaded to Ceres.
+
+12. (2Jun2021) Ran `ppanggolin.slurm` on Ceres as a slurm job 5885558.
+
+13. (2Jun2021) Downloaded output and viewed `tile_plot.html`. It showed several large sets of gene families missing in most commensals that are present in STEC.
+
+14. (2Jun2021) Opened `gene_presence_absence.Rtab` in R to find what the gene family names look like. Something like `32-436REC_CDS_2554`. Not descriptive.
+```
+mydata <- read.delim("gene_presence_absence.Rtab", header= TRUE, sep = "\t", check.names = FALSE)
+```
+
+15. (2Jun2021) Reading through https://github.com/labgem/PPanGGOLiN/wiki/Outputs#summarize-spots, found a section that describes how to get gene family and every single gene of pangenome.
+```
+ppanggolin write -p pangenome.h5 --families_tsv --output gene_families
+```
+
+16. (2Jun2021) Changed to `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka/ppanggolin_output_DATE2021-06-02_HOUR11.29.13_PID147821` directory on Ceres. Modified slurm script `ppanggolin.slurm` to include above command and ran slurm job for 5885662.
+
+17. (2June2021) Downloaded `gene_families.tsv` which shows all the genes (non-descriptive) (second column) in each gene family (first column). Will still have to blast what each of these gene family sequences are. Can obtain fasta file for entire pangenome of genes, gene families, or protein families:
+```
+ppanggolin fasta -p pangenome.h5 --output MY_GENES --genes all
+ppanggolin fasta -p pangenome.h5 --output MY_GENES --gene_families all
+ppanggolin fasta -p pangenome.h5 --output MY_PROT --prot_families all
+```
+
 #### Files generated:
 * gene_presence_absence.Rtab       
 * organisms_statistics.tsv  
@@ -3134,12 +3169,11 @@ DRAM.py annotate -i '/project/fsepru/kmou/conda_envs/pan_genome_reference.fa' -o
 DRAM.py distill -i annotation_v5/annotations.tsv -o genome_summaries_annotation_v5
 ```
 
-30. (25May2021) Downloaded `genome_summaries_annotation_v5`. However, the output was a bit strange... very skim (`product.html` and `metabolism_summary.xlsx`). Why?
+30. (25May2021) Downloaded `genome_summaries_annotation_v5`. However, the output was a bit strange... very skim (`product.html` and `metabolism_summary.xlsx`). Perhaps the `pan_genome_reference.fa` should be converted to AA sequence?
 
 99. To do
 * () for `annotation_v3`, combine the `annotations.tsv` for STECs and one for commensals? One tsv is ~1.3Mb. If combine all STEC and commensal, 1.3 * 215 = 279.5Mb ... Might be a bit too big. `annotations.tsv` of `annotation_v4` is 27Mb and that has 18 strains.
-* Run for loop: for each folder in directory, find `annotations.tsv`, rename to directory name, and pipe contents to a file. Separate STEC from commensal E. coli, run distill on STEC `annotations.tsv` , then on commensals?
-* () Ask for ideas of how to combine `annotations.tsv` from 215 separate directories? Tsv first row header (in R - don't read header?).
+* Run for loop: for each folder in directory, find `annotations.tsv`, rename to directory name, and pipe contents to a new master `annotations.tsv` file. Run distill on that?
 The `annotations.tsv` file have about 5400 lines. 5400 * 215 = 1.2 million rows.
 
 ## WGS submission to SRA

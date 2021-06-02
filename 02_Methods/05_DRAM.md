@@ -1,7 +1,7 @@
-# 08_DRAM
+# 05_DRAM
 * Summary: Identify sugar utilization pathways in STECs that are also present in commensal E. coli to identify candidate commensal E. colis for further study.
 * Platform: Ceres, conda
-  * `/project/fsepru/kmou/FS19C/STECgenomes/`
+  * `/project/fsepru/kmou/FS19C/conda_envs_dram_analysis/` and `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/`
 
 1. Install DRAM via miniconda: https://github.com/shafferm/DRAM/wiki/2.-How-to-Install-and-Set-Up-DRAM in:
 ```
@@ -93,5 +93,11 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
   module load miniconda
   source activate /project/fsepru/kmou/conda_envs_dram_analysis/DRAM
   DRAM.py annotate -i '/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/*.fna' -o annotation_v3 --threads 32
+  DRAM.py annotate -i '/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/seconddramannotation/*.fna' -o annotation_v4 --threads 32
   ```
 </details>
+
+8. Run `DRAM.py distill` on E. coli `annotations.tsv` file. Did this for `annotation_v4` and got results. How to do so for `annotation_v3` files because each isolate has its own `annotations.tsv` versus all 213 isolates having their annotations combined into one `annotations.tsv` file.
+  ```
+  DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv
+  ```

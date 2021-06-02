@@ -9,6 +9,7 @@
 #SBATCH --mem=32G   # memory
 #SBATCH --account fsepru
 #SBATCH --mail-user=kathy.mou@usda.gov
+#SBATCH --mail-type=ALL
 #Enter commands here:
 set -e
 set -u
@@ -16,5 +17,6 @@ set +eu
 module load miniconda
 source activate /project/fsepru/conda_envs/ppanggolin
 ppanggolin workflow --anno Ecoligbk.txt
+ppanggolin write -p pangenome.h5 --families_tsv --output gene_families
 
 #End of file

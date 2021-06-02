@@ -43,13 +43,14 @@
             |_FS9/
             |_FS19C/
                 |_fs19c_sequences/
-                  |_assemblywithbbtoolsandspades
-                  |_badsequencedata
-                  |_polished_genomes_100X
+                  |_assemblywithbbtoolsandspades/
+                  |_badsequencedata/
+                  |_polished_genomes_100X/
                   |_renamefiles.batch
                   |_touchfilenames.batch
                 |_SRAassemblyPipeline.FS19C.SLURM_TEMPLATE  
                 |_stecandcommensalEcoli_gifrop/
+                    |_gbkforppanggolin_prokka/
                     |_gfftest/
                     |_pan/
                     |_panpipe_logs/
@@ -118,6 +119,9 @@
         |_kmou/
             |_FS19C/
                 |_stecandcommensalEcoli_gifrop/
+                    |_*_pol/ or *_genomic/ (for each isolate)
+                    |_*.fna
+                    |_gbkforppanggolin_prokka/
                     |_gfftest/
                     |_pan/
                     |_panpipe_logs/
@@ -126,6 +130,8 @@
                     |_stecftp.txt
                     |_stec.slurm/
 ```
+* gbkforppanggolin_prokka/
+  * has output from ppanggolin (used prokka annotated gbk files in ppanggolin)
 * pan/
   * has output from roary
 * gfftest/
