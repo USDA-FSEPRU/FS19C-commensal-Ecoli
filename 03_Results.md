@@ -145,15 +145,5 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
   * summary_statistics.txt
   * _uninflated_mcl_groups
 
-### RAxML
-1. Figure of tree!
-
-##### Files generated:
-* RAxML_bestTree.core_genome_tree_1
-* RAxML_bipartitionsBranchLabels.core_genome_tree_1
-* RAxML_bipartitions.core_genome_tree_1
-* RAxML_bootstrap.core_genome_tree_1
-* RAxML_info.core_genome_tree_1
-
 ### DRAM
 ##### Files generated:

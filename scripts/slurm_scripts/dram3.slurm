@@ -16,17 +16,16 @@ set -e
 set -u
 set +eu
 module load miniconda
-source activate /project/fsepru/kmou/conda_envs/DRAM
+source activate /project/fsepru/kmou/conda_envs_dram_analysis/DRAM
 
 ## DRAM database setup, make sure set #SBATCH --ntasks-per-core=16
 # DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
 
-## Use this if manually downloaded uniref90.fasta.gz and want to skip downloading it again when running database setup
+## From Chris Anderson: Use this if manually downloaded uniref90.fasta.gz and want to skip downloading it again when running database setup
 # DRAM-setup.py prepare_databases --output_dir DRAM_data --threads 16 --uniref_loc /path/to/uniref90.fasta.gz
 
-#DRAM.py annotate -i /project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna -o annotation --threads 20
-#DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/*.fna' -o annotation_v2 --threads 32
-#DRAM.py annotate -i '/project/fsepru/kmou/FS19C/STECgenomes/seconddramannotation/*.fna' -o annotation_v4 --threads 32
+## DRAM annotate
+# DRAM.py annotate -i '/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/seconddramannotation/*.fna' -o annotation_v4 --threads 32
 
 ## DRAM distill for annotation_v4
 DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv

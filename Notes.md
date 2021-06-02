@@ -1,32 +1,18 @@
 # Notes, Ideas and Thoughts
 
-#Skeleton
-### Method
-* Summary:
-* Began on:
-* Completed on:
-* Platform:
-
-#To do
-
+# To do
 ## FS19C
 * new approach:
     * grab all STEC genomes from NCBI?
     * run prokka and roary of STEC genomes and commensal genomes together
-    * How to do Fisher exact test?
     * DRAM
+    * do GO enrichment analysis to find which STEC have sugar utilization pathways of interest, and then which commensals also have these pathways
 * old approach:
     * run prokka with Escherichia coli of commensals + STECs via gifrop
     * parallel blast to make sure virulence genes exist in the strains
       * custom database of virulence genes: track which source (EDL933, Sakai, etc.)
-
-
-* check out dram2, dram3, run annotation
-* fisher exact test - prep csv file, use old roary pangenome data?
-* highlight isolates in raxml tree once can narrow down which isolates have LEE operon, other virulence genes. Maybe gifrop results can help narrow that down?
-* check out anvi'o: https://merenlab.org/2016/11/08/pangenomics-v2/
-* troubleshoot gapseq results
-* update 02b_Methods.md (gifrop, gapseq), 03_Results.md (gifrop, gapseq), 02c_MethodsSummary.md (gapseq)
+* run `DRAM.py distill` for remaining 213 commensal and STEC annotated genomes - need to compile all genomes' `annotations.tsv` into one `annotations.tsv`
+* update `02_Methods` (`08_DRAM.md`), `03_Results.md` (gifrop, DRAM)
 * Run isolates through Daniel's github tools
   * https://github.com/nielsend/O157LineageAssignment
     `./LSPA6Long.sh [output CSV File Name] [Fasta File(s)]`
@@ -38,17 +24,17 @@
 ## Ceres
 * You can change your default Slurm account using running slurm-account-selector.sh on the login node.
   * To see all your Slurm accounts at any time, use “sacctmgr -Pns show user format=account”
-* reduce space used on Ceres: /project/fsepru/kmou/FS19C/lane1/**
-  * *.fastq.gz sequence data for samples 1-96
-  * tar these files once finish running assembly slurm scripts and get covstats.txt
-  * /project/fsepru/kmou/FS19C/polished_genomes: gzip fasta files from polished_genomes_100X, mash_all/, polishedgenomesprokka/, referencegenomes/
-  * remove intermediate files
-  * make sure raw data somehwere!
-
-# Journal Target
-* [Journal submission guidelines](link)
 
 # Random stuff
+1. [Journal submission guidelines](link)
+
 <details><summary>ClIcK iF yOu DaRe</summary>
 Boo!! Congratulations
 </details>
+
+# Skeleton
+### Method
+* Summary:
+* Began on:
+* Completed on:
+* Platform:

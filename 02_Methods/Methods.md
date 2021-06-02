@@ -2568,7 +2568,7 @@ You can also check out the `INSTALL` file for directions
 `$gapseq find -p all -b 200 -m Bacteria Streptococcus_thermophilus_strain_ATCC_19258.fna`
 
 ## (16) DRAM
-* Summary:
+* Summary: Identify sugar utilization pathways in STECs that are also present in commensal E. coli to identify candidate commensal E. colis for further study.
 * Began on: 19Apr2021
 * Completed on:
 * DRAM doi: https://academic.oup.com/nar/article/48/16/8883/5884738
