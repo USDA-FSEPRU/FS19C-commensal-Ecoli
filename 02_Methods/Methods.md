@@ -1430,25 +1430,25 @@ Submitted batch job 5589844
 ls -d -1 "$PWD/"*.gbk > Ecoligbkpath.txt
 ```
 
-11. (2Jun2021) Opened `Ecoligbkpath.txt` in Excel. Goal is to have 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Deleted the path name `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka/`, `_pol.gbk`, `.gbk` in first column. Saved txt. Uploaded to Ceres.
+21. (2Jun2021) Opened `Ecoligbkpath.txt` in Excel. Goal is to have 1st column containing unique organism name (use the gbk file name) and second column as path to location of gbk file. Deleted the path name `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka/`, `_pol.gbk`, `.gbk` in first column. Saved txt. Uploaded to Ceres.
 
-12. (2Jun2021) Ran `ppanggolin.slurm` on Ceres as a slurm job 5885558.
+22. (2Jun2021) Ran `ppanggolin.slurm` on Ceres as a slurm job 5885558.
 
-13. (2Jun2021) Downloaded output and viewed `tile_plot.html`. It showed several large sets of gene families missing in most commensals that are present in STEC.
+23. (2Jun2021) Downloaded output and viewed `tile_plot.html`. It showed several large sets of gene families missing in most commensals that are present in STEC.
 
-14. (2Jun2021) Opened `gene_presence_absence.Rtab` in R to find what the gene family names look like. Something like `32-436REC_CDS_2554`. Not descriptive.
+24. (2Jun2021) Opened `gene_presence_absence.Rtab` in R to find what the gene family names look like. Something like `32-436REC_CDS_2554`. Not descriptive.
 ```
 mydata <- read.delim("gene_presence_absence.Rtab", header= TRUE, sep = "\t", check.names = FALSE)
 ```
 
-15. (2Jun2021) Reading through https://github.com/labgem/PPanGGOLiN/wiki/Outputs#summarize-spots, found a section that describes how to get gene family and every single gene of pangenome.
+25. (2Jun2021) Reading through https://github.com/labgem/PPanGGOLiN/wiki/Outputs#summarize-spots, found a section that describes how to get gene family and every single gene of pangenome.
 ```
 ppanggolin write -p pangenome.h5 --families_tsv --output gene_families
 ```
 
-16. (2Jun2021) Changed to `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka/ppanggolin_output_DATE2021-06-02_HOUR11.29.13_PID147821` directory on Ceres. Modified slurm script `ppanggolin.slurm` to include above command and ran slurm job for 5885662.
+26. (2Jun2021) Changed to `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/gbkforppanggolin_prokka/ppanggolin_output_DATE2021-06-02_HOUR11.29.13_PID147821` directory on Ceres. Modified slurm script `ppanggolin.slurm` to include above command and ran slurm job for 5885662.
 
-17. (2June2021) Downloaded `gene_families.tsv` which shows all the genes (non-descriptive) (second column) in each gene family (first column). Will still have to blast what each of these gene family sequences are. Can obtain fasta file for entire pangenome of genes, gene families, or protein families:
+27. (2June2021) Downloaded `gene_families.tsv` which shows all the genes (non-descriptive) (second column) in each gene family (first column). Will still have to blast what each of these gene family sequences are. Can obtain fasta file for entire pangenome of genes, gene families, or protein families:
 ```
 ppanggolin fasta -p pangenome.h5 --output MY_GENES --genes all
 ppanggolin fasta -p pangenome.h5 --output MY_GENES --gene_families all

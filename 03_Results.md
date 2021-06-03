@@ -62,7 +62,7 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
 * qc_mds.R
 
 ### gifrop
-1.
+1. Generated pangenome files. Will need to translate the genes to GO terms to find pathways of interest and what STECs and commensals have these pathways and genes.
 
 ##### Files generated:
 * **_pol/ or Ecoli_*/
@@ -146,4 +146,6 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
   * _uninflated_mcl_groups
 
 ### DRAM
+1. `product.html` shows what modules are present in the isolates from second dram run.
+
 ##### Files generated:
