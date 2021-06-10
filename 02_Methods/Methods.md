@@ -2837,31 +2837,31 @@ I increased the number of cores to 32 (32 cores * 16GB mem per core = 512 GB mem
 
 14. (23Apr2021) Ran `DRAM-setup.py print_config` in `/project/fsepru/kmou/conda_envs/dram2/` and got same message as yesterday. I asked Chris and showed him my slurm script of the latest job. It turns out I didn't request threads in `DRAM-setup.py` and need to request threads for slurm itself. Chris gave me the corrected slurm script (called it `dram3.slurm`. Ran job 5770291.
 
-<details><summary>dram3.slurm script</summary>
+  <details><summary>dram3.slurm script</summary>
 
-```
-#!/bin/bash
-#SBATCH --job-name=dram3                            # name of the job submitted
-#SBATCH -p mem                                    # name of the queue you are submitting to
-#SBATCH -N 1
-#SBATCH -n 1
-#SBATCH --ntasks-per-core=16
-#SBATCH --mem=550gb
-#SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
-#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
-#SBATCH --account fsepru
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=kathy.mou@usda.gov
-#Enter commands here:
-set -e
-set -u
-set +eu
-module load miniconda
-source activate /project/fsepru/kmou/conda_envs/DRAM
-DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
-```
-</details>
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=dram3                            # name of the job submitted
+  #SBATCH -p mem                                    # name of the queue you are submitting to
+  #SBATCH -N 1
+  #SBATCH -n 1
+  #SBATCH --ntasks-per-core=16
+  #SBATCH --mem=550gb
+  #SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --account fsepru
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
+  #Enter commands here:
+  set -e
+  set -u
+  set +eu
+  module load miniconda
+  source activate /project/fsepru/kmou/conda_envs/DRAM
+  DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
+  ```
+  </details>
 
 15. (26Apr2021) Both dram2 and dram3 jobs finished. Ran `DRAM-setup.py print_config` in `/project/fsepru/kmou/conda_envs/dram2/DRAM_data2` and `/project/fsepru/kmou/conda_envs/DRAM_data3`
 
@@ -2977,31 +2977,31 @@ I'll stick with DRAM_data3 to run annotation.
 
 16. (26Apr2021) Ran annotation in `/project/fsepru/kmou/conda_envs/dram3.slurm`, job 5772721.
 
-<details><summary>dram3.slurm script</summary>
+  <details><summary>dram3.slurm script</summary>
 
-```
-#!/bin/bash
-#SBATCH --job-name=dram3                            # name of the job submitted
-#SBATCH -p mem                                    # name of the queue you are submitting to
-#SBATCH -N 1                                            # number of nodes in this job
-#SBATCH -n 1                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
-#SBATCH --ntasks-per-core=20
-#SBATCH --mem=550gb
-#SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
-#SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
-#SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
-#SBATCH --account fsepru
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=kathy.mou@usda.gov
-#Enter commands here:
-set -e
-set -u
-set +eu
-module load miniconda
-source activate /project/fsepru/kmou/conda_envs/DRAM
-DRAM.py annotate -i '/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna' -o annotation --threads 20
-```
-</details>
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=dram3                            # name of the job submitted
+  #SBATCH -p mem                                    # name of the queue you are submitting to
+  #SBATCH -N 1                                            # number of nodes in this job
+  #SBATCH -n 1                                           # number of cores/tasks in this job, you get all 20 cores with 2 threads per core with hyperthreading
+  #SBATCH --ntasks-per-core=20
+  #SBATCH --mem=550gb
+  #SBATCH -t 96:00:00                                      # time allocated for this job hours:mins:seconds
+  #SBATCH -o "stdout.%j.%N.%x"                               # standard out %j adds job number to outputfile name and %N adds the node name
+  #SBATCH -e "stderr.%j.%N.%x"                               # optional but it prints our standard error
+  #SBATCH --account fsepru
+  #SBATCH --mail-type=ALL
+  #SBATCH --mail-user=kathy.mou@usda.gov
+  #Enter commands here:
+  set -e
+  set -u
+  set +eu
+  module load miniconda
+  source activate /project/fsepru/kmou/conda_envs/DRAM
+  DRAM.py annotate -i '/project/fsepru/kmou/FS19C/polished_genomes_100X/polishedgenomesforprokka_95isolates6refgenomes/renamed_contigs/*.fna' -o annotation --threads 20
+  ```
+  </details>
 
 17. (28Apr2021) Job cancelled (because I accidentally deleted `*pol.fna` files). Rerun `dram3.slurm` on `*pol.fna` files in `/project/fsepru/kmou/FS19C/STECgenomes`, with some changes to `dram3.slurm` script. Job 5801952.
 
