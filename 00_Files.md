@@ -34,6 +34,7 @@
                 |_dram3.slurm
                 |_DRAM_data3/
                 |_environment.yaml
+                |_genome_summaries_annotation_v3/
                 |_genome_summaries_annotation_v4/
                 |_pan_genome_reference.fa
                 |_prokka_env/
@@ -153,20 +154,23 @@
                 |_dram3.slurm
                 |_DRAM_data3/
                 |_environment.yaml
+                |_genome_summaries_annotation_v3/
                 |_genome_summaries_annotation_v4/
                 |_pan_genome_reference.fa
                 |_prokka_env/
 ```
-* annotation_v3_dramfirstrun/working_dir
+* annotation_v3_dramfirstrun/working_dir/
   * 195 of 231 STEC and commensal E. coli annotations generated from `DRAM.py annotate`
   * each isolate's directory has: *.gbk, genes.annotated.faa, genes.annotated.gff, scaffolds.annotated.fa, annotations.tsv, genes.annotated.fna, rrnas.tsv, trnas.tsv
-* annotation_v4_dramsecondrun
+* annotation_v4_dramsecondrun/
   * remaining 18 of 231 STEC and commensal E. coli annotations generated from `DRAM.py annotate`
   * annotations.tsv, genbank, genes.faa, genes.fna, genes.gff, rrnas.tsv, scaffolds.fna, trnas.tsv
 * _DRAM_data3/
   * databases compiled by `DRAM-setup.py`
+* genome_summaries_annotation_v3/
+  * `DRAM.py distill` output of `annotation_v3_dramfirstrun/mergedannotation_dramfirstrun.tsv`
 * genome_summaries_annotation_v4/
-  * test run of `DRAM.py distill` on `annotation_v4_dramsecondrun/annotations.tsv`
+  * `DRAM.py distill` output of `annotation_v4_dramsecondrun/annotations.tsv`
 * _prokka_env/
   * conda environment that has fastani, multiqc, mash prokka, PPanGGOLiN installed
 

@@ -10,9 +10,6 @@ Mou KT<sup>1,2</sup>, Trachsel J<sup>2</sup>, Sharma VK<sup>2</sup>, Kudva IT<su
 ## Corresponding author
 * Crystal L. Loving (crystal.loving@usda.gov)
 
-## Email addresses
-* Kathy Mou (kathymou@yahoo.com)
-
 ## Contributions
 | Author | Contributions |
 | -- | -- |
@@ -22,12 +19,11 @@ Mou KT<sup>1,2</sup>, Trachsel J<sup>2</sup>, Sharma VK<sup>2</sup>, Kudva IT<su
 | Kudva, IT | Conceptualization, Funding Acquisition, Investigation, Project Administration, Resources |
 | Loving, CL | Conceptualization, Formal Analysis, Funding Acquisition, Investigation, Project Administration, Resources, Supervision |
 
-
 ## Acknowledgements
 Bradd Haley and Jo Ann Van Kessel for pipeline ideas, Chris Anderson for helpful discussions, David Alt for sequencing the samples, Hannah Watkins and Daniel Nielsen for assistance in collecting commensal isolates.
 
 ## Journal target
-
+?
 
 
 ## PLOS genetics uses the standard CRediT Taxonomy listed below

@@ -3188,7 +3188,7 @@ Having issues when I renamed `conda_envs` to `conda_envs_dram_analysis`. DRAM ca
 
 33. (9June2021) Downloaded `genome_summaries_annotation_v3` and examined `product.html`. I did not see the carbon/sugar utilization pathways we're interested in this file. Need to examine the `metabolism_summary.xlsx` file.
 
-99. Other options: try GO term enrichment on DRAM? Run prokka pan_genome_reference.fa through `DRAM.py distill` but convert fasta file to AA sequence?
+34. (10June2021) Discussions with Jules and Crystal: converting presence/absence data from `metabolism_summary.xlsx` into an ordination to see which commensals fall closer to STEC and could be candidates for further study.
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

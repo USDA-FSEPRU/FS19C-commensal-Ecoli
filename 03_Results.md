@@ -147,7 +147,7 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
   * _uninflated_mcl_groups
 
 ### DRAM
-1. Completed `DRAM.py distill` for both dram runs (all 231 genomes). See `genome_summaries_annotation_v3` and `genome_summaries_annotation_v4` for output files. I examined `product.html`, which shows what modules are present in the isolates. I did not see the carbon/sugar utilization pathways we're interested in this file. Need to examine the `metabolism_summary.xlsx` file.
+1. Completed `DRAM.py distill` for both dram runs (all 231 genomes). See `genome_summaries_annotation_v3` and `genome_summaries_annotation_v4` for output files. I examined `product.html`, which shows what modules are present in the isolates. Need to examine this and the `metabolism_summary.xlsx` more closely. Discussions with Jules and Crystal about converting presence/absence data from `metabolism_summary.xlsx` into an ordination to see which commensals fall closer to STEC and could be candidates for further study. Can also color code and include virulence genes.
 
 ##### Files generated:
 * genome_summaries_annotation_*/
