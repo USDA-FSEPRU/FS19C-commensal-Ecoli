@@ -20,9 +20,10 @@ This is Kathy Mou's lab notebook describing the comparative genomics project of 
 | [scripts](https://github.com/k39ajdM2/Notebook/tree/main/scripts) | Scripts used in data analysis on HPC (Ceres) or locally (RStudio) |
 
 ## **General Pipeline**
-1. Assemble short read sequences (Illumina) with BBMap and spades
-2. Fetch STEC genomes from NCBI (RefSeq)
-3. Determine how closely related isolates are using mash and MDS (in R)
-4. Run gifrop to annotate with prokka and analyze pan-genomes of commensal E. coli and STEC with roary.
-5. Identify metabolic pathways of interest in STECs that are also present in commensal E. coli (DRAM, BioCyc, blast) to find candidate commensal E. coli isolates.
-6. Interproscan: GO term enrichment using roary output
+1. Assemble short read sequences (Illumina) with BBMap and spades.
+2. Determine how closely related isolates are using mash and visualize with MDS (in R).
+3. Fetch STEC genomes from NCBI (RefSeq).
+4. Run gifrop to 1) annotate with prokka and 2) conduct pan-genome analysis of commensal E. coli and STEC with roary.
+5. Run DRAM as a second method to annotate and distill carbon/sugar utilization pathways of interest that are in STEC and thus also in commensal E. coli. This tool is relatively new and was developed with the goal of finding metabolic networks in metagenomes (relevant to this project). The authors showed DRAM had higher resolution annotation than prokka, so we are trying it out. The tool also generates neat plots of metabolic pathways present/absent in isolates.
+6. Interproscan: GO term enrichment using roary output (and DRAM?) to identify carbon/sugar utilization pathways of interest present in STEC that are present in commensal E. coli.
+7. Identify candidate commensal E. coli for further study.

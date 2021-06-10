@@ -1,5 +1,5 @@
 # Methods
-Details of sequence analyses methods performed on FS19C samples 1-96 in this repo. Includes lab notes of how methods performed
+Post-sequence analyses described in great detail, performed on FS19C samples 1-96. Includes tools that were and were not successfully implemented into the working pipeline.
 
 ## Notes
 GFF file description: http://gmod.org/wiki/GFF3
@@ -2239,6 +2239,7 @@ and then access the data using the ftp_path from column #20 of the file.
 * Tested wget with the first two and the files don't exist. Tried running slurm script to see what can be fetched - nothing was picked up. Asking Jules if he's encountered this or should I contact NCBI help desk.
 
 <details><summary>wget and stec.ftp.slurm script details</summary>
+
 ```
 wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/307/215/GCF_001307215.1_ASM130721v1
 --2021-04-27 15:48:41--  ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/307/215/GCF_001307215.1_ASM130721v1
