@@ -27,7 +27,7 @@
                 |_good_contig_names.R
                 |_share/
                 |_SPAdes-3.14.1-Linux/              
-            |_conda_envs_dram_analysis/
+            |_conda_envs/
                 |_annotation_v3_dramfirstrun/         
                 |_annotation_v4_dramsecondrun/
                 |_DRAM/
@@ -139,14 +139,15 @@
 
 
 ### (06) Ceres: DRAM (genome annotation, metabolic pathways analysis)
-**/project/fsepru/kmou/_conda_envs_dram_analysis/**
+**/project/fsepru/kmou/conda_envs/**
 ```
 |_project/
     |_fsepru/
         |_kmou/
-            |_conda_envs_dram_analysis/
+            |_conda_envs/
                 |_annotation_v3_dramfirstrun/      
-                    |_working_dir
+                    |_working_dir/
+                    |_mergedannotation_dramfirstrun.tsv
                 |_annotation_v4_dramsecondrun/
                 |_DRAM/
                 |_dram3.slurm

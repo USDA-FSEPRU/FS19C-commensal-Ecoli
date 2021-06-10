@@ -235,4 +235,4 @@ Vijay
 
 How to get a list of genes associated with metabolism of each carbon/sugar substrate? KEGG pathway has diagram and can click on individual genes, but how to get whole list?
 
-Or maybe try UniProt? Or gapseq?
+UniProt? gapseq? BioCyc?

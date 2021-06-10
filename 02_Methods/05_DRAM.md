@@ -1,5 +1,5 @@
 # 05_DRAM
-* Summary: Identify sugar utilization pathways in STECs that are also present in commensal E. coli to identify candidate commensal E. colis for further study.
+* Summary: Identify sugar utilization pathways in STECs that are also present in commensal E. coli to identify candidate commensal E. coli for further study.
 * Platform: Ceres, conda
   * `/project/fsepru/kmou/FS19C/conda_envs_dram_analysis/` and `/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/`
 
@@ -97,7 +97,19 @@ DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
   ```
 </details>
 
-8. Run `DRAM.py distill` on E. coli `annotations.tsv` file. Did this for `annotation_v4` and got results. How to do so for `annotation_v3` files because each isolate has its own `annotations.tsv` versus all 213 isolates having their annotations combined into one `annotations.tsv` file.
+8. Run `DRAM.py distill` on E. coli `annotations.tsv` file for `annotation_v4` via:
   ```
   DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv
   ```
+
+9. For `annotation_v3_dramfirstrun`, combine the `annotations.tsv` file from each directory with the following command (reference: https://unix.stackexchange.com/questions/447702/how-to-concatenate-files-from-different-sub-directories):
+```
+find /project/fsepru/kmou/conda_envs_dram_analysis/annotation_v3_dramfirstrun/working_dir/* -type f -name 'annotations.tsv' -exec cat {} + >mergedannotation_dramfirstrun.tsv
+```
+
+10. Run `DRAM.py distill` on `mergedannotation_dramfirstrun.tsv` via:
+```
+DRAM.py distill -i annotation_v3_dramfirstrun/mergedannotation_dramfirstrun.tsv -o genome_summaries_annotation_v3
+```
+
+11. Download directory files and examine `product.html`.

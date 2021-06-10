@@ -3171,10 +3171,21 @@ DRAM.py distill -i annotation_v5/annotations.tsv -o genome_summaries_annotation_
 
 30. (25May2021) Downloaded `genome_summaries_annotation_v5`. However, the output was a bit strange... very skim (`product.html` and `metabolism_summary.xlsx`). Perhaps the `pan_genome_reference.fa` should be converted to AA sequence?
 
-99. To do
-* () for `annotation_v3`, combine the `annotations.tsv` for STECs and one for commensals? One tsv is ~1.3Mb. If combine all STEC and commensal, 1.3 * 215 = 279.5Mb ... Might be a bit too big. `annotations.tsv` of `annotation_v4` is 27Mb and that has 18 strains.
-* Run for loop: for each folder in directory, find `annotations.tsv`, rename to directory name, and pipe contents to a new master `annotations.tsv` file. Run distill on that?
-The `annotations.tsv` file have about 5400 lines. 5400 * 215 = 1.2 million rows.
+31. (9June2021) On Ceres, for `annotation_v3`, combined the `annotations.tsv` file from each directory with the following command (reference: https://unix.stackexchange.com/questions/447702/how-to-concatenate-files-from-different-sub-directories):
+```
+find /project/fsepru/kmou/conda_envs_dram_analysis/annotation_v3_dramfirstrun/working_dir/* -type f -name 'annotations.tsv' -exec cat {} + >mergedannotation_dramfirstrun.tsv
+```
+The `mergedannotation_dramfirstrun.tsv` is 300M in size and has 1100551 lines. When I counted how many lines are in each of the `annotations.tsv` from each directory, they added up to a total of 1100551. So the `find` command seemed to work.
+
+32. (9June2021) Run `DRAM.py distill`. Submitted job 5905920.
+```
+DRAM.py distill -i annotation_v3_dramfirstrun/mergedannotation_dramfirstrun.tsv -o genome_summaries_annotation_v3
+```
+Having issues when I renamed `conda_envs` to `conda_envs_dram_analysis`. DRAM can't find files because I changed directory name. I changed the directory from `conda_envs_dram_analysis` back to `conda_envs`.
+
+33. (9June2021) Downloaded `genome_summaries_annotation_v3` and examined `product.html`. I did not see the carbon/sugar utilization pathways we're interested in this file. Need to examine the `metabolism_summary.xlsx` file.
+
+99. Other options: try GO term enrichment on DRAM? Run prokka pan_genome_reference.fa through `DRAM.py distill` but convert fasta file to AA sequence?
 
 ## WGS submission to SRA
 * Must complete Biosample entry (which will generate biosample entry in tandem)

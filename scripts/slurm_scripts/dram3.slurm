@@ -16,7 +16,7 @@ set -e
 set -u
 set +eu
 module load miniconda
-source activate /project/fsepru/kmou/conda_envs_dram_analysis/DRAM
+source activate /project/fsepru/kmou/conda_envs/DRAM
 
 ## DRAM database setup, make sure set #SBATCH --ntasks-per-core=16
 # DRAM-setup.py prepare_databases --output_dir DRAM_data3 --threads 16
@@ -28,4 +28,7 @@ source activate /project/fsepru/kmou/conda_envs_dram_analysis/DRAM
 # DRAM.py annotate -i '/project/fsepru/kmou/FS19C/stecandcommensalEcoli_gifrop/seconddramannotation/*.fna' -o annotation_v4 --threads 32
 
 ## DRAM distill for annotation_v4
-DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv
+# DRAM.py distill -i annotation_v4/annotations.tsv -o genome_summaries_annotation_v4 --trna_path annotation_v4/trnas.tsv --rrna_path annotation_v4/rrnas.tsv
+
+## DRAM distill for annotation_v3
+DRAM.py distill -i annotation_v3_dramfirstrun/mergedannotation_dramfirstrun.tsv -o genome_summaries_annotation_v3

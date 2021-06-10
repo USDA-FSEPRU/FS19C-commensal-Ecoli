@@ -10,7 +10,6 @@ This is Kathy Mou's lab notebook describing the comparative genomics project of 
 | [00a_Metadata.md](https://github.com/k39ajdM2/Notebook/tree/main/00a_Metadata.md) | Important metadata related to the project and files in 00_Files.md and Files directory|
 | [01_Background.md](https://github.com/k39ajdM2/Notebook/tree/main/01_Background.md) | Notes taken from OSQR plan, references listed in OSQR that are related to this project |
 | [02_Methods](https://github.com/k39ajdM2/Notebook/tree/main/02_Methods) | Lists entries from OneNote FS19C lab notebook on practicing using tools (bbmap and spades) on 4 FS19C isolates' sequence data; entries from OneNote FS19C lab notebook of relevance, conda environments created for sequence analysis, description and scripts for each method; each individual method as its own step. |
-| [02_Methods-Manuscript.md](https://github.com/k39ajdM2/Notebook/tree/main/02_Methods-Manuscript.md) | Ideas for how to write methods in manuscript |
 | [03_Results.md](https://github.com/k39ajdM2/Notebook/tree/main/03_Results.md)| Notes to include in paper |
 | [04_Introduction.md](https://github.com/k39ajdM2/Notebook/tree/main/04_Introduction.md) | Notes to include in paper |
 | [05_Discussion.md](https://github.com/k39ajdM2/Notebook/tree/main/05_Discussion.md) | Notes to include in paper |

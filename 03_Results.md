@@ -58,7 +58,8 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
 ##### Files generated:
 * fastANImashMDSheatmaps.pptx
 * FS19C_fastaniMDS.tiff
-* FS19C_mashMDS.tiff
+* FS19C_mashMDS_thirdrun_all.tiff
+* FS19C_mashMDS_thirdrun_onlyrefgenomes.tiff
 * qc_mds.R
 
 ### gifrop
@@ -146,6 +147,44 @@ Also ran MDS of mash-generated `distances_thirdrun.tab` of 95 isolates + 6 refer
   * _uninflated_mcl_groups
 
 ### DRAM
-1. `product.html` shows what modules are present in the isolates from second dram run.
+1. Completed `DRAM.py distill` for both dram runs (all 231 genomes). See `genome_summaries_annotation_v3` and `genome_summaries_annotation_v4` for output files. I examined `product.html`, which shows what modules are present in the isolates. I did not see the carbon/sugar utilization pathways we're interested in this file. Need to examine the `metabolism_summary.xlsx` file.
 
 ##### Files generated:
+* genome_summaries_annotation_*/
+  * genome_stats.tsv  
+  * metabolism_summary.xlsx  
+  * product.html  
+  * product.tsv
+* annotation_v3_dramfirstrun/working_dir/ or annotation_v4_dramsecondrun/
+  * */
+    * *.gbk
+    * genes.annotated.faa
+    * genes.annotated.gff3
+    * scaffolds.annotated.fa
+    * annotations.tsv
+    * genes.annotated.fna
+    * rrnas.tsv
+    * trnas.tsv
+    * genbank/ # <= in `annotation_v4_dramsecondrun` only
+
+### PPanGGOLiN
+1. Download `gene_families.tsv` which shows all the genes (non-descriptive) (second column) in each gene family (first column). Will still have to blast what each of these gene family sequences are. Can obtain fasta file for entire pangenome of genes, gene families, or protein families:
+```
+ppanggolin fasta -p pangenome.h5 --output MY_GENES --genes all
+ppanggolin fasta -p pangenome.h5 --output MY_GENES --gene_families all
+ppanggolin fasta -p pangenome.h5 --output MY_PROT --prot_families all
+```
+
+##### Files generated:
+* gene_presence_absence.Rtab       
+* organisms_statistics.tsv  
+* pangenomeGraph_light.gexf  
+* projection/
+* matrix.csv                       
+* pangenomeGraph.gexf       
+* pangenome.h5               
+* tile_plot.html
+* mean_persistent_duplication.tsv  
+* pangenomeGraph.json       
+* partitions/
+* Ushaped_plot.html
