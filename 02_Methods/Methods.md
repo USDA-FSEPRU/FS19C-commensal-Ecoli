@@ -2375,6 +2375,7 @@ I don’t know if the topGO analysis will be of much use for you as it is just u
 9. (20May2021) Customized `interproscan.SLURM`. Submitted job 5866474. Completed overnight for 11h43min.
 
   <details><summary>interproscan.slurm script</summary>
+
   #!/bin/bash
 
   #SBATCH --job-name="interproscan"                    # name of the job submitted
@@ -2395,6 +2396,7 @@ I don’t know if the topGO analysis will be of much use for you as it is just u
   </details>
 
   <details><summary>interproscan stdout details</summary>
+
   ```
   Running the following analyses:
   [CDD-3.17,Coils-2.2.1,Gene3D-4.2.0,Hamap-2020_01,MobiDBLite-2.0,Pfam-32.0,PIRSF-3.10,PRINTS-42.0,ProSitePatterns-2019_11,ProSiteProfiles-2019_11,SFLD-4,SMART-7.1,SUPERFAMILY-1.75,TIGRFAM-15.0]
